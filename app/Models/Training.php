@@ -11,7 +11,7 @@ class Training extends Model
 
     protected $fillable = [
         'training_name',
-        'links' => 'array',
+        'links',
         'user_id',
         'keywords'
     ];

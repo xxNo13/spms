@@ -10,15 +10,17 @@
                 Saved
             </x-maz-alert>
             <form wire:submit.prevent="updateProfileInformation">
-
-                @foreach ($offices as $office)
+                
+                @foreach ($auth_offices as $off)
                     <!-- is Head -->
-                    <div class="form-group">
-                        <input id="office.{{$office->id}}" type="checkbox" value="1" class="form-check-input" wire:model.defer="office.{{$office->id}}" autocomplete="office.{{$office->id}}" >
-                        <label for="office.{{$office->id}}">Head of the {{ $office->office_name }}</label>
-                        <x-maz-input-error for="office.{{$office->id}}" />
+                    <div class="form-group col-6">
+                        <input id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
+                        <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
+                        <x-maz-input-error for="isHead.{{$off->id}}" />
                     </div>
                 @endforeach
+
+                <hr>
 
                 <!-- Name -->
                 <div class="form-group">
@@ -33,6 +35,67 @@
                     <input type="email" name="email " id="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" wire:model.defer="state.email" >
                     <x-maz-input-error for="email" />
                 </div>
+
+                <hr>
+
+                <!-- Offices -->
+                <div class="form-group" wire:ignore>
+                    <label for="office">Offices</label>
+                    <select name="office" id="office" class="form-select" wire:model="office" multiple="multiple">
+                        <option></option>
+                        @foreach ($offices as $choices)
+                            <option value="{{$choices->id}}" {{ in_array($choices->id, $office) ? 'selected' : '' }}>{{$choices->office_name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Account Types -->
+                <div class="form-group" wire:ignore>
+                    <label for="account_type">Account Types</label>
+                    <select name="account_type" id="account_type" class="form-select" wire:model="account_type" multiple="multiple">
+                        <option></option>
+                        @foreach ($account_types as $choices)
+                            <option value="{{$choices->id}}" 
+                                {{ in_array($choices->id, $account_type) ? 'selected' : '' }}
+                                >{{$choices->account_type}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                @push('script')
+                    <script>
+                        $('#office').select2({
+                            placeholder: "Select an Office",
+                            multiple: true,
+                        });
+
+                        $('#office').on('change', function () {
+                            @this.office = $(this).val();
+                        });
+
+                        
+                        $('#account_type').select2({
+                            placeholder: "Select an Account Type",
+                            multiple: true,
+                        });
+
+                        $('#account_type').on('change', function () {
+                            @this.account_type = $(this).val();
+                        });
+
+                        $(document).ready(function(){
+
+                            $('select[name="account_type"]').on('change',function(){
+                                var $this = $(this); 
+                                $('select[name="account_type"]').find('option[value="1"]').prop('disabled', ($this.val().indexOf("2") > -1) ); // disabled or enabled 
+                                $('select[name="account_type"]').find('option[value="2"]').prop('disabled', ($this.val().indexOf("1") > -1) ); // disabled or enabled 
+                            });
+
+                            $('select[name="account_type"]').trigger('change');
+
+                        });
+                    </script>
+                @endpush
 
                 <button class="btn btn-primary float-end mt-2"  wire:loading.attr="disabled" wire:target="photo">Save</button>
             </form>

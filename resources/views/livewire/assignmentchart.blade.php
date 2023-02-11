@@ -21,10 +21,10 @@
             },
             series: [{
                 name: 'Target Finished',
-                data: [5,4,3,2,1]
+                data: @json($assignments)
             }],
             xaxis: {
-                categories: ['five', 'four', 'three', 'two', 'one']
+                categories: @json($days)
             }
         }
 

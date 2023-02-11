@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        @if (Auth::user()->isHead)
+        @if (Auth::user()->offices()->wherePivot('isHead', true)->first())
             <hr>
 
             <div class="card">

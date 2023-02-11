@@ -49,16 +49,16 @@
     <x-maz-sidebar-item name="Dashboard" :link="route('dashboard')" icon="bi bi-grid-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
+    <x-maz-sidebar-item name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>
+    <x-maz-sidebar-item name="Subordinates" :link="route('subordinates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
     {{-- <x-maz-sidebar-item name="Training Recommendation" :link="route('training.recommendation')" icon="bi bi-person-video3"></x-maz-sidebar-item>
     @if ($head || $pmo || $hrmo)
         <x-maz-sidebar-item name="Recommended for Trainings" :link="route('recommended.trainings')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
-        <x-maz-sidebar-item name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>
     @endif
     @if ($pmo)
         <x-maz-sidebar-item name="Agency/Organization's Target" :link="route('agency.target')" icon="bi bi-person-circle"></x-maz-sidebar-item>
     @endif
     @if ($head || $agency)
-        <x-maz-sidebar-item name="Subordinates" :link="route('officemates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
         <x-maz-sidebar-item name="For Approval" :link="route('for-approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
     @endif
     @if ($head)

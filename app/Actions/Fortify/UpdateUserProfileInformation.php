@@ -40,13 +40,15 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 
             $offices = [];
 
-            foreach ($input['office'] as $id => $isHead) {
+            foreach ($input['isHead'] as $id => $isHead) {
                 $offices[$id] = ['isHead' => $isHead];
             }
-            $user->offices()->sync($offices);
-        }
 
-        return redirect(request()->header('Referer'));
+            $user->offices()->sync($offices);
+            $user->offices()->sync($input['office']);
+            $user->account_types()->sync($input['account_type']);
+        }
+        
     }
 
     /**

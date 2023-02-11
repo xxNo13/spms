@@ -26,7 +26,7 @@ class ConfigureLivewire extends Component
     public $category;
     public $office_id;
     public $office_name;
-    public $abr;
+    public $office_abbr;
     public $building;
     public $account_type_id;
     public $account_type;
@@ -56,7 +56,7 @@ class ConfigureLivewire extends Component
         'start_date' => ['required_if:type,duration'],
         'end_date' => ['required_if:type,duration'],
         'office_name' => ['required_if:type,office'],
-        'abr' => ['required_if:type,office'],
+        'office_abbr' => ['required_if:type,office'],
         'building' =>  ['required_if:type,office'],
         'account_type' => ['required_if:type,account_type'],
         'out_from' => ['nullable', 'required_if:type,scoreEq', 'numeric', 'max:5', 'gt:verysat_to'],
@@ -74,6 +74,70 @@ class ConfigureLivewire extends Component
         'timeliness' => ['required_if:type,standardValue'],
     ];
 
+    protected $messages = [
+        'duration_name.required_if' => "Semester's Name cannot be null.",
+        'start_date.required_if' => "Start of Semeter cannot be null.",
+        'end_date.required_if' => "End of Semeter cannot be null.",
+        'office_name.required_if' => 'Office Name cannot be null.',
+        'office_abbr.required_if' => 'Office Abbreviation cannot be null.',
+        'building.required_if' =>  'Building Name cannot be null.',
+        'account_type.required_if' => 'Account Type cannot be null.',
+
+        'out_from.required_if' => 'Outstanding Score From cannot be null.',
+        'out_from.numeric' => 'Outstanding Score From should be numeric.',
+        'out_from.max' => 'Outstanding Score From should not exceed 5.',
+        'out_from.gt' => 'Outstanding Score From should be greater than Very Satisfacty Score.',
+
+        'out_to.required_if' => 'Outstanding Score To cannot be null.',
+        'out_to.numeric' => 'Outstanding Score To should be numeric.',
+        'out_to.max' => 'Outstanding Score To should not exceed 5.',
+        'out_to.gte' => 'Outstanding Score To should be greater than or equal to Outstanding Score From.',
+
+        'verysat_from.required_if' => 'Very Satisfactory Score From cannot be null.',
+        'verysat_from.numeric' => 'Very Satisfactory Score From should be numeric.',
+        'verysat_from.max' => 'Very Satisfactory Score From should not exceed 5.',
+        'verysat_from.gt' => 'Very Satisfactory Score From should be greater than Satisfactory Score.',
+
+        'verysat_to.required_if' => 'Very Satisfactory Score To cannot be null.',
+        'verysat_to.numeric' => 'Very Satisfactory Score To should be numeric.',
+        'verysat_to.max' => 'Very Satisfactory Score To should not exceed 5.',
+        'verysat_to.gte' => 'Very Satisfactory Score To should be greater than or equal to Very Satisfactory Score From.',
+
+        'sat_from.required_if' => 'Satisfactory Score From cannot be null.',
+        'sat_from.numeric' => 'Satisfactory Score From should be numeric.',
+        'sat_from.max' => 'Satisfactory Score From should not exceed 5.',
+        'sat_from.gt' => 'Satisfactory Score From should be greater than Unsatisfactory Score.',
+
+        'sat_to.required_if' => 'Satisfactory Score To cannot be null.',
+        'sat_to.numeric' => 'Satisfactory Score To should be numeric.',
+        'sat_to.max' => 'Satisfactory Score To should not exceed 5.',
+        'sat_to.gte' => 'Satisfactory Score To should be greater than equal to Satisfactory Score From.',
+
+        'unsat_from.required_if' => 'Unsatisfactory Score From cannot be null.',
+        'unsat_from.numeric' => 'Unsatisfactory Score From should be numeric.',
+        'unsat_from.max' => 'Unsatisfactory Score From should not exceed 5.',
+        'unsat_from.gt' => 'Unsatisfactory Score From should be greater than Poor Score.',
+
+        'unsat_to.required_if' => 'Unsatisfactory Score To cannot be null.',
+        'unsat_to.numeric' => 'Unsatisfactory Score To should be numeric.',
+        'unsat_to.max' => 'Unsatisfactory Score To should not exceed 5.',
+        'unsat_to.gte' => 'Unsatisfactory Score To should be greater than equal to Unsatisfactory Score From.',
+
+        'poor_from.required_if' => 'Poor Score From cannot be null.',
+        'poor_from.numeric' => 'Poor Score From should be numeric.',
+        'poor_from.max' => 'Poor Score From should not exceed 5.',
+        'poor_from.gte' => 'Poor Score From should be greater than or equal to 1.',
+
+        'poor_to.required_if' => 'Poor Score To cannot be null.',
+        'poor_to.numeric' => 'Poor Score To should be numeric.',
+        'poor_to.max' => 'Poor Score To should not exceed 5.',
+        'poor_to.gte' => 'Poor Score To should be greater than equal to Poor Score From.',
+
+        'efficiency.required_if' => 'Efficiency cannot be null.',
+        'quality.required_if' => 'Quality cannot be null.',
+        'timeliness.required_if' => 'Timeliness cannot be null.',
+    ];
+
     public function updated($property)
     {
         $this->validateOnly($property);
@@ -85,7 +149,7 @@ class ConfigureLivewire extends Component
         $offices = Office::query();
         if ($this->searchoffice) {
             $offices->where('office_name', 'like', "%{$this->searchoffice}%")
-                ->orwhere('abr', 'like', "%{$this->searchoffice}%")
+                ->orwhere('office_abbr', 'like', "%{$this->searchoffice}%")
                 ->orwhere('building', 'like', "%{$this->searchoffice}%");
         }
 
@@ -116,31 +180,43 @@ class ConfigureLivewire extends Component
         if ($this->category == 'edit' && $this->type == 'office') {
             Office::where('id', $this->office_id)->update([
                 'office_name' => $this->office_name,
-                'abr' => $this->abr, 
+                'office_abbr' => $this->office_abbr, 
                 'building' => $this->building
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         } elseif ($this->type == 'office') {
             Office::create([
                 'office_name' => $this->office_name, 
-                'abr' => $this->abr,
+                'office_abbr' => $this->office_abbr,
                 'building' => $this->building
             ]);
 
-            session()->flash('message', 'Added Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
         } elseif ($this->category == 'edit' && $this->type == 'account_type') {
             AccountType::where('id', $this->account_type_id)->update([
                 'account_type' => $this->account_type,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         } elseif ($this->type == 'account_type') {
             AccountType::create([
                 'account_type' => $this->account_type,
             ]);
 
-            session()->flash('message', 'Added Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
         } elseif ($this->category == 'edit' && $this->type == 'standardValue') {
             StandardValue::where('id', $this->standardValue_id)->update([
                 'efficiency' => $this->efficiency,
@@ -148,7 +224,10 @@ class ConfigureLivewire extends Component
                 'timeliness' => $this->timeliness,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         } elseif ($this->category == 'edit' && $this->type == 'duration') {
             Duration::where('id', $this->duration_id)->update([
                 'duration_name' => $this->duration_name,
@@ -156,7 +235,10 @@ class ConfigureLivewire extends Component
                 'end_date' => $this->end_date,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         } elseif ($this->type == 'duration') {
             Duration::create([
                 'duration_name' => $this->duration_name,
@@ -164,8 +246,12 @@ class ConfigureLivewire extends Component
                 'end_date' => $this->end_date,
             ]);
 
-            session()->flash('message', 'Added Successfully!');
-            return redirect(request()->header('Referer'));
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
+            
+            $this->mount();
         } elseif ($this->type == 'scoreEq' && $this->category == 'edit') {
             ScoreEquivalent::where('id', $this->scoreEq_id)->update([
                 'out_from' => $this->out_from,
@@ -180,7 +266,10 @@ class ConfigureLivewire extends Component
                 'poor_to' => $this->poor_to,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         }
 
         $this->resetInput();
@@ -198,7 +287,7 @@ class ConfigureLivewire extends Component
                 $data = Office::find($this->office_id);
 
                 $this->office_name = $data->office_name;
-                $this->abr = $data->abr;
+                $this->office_abbr = $data->office_abbr;
                 $this->building = $data->building;
             }
         } elseif ($type == 'account_type') {
@@ -260,7 +349,10 @@ class ConfigureLivewire extends Component
             Duration::where('id', $this->duration_id)->delete();
         }
 
-        session()->flash('message', 'Deleted Successfully!');
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Deleted Successfully",
+            'color' => "#f3616d",
+        ]);
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal'); 
     }
@@ -268,7 +360,7 @@ class ConfigureLivewire extends Component
     public function resetInput(){
         $this->office_id = '';
         $this->office_name = '';
-        $this->abr = '';
+        $this->office_abbr = '';
         $this->building = '';
         $this->type = '';
         $this->category = '';

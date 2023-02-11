@@ -1394,9 +1394,8 @@
                             </div>
                             <label>Action Officer: </label>
                             <div class="form-group">
-                                <select type="text" placeholder="Action Officer" class="form-control"
-                                    wire:model="user_id">
-                                    <option value="">Select Action Officer</option>
+                                <select name="user_id" class="form-select" wire:model="user_id">
+                                    <option>Select an Action Officer</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
@@ -2251,17 +2250,17 @@
                         <label>Training Name: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Training Name" class="form-control"
-                            wire:model="training">
-                            @error('training')
+                            wire:model="training_name">
+                            @error('training_name')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
                         <label>Links: </label>
                         <div class="form-group">
                             <textarea placeholder="Links" class="form-control"
-                                wire:model="link">
+                                wire:model="links">
                             </textarea>
-                            @error('link')
+                            @error('links')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
@@ -2303,17 +2302,17 @@
                         <label>Training Name: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Training Name" class="form-control"
-                            wire:model="training">
-                            @error('training')
+                            wire:model="training_name">
+                            @error('training_name')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
                         <label>Links: </label>
                         <div class="form-group">
                             <textarea placeholder="Links" class="form-control"
-                                wire:model="link">
+                                wire:model="links">
                             </textarea>
-                            @error('link')
+                            @error('links')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>

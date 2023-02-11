@@ -11,12 +11,12 @@
             </x-maz-alert>
             <form wire:submit.prevent="updateProfileInformation">
 
-                @foreach (auth()->user()->offices as $office)
+                @foreach ($offices as $office)
                     <!-- is Head -->
                     <div class="form-group">
-                        <label for="office.pivot.isHead">Head of the {{ $office->pivot->isHead }}</label>
-                        <input id="office.pivot.isHead" type="checkbox" class="form-check-input" wire:model.defer="state.office.pivot.isHead" autocomplete="office.pivot.isHead" >
-                        <x-maz-input-error for="office.pivot.isHead" />
+                        <input id="office.{{$office->id}}" type="checkbox" value="1" class="form-check-input" wire:model.defer="office.{{$office->id}}" autocomplete="office.{{$office->id}}" >
+                        <label for="office.{{$office->id}}">Head of the {{ $office->office_name }}</label>
+                        <x-maz-input-error for="office.{{$office->id}}" />
                     </div>
                 @endforeach
 

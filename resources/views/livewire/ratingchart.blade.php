@@ -27,10 +27,10 @@
             },
             series: [{
                 name: 'Rating score',
-                data: [5,5,4,3,5]
+                data: @json($ratings)
             }],
             xaxis: {
-                categories: ['Target 1' ,'Target 2' ,'Target 3' ,'Target 4' ,'Target 5']
+                categories: @json($targets)
             },
         }
 

@@ -30,7 +30,15 @@
                                         class="col-md-9 col-lg-12 col-xl-12 col-xxl-8 text-md-start text-lg-center text-xxl-start">
                                         <h6 class="text-muted font-semibold">Rated Targets</h6>
                                         <h6 class="font-extrabold mb-0">
-                                            Not approved or Semester's not started yet.
+                                            @if ((isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1) && (isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1))
+                                                {{ count($ratings) }} / {{ (count($targetsS) + count($targetsF)) }}
+                                            @elseif (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1)
+                                                {{ count($ratings) }} / {{ count($targetsS) }}
+                                            @elseif(isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1)
+                                                {{ count($ratings) }} / {{ count($targetsF) }}
+                                            @else
+                                                Not approved or Semester's not started yet.
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -50,7 +58,11 @@
                                         class="col-md-9 col-lg-12 col-xl-12 col-xxl-8 text-md-start text-lg-center text-xxl-start">
                                         <h6 class="text-muted font-semibold">Assignments</h6>
                                         <h6 class="font-extrabold mb-0">
-                                            Semester's not started yet.
+                                            @if ($duration)
+                                                {{ count($finished) }} / {{ count($assignments) }}
+                                            @else
+                                                Semester's not started yet.
+                                            @endif
                                         </h6>
                                     </div>
                                 </div>
@@ -65,7 +77,9 @@
                                 <h4>Target Finish/Day Chart</h4>
                             </div>
                             <div class="card-body">
-                                <livewire:targetchart />
+                                @if ($duration)
+                                    <livewire:targetchart />
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -77,7 +91,9 @@
                                 <h4>Assignment Finish/Day Chart</h4>
                             </div>
                             <div class="card-body">
-                                <livewire:assignmentchart />
+                                @if ($duration)
+                                    <livewire:assignmentchart />
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -112,8 +128,60 @@
                         <h4>Recent Targets</h4>
                     </div>
                     <div class="card-body">
-                        <h6 class="text-muted mb-2">No Data avialable</h6>
+                        @if (isset($recentTargets))
+                            @forelse ($recentTargets as $target)
+                                @if ((isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1) && (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1))
+                                    <h6 class="text-muted mb-2">
+                                        <a
+                                            href="#">
+                                            @if ($target->rating)
+                                                <i class="bi bi-check"></i>
+                                            @endif
+                                            {{ $target->target }}
+                                        </a>
+                                    </h6>
+                                @elseif (isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1)
+                                    @if ($target->user_type == 'faculty')
+                                        <h6 class="text-muted mb-2">
+                                            <a href="">
+                                                @if ($target->rating)
+                                                    <i class="bi bi-check"></i>
+                                                @endif
+                                                {{ $target->target }}
+                                            </a>
+                                        </h6>
+                                    @endif
+                                @elseif (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1)
+                                    @if ($target->user_type == 'staff')
+                                        <h6 class="text-muted mb-2">
+                                            <a href="">
+                                                @if ($target->rating)
+                                                    <i class="bi bi-check"></i>
+                                                @endif
+                                                {{ $target->target }}
+                                            </a>
+                                        </h6>
+                                    @endif
+                                @elseif($loop->last)
+                                    <h6 class="text-muted mb-2">No Data avialable</h6>
+                                @endif
+                            @empty
+                                <h6 class="text-muted mb-2">No Data avialable</h6>
+                            @endforelse
+                        @else
+                            <h6 class="text-muted mb-2">No Data avialable</h6>
+                        @endif
                         <h6 class="text-muted text-center mt-4 mb-2">
+                            @php
+                                $faculty = false;
+                            @endphp
+                            @foreach (Auth::user()->account_types as $account_type)
+                                @if (str_contains(strtolower($account_type->account_type), 'faculty'))
+                                    @php
+                                        $faculty = true;
+                                    @endphp
+                                @endif
+                            @endforeach
                             <a
                                 href="#">
                                 View all <i class="bi bi-arrow-right"></i>
@@ -126,9 +194,24 @@
                         <h4>Recent Assignments</h4>
                     </div>
                     <div class="card-body">
-                        <h6 class="text-muted mb-2">No Data avialable</h6>
+                        @if (isset($recentAssignments))
+                            @forelse ($recentAssignments as $assignment)
+                                <h6 class="text-muted mb-2">
+                                    <a href="{{ route('ttma') }}">
+                                        @if ($assignment->remarks == 'Done')
+                                            <i class="bi bi-check"></i>
+                                        @endif
+                                        {{ $assignment->output }}
+                                    </a>
+                                </h6>
+                            @empty
+                                <h6 class="text-muted mb-2">No Data avialable</h6>
+                            @endforelse
+                        @else
+                            <h6 class="text-muted mb-2">No Data avialable</h6>
+                        @endif
                         <h6 class="text-muted text-center mt-4 mb-2">
-                            <a href="#">
+                            <a href="{{ route('ttma') }}">
                                 View all <i class="bi bi-arrow-right"></i>
                             </a>
                         </h6>
@@ -141,7 +224,9 @@
                         <h4>Score/Targets Chart</h4>
                     </div>
                     <div class="card-body">
-                        <livewire:ratingchart />
+                        @if ($duration)
+                            <livewire:ratingchart />
+                        @endif
                     </div>
                 </div>
             </div>

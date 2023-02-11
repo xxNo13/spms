@@ -2,42 +2,74 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Office;
 use Livewire\Component;
+use App\Models\AccountType;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 
 class ProfileForm extends Component
 {
     public $state = [];
-    public $office = [];
-    public $offices = [];
+    public $isHead = [];
+    public $auth_offices = [];
+    public $offices;
+    public $office;
+    public $account_types;
+    public $account_type;
+
+    protected $listeners = ['refreshComponent' => '$refresh'];
 
     public function mount()
     {
+        $this->offices = Office::orderBy('office_name', 'ASC')->get();
+
+        $this->account_types = AccountType::orderBy('account_type', 'ASC')->get();
+
         $this->state = auth()->user()->withoutRelations()->toArray();
 
-        foreach (auth()->user()->offices as $office) {
-            $this->office[$office->id] = $office->pivot->isHead;
-        }
+        $this->office = auth()->user()->offices->pluck('id')->toArray();
+
+        $this->account_type = auth()->user()->account_types->pluck('id')->toArray();
 
         foreach (auth()->user()->offices as $office) {
-            $this->offices[$office->id] = $office;
+            $this->isHead[$office->id] = $office->pivot->isHead;
         }
     }
 
     public function render()
     {
+        foreach (auth()->user()->offices as $office) {
+            $this->auth_offices[$office->id] = $office;
+        }
+
         return view('livewire.profile-form');
     }
 
     public function updateProfileInformation(UpdateUserProfileInformation $updater)
     {
-
         $this->state['office'] = $this->office;
+        $this->state['account_type'] = $this->account_type;
+        $this->state['isHead'] = $this->isHead;
 
         $this->resetErrorBag();
 
         $updater->update(auth()->user(), $this->state);
+        $this->resetInput();
+            
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Profile Information Saved",
+            'color' => "#28ab55",
+        ]);
+    }
 
-        session()->flash('status', 'Profile successfully updated');
+    public function resetInput() {
+        $this->state = [];
+        $this->isHead = [];
+        $this->auth_offices = [];
+        $this->offices = "";
+        $this->office = "";
+        $this->account_types = "";
+        $this->account_type = "";
+        $this->mount();
     }
 }

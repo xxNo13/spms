@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\Duration;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\AssignmentNotification;
 
 class TtmaLivewire extends Component
 {
@@ -35,11 +36,11 @@ class TtmaLivewire extends Component
     ];
 
     protected $messages = [
-        'subject.required' => 'The Subject cannot be empty.',
-        'user_id.required' => 'Need to assign to a user.',
-        'output.required' => 'The Output cannot be empty.',
-        'deadline.required' => 'The Deadline cannot be empty.',
-        'comment.required' => 'The reason for declining cannot be empty.',
+        'subject.required_if' => 'The Subject cannot be empty.',
+        'user_id.required_if' => 'Need to assign to a user.',
+        'output.required_if' => 'The Output cannot be empty.',
+        'deadline.required_if' => 'The Deadline cannot be empty.',
+        'comment.required_if' => 'The reason for declining cannot be empty.',
     ];
 
     protected  $queryString = ['search'];
@@ -48,11 +49,11 @@ class TtmaLivewire extends Component
 
         $users = User::query();
 
-        foreach (Auth::user()->offices as $office) {
+        foreach (Auth::user()->offices()->wherePivot('isHead', true)->get() as $office) {
             
             $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
-                return $query->where('id', $office->id);
-            })->where('id', '!=', Auth::user()->id)->where('isHead', false);
+                return $query->where('id', $office->id)->where('isHead', false);
+            })->where('id', '!=', Auth::user()->id);
 
             foreach ($office->child as $office) {
                 $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
@@ -67,7 +68,7 @@ class TtmaLivewire extends Component
             }
         }
         
-        $this->users = $users->distinct()->get();
+        $this->users = $users->distinct()->orderBy('name', 'ASC')->get();
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
     }
 
@@ -150,7 +151,10 @@ class TtmaLivewire extends Component
                 'deadline' => $this->deadline,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         } else {
             $ttma = Ttma::create([
                 'subject' => $this->subject,
@@ -165,7 +169,10 @@ class TtmaLivewire extends Component
 
             $user->notify(new AssignmentNotification($ttma));
 
-            session()->flash('message', 'Added Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
         }
 
         $this->resetInput();
@@ -186,7 +193,10 @@ class TtmaLivewire extends Component
             'comments' => $this->comment,
         ]);
 
-        session()->flash('message', 'Sent Successfully!');
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Sent Successfully",
+            'color' => "#435ebe",
+        ]);
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal');
     }
@@ -206,7 +216,10 @@ class TtmaLivewire extends Component
             'comments' => null,
         ]);
 
-        session()->flash('message', 'Sent Successfully!');
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Sent Successfully",
+            'color' => "#435ebe",
+        ]);
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal');
     }
@@ -223,7 +236,10 @@ class TtmaLivewire extends Component
 
         $user->notify(new AssignmentNotification($ttma));
 
-        session()->flash('message', 'Mark the assignment as completed!');
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Mark Assignment as completed",
+            'color' => "#435ebe",
+        ]);
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal');
     }
@@ -259,7 +275,10 @@ class TtmaLivewire extends Component
         
         $ttma->delete();
 
-        session()->flash('message', 'Deleted Successfully!');
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Deleted Successfully",
+            'color' => "#f3616d",
+        ]);
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal');
     }

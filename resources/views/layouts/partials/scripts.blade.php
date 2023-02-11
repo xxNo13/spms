@@ -11,6 +11,8 @@
 @livewireScripts
 <script src="{{ asset('/js/main.js') }}"></script>
 <script src="{{ asset('/js/jquery.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+@stack('script')
 
 <script>
     function scrollToTop() {
@@ -20,6 +22,17 @@
             behavior: "smooth"
         });
     }
+
+    window.addEventListener('toastify', event => {
+        Toastify({
+            text: event.detail.message,
+            duration: 3000,
+            close: true,
+            gravity:"bottom",
+            position: "right",
+            backgroundColor: event.detail.color,
+        }).showToast();
+    })
 
     window.addEventListener('close-modal', event => {
         $('#AddIPCROSTModal').modal('hide');

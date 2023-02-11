@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{{ asset('/vendors/toastify/toastify.css') }}">
 <link rel="stylesheet" href="{{ asset('/vendors/iconly/bold.css') }}">
 <link rel="stylesheet" href="{{ asset('/vendors/apexcharts/apexcharts.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 
 
 

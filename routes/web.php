@@ -3,7 +3,9 @@
 use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\TtmaLivewire;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\ConfigureLivewire;
+use App\Http\Livewire\SubordinateLivewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/ttma', TtmaLivewire::class)->name('ttma');
     Route::get('/configure', ConfigureLivewire::class)->name('configure');
+    Route::get('/trainings', TrainingLivewire::class)->name('trainings');
+    Route::get('/subordinates', SubordinateLivewire::class)->name('subordinates');
 });
