@@ -11,13 +11,25 @@
             </x-maz-alert>
             <form wire:submit.prevent="updateProfileInformation">
                 
-                @foreach ($auth_offices as $off)
-                    <!-- is Head -->
-                    <div class="form-group col-6">
-                        <input id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
-                        <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
-                        <x-maz-input-error for="isHead.{{$off->id}}" />
-                    </div>
+                @foreach (auth()->user()->offices as $off)
+                    @foreach($off->users as $user)
+                        @if ($user->pivot->isHead == 1 && $user->pivot->user_id != auth()->user()->id)
+                            <!-- is Head -->
+                            <div class="form-group col-6">
+                                <input disabled id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
+                                <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
+                                <x-maz-input-error for="isHead.{{$off->id}}" />
+                            </div>
+                            @break
+                        @elseif ($loop->last)
+                            <!-- is Head -->
+                            <div class="form-group col-6">
+                                <input id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
+                                <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
+                                <x-maz-input-error for="isHead.{{$off->id}}" />
+                            </div>
+                        @endif
+                    @endforeach
                 @endforeach
 
                 <hr>

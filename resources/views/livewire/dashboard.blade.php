@@ -30,11 +30,11 @@
                                         class="col-md-9 col-lg-12 col-xl-12 col-xxl-8 text-md-start text-lg-center text-xxl-start">
                                         <h6 class="text-muted font-semibold">Rated Targets</h6>
                                         <h6 class="font-extrabold mb-0">
-                                            @if ((isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1) && (isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1))
+                                            @if ((isset($approvalIPCRS) && $approvalIPCRS->review_status == 1 && $approvalIPCRS->approve_status == 1) && (isset($approvalIPCRF) && $approvalIPCRF->review_status == 1 && $approvalIPCRF->approve_status == 1))
                                                 {{ count($ratings) }} / {{ (count($targetsS) + count($targetsF)) }}
-                                            @elseif (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1)
+                                            @elseif (isset($approvalIPCRS) && $approvalIPCRS->review_status == 1 && $approvalIPCRS->approve_status == 1)
                                                 {{ count($ratings) }} / {{ count($targetsS) }}
-                                            @elseif(isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1)
+                                            @elseif(isset($approvalIPCRF) && $approvalIPCRF->review_status == 1 && $approvalIPCRF->approve_status == 1)
                                                 {{ count($ratings) }} / {{ count($targetsF) }}
                                             @else
                                                 Not approved or Semester's not started yet.
@@ -130,7 +130,7 @@
                     <div class="card-body">
                         @if (isset($recentTargets))
                             @forelse ($recentTargets as $target)
-                                @if ((isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1) && (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1))
+                                @if ((isset($approvalIPCRF) && $approvalIPCRF->review_status == 1 && $approvalIPCRF->approve_status == 1) && (isset($approvalIPCRS) && $approvalIPCRS->review_status == 1 && $approvalIPCRS->approve_status == 1))
                                     <h6 class="text-muted mb-2">
                                         <a
                                             href="#">
@@ -140,7 +140,7 @@
                                             {{ $target->target }}
                                         </a>
                                     </h6>
-                                @elseif (isset($approvalIPCRF) && $approvalIPCRF->superior1_status == 1 && $approvalIPCRF->superior2_status == 1)
+                                @elseif (isset($approvalIPCRF) && $approvalIPCRF->review_status == 1 && $approvalIPCRF->approve_status == 1)
                                     @if ($target->user_type == 'faculty')
                                         <h6 class="text-muted mb-2">
                                             <a href="">
@@ -151,7 +151,7 @@
                                             </a>
                                         </h6>
                                     @endif
-                                @elseif (isset($approvalIPCRS) && $approvalIPCRS->superior1_status == 1 && $approvalIPCRS->superior2_status == 1)
+                                @elseif (isset($approvalIPCRS) && $approvalIPCRS->review_status == 1 && $approvalIPCRS->approve_status == 1)
                                     @if ($target->user_type == 'staff')
                                         <h6 class="text-muted mb-2">
                                             <a href="">

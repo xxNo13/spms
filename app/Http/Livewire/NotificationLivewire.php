@@ -88,8 +88,8 @@ class NotificationLivewire extends Component
                                     if ($duration) {
                                         $assessF = Approval::orderBy('id', 'DESC')
                                             ->where('name', 'assess')
-                                            ->where('superior1_status', 1)
-                                            ->where('superior2_status', 1)
+                                            ->where('review_status', 1)
+                                            ->where('approve_status', 1)
                                             ->where('user_id', $user->id)
                                             ->where('type', 'ipcr')
                                             ->where('duration_id', $duration->id)
@@ -108,8 +108,8 @@ class NotificationLivewire extends Component
                                     if ($duration) {
                                         $assessS = Approval::orderBy('id', 'DESC')
                                             ->where('name', 'assess')
-                                            ->where('superior1_status', 1)
-                                            ->where('superior2_status', 1)
+                                            ->where('review_status', 1)
+                                            ->where('approve_status', 1)
                                             ->where('user_id', $user->id)
                                             ->where('type', 'ipcr')
                                             ->where('duration_id', $duration->id)

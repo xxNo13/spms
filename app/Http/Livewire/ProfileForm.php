@@ -11,7 +11,6 @@ class ProfileForm extends Component
 {
     public $state = [];
     public $isHead = [];
-    public $auth_offices = [];
     public $offices;
     public $office;
     public $account_types;
@@ -38,9 +37,6 @@ class ProfileForm extends Component
 
     public function render()
     {
-        foreach (auth()->user()->offices as $office) {
-            $this->auth_offices[$office->id] = $office;
-        }
 
         return view('livewire.profile-form');
     }
@@ -65,7 +61,6 @@ class ProfileForm extends Component
     public function resetInput() {
         $this->state = [];
         $this->isHead = [];
-        $this->auth_offices = [];
         $this->offices = "";
         $this->office = "";
         $this->account_types = "";

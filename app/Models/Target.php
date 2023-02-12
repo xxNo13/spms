@@ -29,6 +29,10 @@ class Target extends Model
         return $this->hasMany(Standard::class);
     }
 
+    public function ratings() {
+        return $this->hasMany(Rating::class);
+    }
+
     public function users() {
         return $this->belongsToMany(User::class, 'target_user')
             ->withPivot('target_output')

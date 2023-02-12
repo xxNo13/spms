@@ -29,10 +29,8 @@ class Ratingchart extends Component
             ->get();
         foreach($this->targs as $targ){
             $this->targets[$this->number] = $targ->target;
-            if ($targ->rating) {
-                $rating = Rating::where('target_id', $targ->id)
-                    ->where('duration_id', $this->duration->id)
-                    ->first();
+            if ($targ->ratings()->where('user_id', auth()->user()->id)->first()) {
+                $rating = $targ->ratings()->where('user_id', auth()->user()->id)->first();
                 $this->ratings[$this->number] = $rating->average;
             } else {
                 $this->ratings[$this->number] = 0;

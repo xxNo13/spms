@@ -51,15 +51,14 @@
     <x-maz-sidebar-item name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>
     <x-maz-sidebar-item name="Subordinates" :link="route('subordinates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
-    {{-- <x-maz-sidebar-item name="Training Recommendation" :link="route('training.recommendation')" icon="bi bi-person-video3"></x-maz-sidebar-item>
-    @if ($head || $pmo || $hrmo)
-        <x-maz-sidebar-item name="Recommended for Trainings" :link="route('recommended.trainings')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
-    @endif
+    <x-maz-sidebar-item name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
+    <x-maz-sidebar-item name="Recommended for Trainings" :link="route('recommended.for.training')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
+    <x-maz-sidebar-item name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+    {{-- 
     @if ($pmo)
         <x-maz-sidebar-item name="Agency/Organization's Target" :link="route('agency.target')" icon="bi bi-person-circle"></x-maz-sidebar-item>
     @endif
     @if ($head || $agency)
-        <x-maz-sidebar-item name="For Approval" :link="route('for-approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
     @endif
     @if ($head)
         <x-maz-sidebar-item name="OPCR" :link="route('opcr')" icon="bi bi-clipboard2-data-fill"></x-maz-sidebar-item>

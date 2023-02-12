@@ -5,7 +5,10 @@ use App\Http\Livewire\TtmaLivewire;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\ConfigureLivewire;
+use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\SubordinateLivewire;
+use App\Http\Livewire\RecommendationListLivewire;
+use App\Http\Livewire\RecommendedForTrainingLivewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/configure', ConfigureLivewire::class)->name('configure');
     Route::get('/trainings', TrainingLivewire::class)->name('trainings');
     Route::get('/subordinates', SubordinateLivewire::class)->name('subordinates');
+    Route::get('/recommendation-list', RecommendationListLivewire::class)->name('recommendation.list');
+    Route::get('/recommended-for-training', RecommendedForTrainingLivewire::class)->name('recommended.for.training');
+    Route::get('/for-approval', ForApprovalLivewire::class)->name('for.approval');
 });
