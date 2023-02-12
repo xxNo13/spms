@@ -23,6 +23,10 @@ class Output extends Model
         return $this->hasMany(Suboutput::class);
     }
 
+    public function targets() {
+        return $this->hasMany(Target::class);
+    }
+
     public function users() {
         return $this->belongsToMany(User::class, 'output_user');
     }

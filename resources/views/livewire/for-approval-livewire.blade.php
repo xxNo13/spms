@@ -19,6 +19,24 @@
         <div class="card">
             <div class="card-header hstack">
                 <h4 class="card-title my-auto"></h4>
+                <div class="hstack gap-3">
+                    <div class="form-group">
+                        <label for="filterP">Purpose</label>
+                        <select class="form-select" name="filterP" id="filterP" wire:model="filterP">
+                            <option value="" selected>None</option>
+                            <option value="review">Review</option>
+                            <option value="approval">Approval</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterA">Remarks</label>
+                        <select class="form-select" name="filterA" id="filterA" wire:model="filterA">
+                            <option value="" selected>None</option>
+                            <option value="remark">With Remark</option>
+                            <option value="noremark">No Remark</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="ms-auto my-auto form-group position-relative has-icon-right">
                     <input type="text" class="form-control" placeholder="Search.." wire:model="search">
                     <div class="form-control-icon">
@@ -40,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($approvals as $approval)
+                            @forelse ($approvals->sortByDesc('updated_at') as $approval)
                                 @if ((Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->approve_id) &&
                                     ($duration && $approval->duration_id == $duration->id))
                                     <tr>
@@ -98,6 +116,8 @@
                                                     Approved
                                                 @elseif ($approval->approve_status == 2)
                                                     Declined
+                                                @elseif ($approval->approve_status == 3)
+                                                    Declined by Reviewer
                                                 @else
                                                     @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                         <div class="hstack gap-2 justify-content-center">

@@ -1,6 +1,6 @@
 <div>
     <div class="page-title">
-        <div class="row">
+        <div class="row"  id="durations">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Configuring available data</h3>
             </div>
@@ -26,7 +26,7 @@
     </div>
 
     <section class="section pt-3">
-        <div class="card" id="durations">
+        <div class="card">
             <div class="accordion accordion-flush card-header" id="durationAccordion">
                 <div class="accordion-item">
                     <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
@@ -99,12 +99,12 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="scoreEqs">
                 {{ $durations->links('components.pagination') }}
             </div>
         </div>
 
-        <div class="card" id="scoreEqs">
+        <div class="card" >
             <div class="accordion accordion-flush card-header" id="scoreEqAccordion">
                 <div class="accordion-item">
                     <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
@@ -117,7 +117,7 @@
                         wire:ignore.self data-bs-parent="#scoreEqAccordion">
                         <div class="acordion-header mt-2 row">    
                             <div class="hstack justify-content-center gap-2 mt-2 col-12">
-                                <button type="button" class="ms-md-auto btn icon btn-success"
+                                <button type="button" class="ms-auto btn icon btn-success"
                                     wire:click="select('{{ 'scoreEq' }}', {{ $scoreEq->id }}, '{{ 'edit' }}')"
                                     data-bs-toggle="modal" data-bs-target="#EditScoreEqModal">
                                     <i class="bi bi-pencil-square"></i>
@@ -167,11 +167,11 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="standardValue">
             </div>
         </div>
 
-        <div class="card" id="standardValue">
+        <div class="card">
             <div class="accordion accordion-flush card-header" id="standardValueAccordion">
                 <div class="accordion-item">
                     <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
@@ -184,7 +184,7 @@
                         wire:ignore.self data-bs-parent="#standardValueAccordion">
                         <div class="acordion-header mt-2 row">    
                             <div class="hstack justify-content-center gap-2 mt-2 col-12">
-                                <button type="button" class="ms-md-auto btn icon btn-success"
+                                <button type="button" class="ms-auto btn icon btn-success"
                                     wire:click="select('{{ 'standardValue' }}', {{ $standardValue->id }}, '{{ 'edit' }}')"
                                     data-bs-toggle="modal" data-bs-target="#EditStandardValueModal">
                                     <i class="bi bi-pencil-square"></i>
@@ -214,11 +214,11 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="offices">
             </div>
         </div>
 
-        <div class="card" id="offices">
+        <div class="card">
             <div class="accordion accordion-flush card-header" id="officeAccordion">
                 <div class="accordion-item">
                     <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
@@ -319,12 +319,12 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="account_types">
                 {{ $offices->links('components.pagination') }}
             </div>
         </div>
 
-        <div class="card" id="account_types">
+        <div class="card">
             <div class="accordion accordion-flush card-header" id="account_typeAccordion">
                 <div class="accordion-item">
                     <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
