@@ -102,11 +102,10 @@
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
-                            @foreach ($percentage->supports as $support)
-                                @if ($support->sub_funct_id == $sub_funct->id)
-                                    {{ $support->percent }}%
-                                @endif
-                            @endforeach
+                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                                @dd($sub_percentage)
+                                {{ $sub_percentage->value }}
+                            @endif
                         </h5>
                         @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output)
                             @if ($output->type == 'ipcr' &&

@@ -10,7 +10,9 @@ class SubPercentage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'values',
+        'value',
+        'type',
+        'user_type',
         'sub_funct_id',
         'user_id',
         'duration_id'

@@ -18258,6 +18258,11 @@ body .bi::before, [class^=bi-]::before, [class*=" bi-"]::before {
   height: 60px;
   font-size: 1.4rem;
 }
+.avatar.avatar-full .avatar-content, .avatar.avatar-full img {
+  width: 200px;
+  height: 200px;
+  font-size: 3rem;
+}
 
 .btn .badge {
   border-radius: 50%;

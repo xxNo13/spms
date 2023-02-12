@@ -218,15 +218,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Score/Targets Chart</h4>
-                    </div>
-                    <div class="card-body">
-                        @if ($duration)
-                            <livewire:ratingchart />
-                        @endif
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Score/Targets Chart</h4>
+                        </div>
+                        <div class="card-body">
+                            @if ($duration)
+                                <livewire:ratingchart />
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

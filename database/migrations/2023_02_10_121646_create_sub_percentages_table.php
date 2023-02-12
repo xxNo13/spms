@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('sub_percentages', function (Blueprint $table) {
             $table->id();
             $table->integer('value');
+            $table->string('type');
+            $table->string('user_type');
             $table->foreignId('sub_funct_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');

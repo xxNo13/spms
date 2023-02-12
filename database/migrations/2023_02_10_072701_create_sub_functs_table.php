@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('sub_functs', function (Blueprint $table) {
             $table->id();            
             $table->string('sub_funct');
+            $table->string('type');
+            $table->string('user_type');
             $table->foreignId('funct_id')->constrained()->onDelete('cascade');
-            $table->foreignId('duration_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('duration_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

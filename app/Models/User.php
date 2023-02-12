@@ -104,6 +104,9 @@ class User extends Authenticatable
     }
 
     public function targets(){
-        return $this->belongsToMany(Target::class, 'target_user');
+        return $this->belongsToMany(Target::class, 'target_user')
+        ->withPivot('target_output')
+        ->withPivot('alloted_budget')
+        ->withPivot('responsible');
     }
 }

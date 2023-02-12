@@ -11,6 +11,8 @@ class SubFunct extends Model
 
     protected $fillable = [
         'sub_funct',
+        'type',
+        'user_type',
         'duration_id',
         'funct_id'
     ];
