@@ -200,7 +200,7 @@ class StaffLivewire extends Component
             $divisor = 0;
             $qua = "";
             $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->selectedTarget->target_output;
+            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
             $standard = $this->selectedTarget->standards()->where('user_id', auth()->user()->id)->first();
             
             switch($this->quality) {
@@ -296,7 +296,7 @@ class StaffLivewire extends Component
             $divisor = 0;
             $qua = "";
             $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->selectedTarget->target_output;
+            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
             $standard = $this->selectedTarget->standards()->where('user_id', auth()->user()->id)->first();
             
             switch($this->quality) {

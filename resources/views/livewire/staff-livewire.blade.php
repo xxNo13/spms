@@ -99,11 +99,12 @@
                                     Submit
                                 </button>
                             @endif
-                
-                                {{-- <button type="button" class="btn btn-outline-info" data-bs-toggle="modal"
-                                    data-bs-target="#AssessISOModal" title="Save IPCR" wire:click="submit">
-                                    Assess
-                                </button> --}}
+                            @if (($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
+                                <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('assess')">
+                                    Submit
+                                </button>
+                            @endif
+                                
                         @endif
         
                         @if ($duration && $assess && $assess->approve_status == 1)
