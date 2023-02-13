@@ -21,14 +21,6 @@
                 <h4 class="card-title my-auto"></h4>
                 <div class="hstack gap-3">
                     <div class="form-group">
-                        <label for="filterP">Purpose</label>
-                        <select class="form-select" name="filterP" id="filterP" wire:model="filterP">
-                            <option value="" selected>None</option>
-                            <option value="review">Review</option>
-                            <option value="approval">Approval</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="filterA">Remarks</label>
                         <select class="form-select" name="filterA" id="filterA" wire:model="filterA">
                             <option value="" selected>None</option>
@@ -45,111 +37,168 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-lg text-center">
-                        <thead>
-                            <tr>
-                                <th>NAME</th>
-                                <th>EMAIL</th>
-                                <th>OFFICE</th>
-                                <th>TYPE</th>
-                                <th>PURPOSE</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($approvals->sortByDesc('updated_at') as $approval)
-                                @if ((Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->approve_id) &&
-                                    ($duration && $approval->duration_id == $duration->id))
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="true">To Review</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="approval-tab" data-bs-toggle="tab" href="#approval" role="tab" aria-controls="approval" aria-selected="false" tabindex="-1">To Approve</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade active show" id="review" role="tabpanel" aria-labelledby="review-tab">
+                        <div class="table-responsive">
+                            <table class="table table-lg text-center">
+                                <thead>
                                     <tr>
-                                        <td>{{ $approval->user->name }}</td>
-                                        <td>{{ $approval->user->email }}</td>
-                                        <td>
-                                            <div class="d-md-flex flex-column gap-3 justify-content-center">
-                                                @foreach ($approval->user->offices as $office)
-                                                    @if ($loop->last)
-                                                        {{ $office->office_abbr }}
-                                                        @break
+                                        <th>NAME</th>
+                                        <th>EMAIL</th>
+                                        <th>OFFICE</th>
+                                        <th>TYPE</th>
+                                        <th>PURPOSE</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($approvals->sortByDesc('updated_at') as $approval)
+                                        @if ((Auth::user()->id == $approval->review_id) &&
+                                            ($duration && $approval->duration_id == $duration->id))
+                                            <tr>
+                                                <td>{{ $approval->user->name }}</td>
+                                                <td>{{ $approval->user->email }}</td>
+                                                <td>
+                                                    <div class="d-md-flex flex-column gap-3 justify-content-center">
+                                                        @foreach ($approval->user->offices as $office)
+                                                            @if ($loop->last)
+                                                                {{ $office->office_abbr }}
+                                                                @break
+                                                            @endif
+                                                            {{ $office->office_abbr }} <br/> 
+                                                        @endforeach
+                                                    </div>
+                                                </td>
+                                                <td>{{ strtoupper($approval->type) }}
+                                                    @if ($approval->type != 'opcr')
+                                                        - {{ strtoupper($approval->user_type) }}
                                                     @endif
-                                                    {{ $office->office_abbr }} <br/> 
-                                                @endforeach
-                                            </div>
-                                        </td>
-                                        <td>{{ strtoupper($approval->type) }}
-                                            @if ($approval->type != 'opcr')
-                                                - {{ strtoupper($approval->user_type) }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (Auth::user()->id == $approval->review_id)
-                                                Reviewed
-                                            @elseif (Auth::user()->id == $approval->approve_id)
-                                                Approval
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (Auth::user()->id == $approval->review_id)
-                                                @if ($approval->review_status == 1)
-                                                    Approved
-                                                @elseif ($approval->review_status == 2)
-                                                    Declined
-                                                @else
-                                                    @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
-                                                        <div class="hstack gap-2 justify-content-center">
-                                                            <button type="button" class="btn icon btn-info"
-                                                                wire:click="approved({{ $approval->id }})">
-                                                                <i class="bi bi-check"></i>
-                                                            </button>
-                                                            <button type="button" class="btn icon btn-danger"
-                                                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                <i class="bi bi-x"></i>
-                                                            </button>
-                                                            <button type="button" class="btn icon btn-secondary"
-                                                                wire:click="viewed({{ $approval->user_id }}, '{{ $approval->type }}', '{{ 'for-approval' }}', '{{ $approval->user_type }}')">
-                                                                <i class="bi bi-eye"></i>
-                                                            </button>
-                                                        </div>
-                                                    @endif
-                                                @endif
-                                            @elseif (Auth::user()->id == $approval->approve_id)
-                                                @if ($approval->approve_status == 1)
-                                                    Approved
-                                                @elseif ($approval->approve_status == 2)
-                                                    Declined
-                                                @elseif ($approval->approve_status == 3)
-                                                    Declined by Reviewer
-                                                @else
-                                                    @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
-                                                        <div class="hstack gap-2 justify-content-center">
-                                                            @if ($approval->review_status == 1)
+                                                </td>
+                                                <td>
+                                                    Reviewed
+                                                </td>
+                                                <td>
+                                                    @if ($approval->review_status == 1)
+                                                        Approved
+                                                    @elseif ($approval->review_status == 2)
+                                                        Declined
+                                                    @else
+                                                        @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
+                                                            <div class="hstack gap-2 justify-content-center">
                                                                 <button type="button" class="btn icon btn-info"
-                                                                    wire:click="approved({{ $approval->id }})">
+                                                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
                                                                     <i class="bi bi-check"></i>
                                                                 </button>
                                                                 <button type="button" class="btn icon btn-danger"
                                                                     wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
                                                                     <i class="bi bi-x"></i>
                                                                 </button>
-                                                            @endif
-                                                            <button type="button" class="btn icon btn-secondary"
-                                                                wire:click="viewed({{ $approval->user_id }}, '{{ $approval->type }}', '{{ 'for-approval' }}', '{{ $approval->user_type }}')">
-                                                                <i class="bi bi-eye"></i>
-                                                            </button>
-                                                        </div>
+                                                                <button type="button" class="btn icon btn-secondary"
+                                                                    wire:click="viewed({{ $approval->user_id }}, '{{ $approval->type }}', '{{ 'for-approval' }}', '{{ $approval->user_type }}')">
+                                                                    <i class="bi bi-eye"></i>
+                                                                </button>
+                                                            </div>
+                                                        @endif
                                                     @endif
-                                                @endif
-                                            @endif
-                                        </td>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        <tr>
+                                            <td colspan="6">No record available!</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+                        <div class="table-responsive">
+                            <table class="table table-lg text-center">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>EMAIL</th>
+                                        <th>OFFICE</th>
+                                        <th>TYPE</th>
+                                        <th>PURPOSE</th>
+                                        <th>ACTION</th>
                                     </tr>
-                                @endif
-                            @empty
-                                <tr>
-                                    <td colspan="6">No record available!</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>                
+                                </thead>
+                                <tbody>
+                                    @forelse ($approvals->sortByDesc('updated_at') as $approval)
+                                        @if ((Auth::user()->id == $approval->approve_id) &&
+                                            ($duration && $approval->duration_id == $duration->id))
+                                            <tr>
+                                                <td>{{ $approval->user->name }}</td>
+                                                <td>{{ $approval->user->email }}</td>
+                                                <td>
+                                                    <div class="d-md-flex flex-column gap-3 justify-content-center">
+                                                        @foreach ($approval->user->offices as $office)
+                                                            @if ($loop->last)
+                                                                {{ $office->office_abbr }}
+                                                                @break
+                                                            @endif
+                                                            {{ $office->office_abbr }} <br/> 
+                                                        @endforeach
+                                                    </div>
+                                                </td>
+                                                <td>{{ strtoupper($approval->type) }}
+                                                    @if ($approval->type != 'opcr')
+                                                        - {{ strtoupper($approval->user_type) }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    Approval
+                                                </td>
+                                                <td>
+                                                    @if ($approval->approve_status == 1)
+                                                        Approved
+                                                    @elseif ($approval->approve_status == 2)
+                                                        Declined
+                                                    @elseif ($approval->approve_status == 3)
+                                                        Declined by Reviewer
+                                                    @else
+                                                        @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
+                                                            <div class="hstack gap-2 justify-content-center">
+                                                                @if ($approval->review_status == 1)
+                                                                    <button type="button" class="btn icon btn-info"
+                                                                        wire:click="approved({{ $approval->id }}, 'Approved')">
+                                                                        <i class="bi bi-check"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn icon btn-danger"
+                                                                        wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                        <i class="bi bi-x"></i>
+                                                                    </button>
+                                                                @endif
+                                                                <button type="button" class="btn icon btn-secondary"
+                                                                    wire:click="viewed({{ $approval->user_id }}, '{{ $approval->type }}', '{{ 'for-approval' }}', '{{ $approval->user_type }}')">
+                                                                    <i class="bi bi-eye"></i>
+                                                                </button>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        <tr>
+                                            <td colspan="6">No record available!</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

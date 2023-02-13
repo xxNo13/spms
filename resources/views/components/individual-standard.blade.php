@@ -50,11 +50,58 @@
                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated w-{{ $progress }}" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
-            @if ($approval->review_id == auth()->user()->id || $approval->review_status == 1)
+            @if ($approval->review_id == auth()->user()->id && $approval->approve_id == auth()->user()->id)
+                @if ($approval->review_status == 1 && $approval->approve_status != 1)
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                @elseif ($approval->review_status != 1)
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                @endif
+            @elseif ($approval->review_id == auth()->user()->id && $approval->review_status != 1)
                 <div class="hstack mb-2">
                     <div class="ms-auto hstack gap-3">
                         <button type="button" class="btn icon btn-info"
-                            wire:click="approved({{ $approval->id }})">
+                            wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                            <i class="bi bi-check"></i>
+                            Approved
+                        </button>
+                        <button type="button" class="btn icon btn-danger"
+                            wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                            <i class="bi bi-x"></i>
+                            Decline
+                        </button>
+                    </div>
+                </div>
+            @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
+                <div class="hstack mb-2">
+                    <div class="ms-auto hstack gap-3">
+                        <button type="button" class="btn icon btn-info"
+                            wire:click="approved({{ $approval->id }}, 'Approved')">
                             <i class="bi bi-check"></i>
                             Approved
                         </button>
@@ -94,8 +141,7 @@
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
-                                @dd($sub_percentage)
+                            @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $sub_percentage->value }}
                             @endif
                         </h5>
@@ -108,7 +154,7 @@
                                         <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                                         <p class="text-subtitle text-muted"></p>
                                     </div>
-                                    @forelse ($output->suboutputs as $suboutput)
+                                    @forelse ($user->suboutputs()->where('output_id', $output->id)->get() as $suboutput)
                                         <div class="card-body">
                                             <h6>{{ $suboutput->suboutput }}</h6>
                                         </div>
@@ -116,7 +162,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                                 <div class="d-sm-flex">
-                                                    @foreach ($suboutput->targets as $target)
+                                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -137,7 +183,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach ($suboutput->targets as $target)
+                                                @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -228,7 +274,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
                                                 <div class="d-sm-flex">
-                                                    @foreach ($output->targets as $target)
+                                                    @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -249,7 +295,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach ($output->targets as $target)
+                                                @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -350,7 +396,7 @@
                             <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                             <p class="text-subtitle text-muted"></p>
                         </div>
-                        @forelse ($output->suboutputs as $suboutput)
+                        @forelse ($user->suboutputs()->where('output_id', $output->id)->get() as $suboutput)
                             <div class="card-body">
                                 <h6>{{ $suboutput->suboutput }}</h6>
                             </div>
@@ -358,7 +404,7 @@
                                 <div class="accordion accordion-flush"
                                     id="{{ 'output' }}{{ $output->id }}">
                                     <div class="d-sm-flex">
-                                        @foreach ($suboutput->targets as $target)
+                                        @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
                                             <div wire:ignore.self
                                                 class="accordion-button collapsed gap-2"
                                                 type="button" data-bs-toggle="collapse"
@@ -379,7 +425,7 @@
                                         @endforeach
                                     </div>
 
-                                    @foreach ($suboutput->targets as $target)
+                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
                                         <div wire:ignore.self
                                             id="{{ 'target' }}{{ $target->id }}"
                                             class="accordion-collapse collapse"
@@ -470,7 +516,7 @@
                                 <div class="accordion accordion-flush"
                                     id="{{ 'output' }}{{ $output->id }}">
                                     <div class="d-sm-flex">
-                                        @foreach ($output->targets as $target)
+                                        @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
                                             <div wire:ignore.self
                                                 class="accordion-button collapsed gap-2"
                                                 type="button" data-bs-toggle="collapse"
@@ -491,7 +537,7 @@
                                         @endforeach
                                     </div>
 
-                                    @foreach ($output->targets as $target)
+                                    @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
                                         <div wire:ignore.self
                                             id="{{ 'target' }}{{ $target->id }}"
                                             class="accordion-collapse collapse"

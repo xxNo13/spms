@@ -36,7 +36,7 @@
             position: "right",
             backgroundColor: event.detail.color,
         }).showToast();
-    })
+    });
 
     window.addEventListener('close-modal', event => {
         $('#AddIPCROSTModal').modal('hide');

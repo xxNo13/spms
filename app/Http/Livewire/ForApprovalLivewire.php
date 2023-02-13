@@ -29,7 +29,6 @@ class ForApprovalLivewire extends Component
     public $approving;
     public $percentage;
     public $selected;
-    public $filterP;
     public $filterA;
 
     protected  $queryString = ['search'];
@@ -186,38 +185,18 @@ class ForApprovalLivewire extends Component
                 }
             }
             
-
-            
-            if (isset($this->filterP) && $this->filterP == 'review') {
-                if (isset($this->filterA) && $this->filterA == 'noremark') {
-                    $approvals->where('review_id', auth()->user()->id)->where('review_status', null);
-                } elseif (isset($this->filterA) && $this->filterA == 'remark') {
-                    $approvals->where('review_id', auth()->user()->id)->where('review_status', '!=', null);
-                } else {
-                    $approvals->where('review_id', auth()->user()->id);
-                }
-            } elseif (isset($this->filterP) && $this->filterP == 'approval') {
-                if (isset($this->filterA) && $this->filterA == 'noremark') {
-                    $approvals->where('approve_id', auth()->user()->id)->where('approve_status', null);
-                } elseif (isset($this->filterA) && $this->filterA == 'remark') {
-                    $approvals->where('approve_id', auth()->user()->id)->where('approve_status', '!=', null);
-                } else {
-                    $approvals->where('approve_id', auth()->user()->id);
-                }
-            } else {
-                if (isset($this->filterA) && $this->filterA == 'noremark') {
-                    $approvals->where(function ($query){
-                        $query->where('review_id', auth()->user()->id)->where('review_status', null);
-                    })->orwhere(function ($query){
-                        $query->where('approve_id', auth()->user()->id)->where('approve_status', null);
-                    });
-                } elseif (isset($this->filterA) && $this->filterA == 'remark') {
-                    $approvals->where(function ($query){
-                        $query->where('review_id', auth()->user()->id)->where('review_status', '!=', null);
-                    })->orwhere(function ($query){
-                        $query->where('approve_id', auth()->user()->id)->where('approve_status', '!=', null);
-                    });
-                }
+            if (isset($this->filterA) && $this->filterA == 'noremark') {
+                $approvals->where(function ($query){
+                    $query->where('review_id', auth()->user()->id)->where('review_status', null);
+                })->orwhere(function ($query){
+                    $query->where('approve_id', auth()->user()->id)->where('approve_status', null);
+                });
+            } elseif (isset($this->filterA) && $this->filterA == 'remark') {
+                $approvals->where(function ($query){
+                    $query->where('review_id', auth()->user()->id)->where('review_status', '!=', null);
+                })->orwhere(function ($query){
+                    $query->where('approve_id', auth()->user()->id)->where('approve_status', '!=', null);
+                });
             }
 
             if ($this->duration) {
@@ -237,30 +216,28 @@ class ForApprovalLivewire extends Component
         $this->validateOnly($property);
     }
         
-    public function approved($id){
+    public function approved($id, $type){
         $approval = Approval::find($id);
 
-        if ($approval->review_id == Auth::user()->id){
-            Approval::where('id', $id)->update([
-                'review_status' => 1,
-                'review_date' => Carbon::now(),
-            ]);
-            $head = User::where('id', $approval->review_id)->first();
-            
-            $status = 'Reviewed';
-        } elseif ($approval->approve_id == Auth::user()->id){
+        if ($approval->approve_id == Auth::user()->id && $type == 'Approved'){
             Approval::where('id', $id)->update([
                 'approve_status' => 1,
                 'approve_date' => Carbon::now(),
             ]);
             $head = User::where('id', $approval->approve_id)->first();
 
-            $status = 'Approved';
+        } elseif ($approval->review_id == Auth::user()->id && $type == 'Reviewed'){
+            Approval::where('id', $id)->update([
+                'review_status' => 1,
+                'review_date' => Carbon::now(),
+            ]);
+            $head = User::where('id', $approval->review_id)->first();
+            
         }
 
         $user = User::where('id', $approval->user_id)->first();
 
-        $user->notify(new ApprovalNotification($approval, $head, $status));
+        $user->notify(new ApprovalNotification($approval, $head, $type));
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Approved Successfully",

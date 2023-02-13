@@ -59,9 +59,11 @@
                                         <select placeholder="Sub Function" class="form-control"
                                             wire:model="sub_funct_id">
                                             <option value="">Select a Sub Function</option>
-                                            @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
-                                                <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
-                                            @endforeach
+                                            @if ($duration)
+                                                @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
+                                                    <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                     <label>Output: </label>
@@ -92,14 +94,16 @@
                                                         break;
                                                 }
                                             @endphp
-                                            @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                @forelse ($output->targets as $target)
-                                                @empty
-                                                    <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
-                                                        {{ $output->output }}
-                                                    </option>
-                                                @endforelse
-                                            @endforeach
+                                            @if ($duration)
+                                                @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                    @forelse ($output->targets as $target)
+                                                    @empty
+                                                        <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                            {{ $output->output }}
+                                                        </option>
+                                                    @endforelse
+                                                @endforeach
+                                            @endif
                                         </select>
                                         @error('output_id')
                                             <p class="text-danger">{{ $message }}</p>
@@ -133,20 +137,22 @@
                                                         break;
                                                 }
                                             @endphp
-                                            @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                @forelse ($output->suboutputs as $suboutput)
-                                                    <option value="suboutput, {{ $suboutput->id }}">
-                                                        {{ $suboutput->output->code }} {{ $number++ }}
-                                                        {{ $suboutput->output->output }} -
-                                                        {{ $suboutput->suboutput }}
-                                                    </option>
-                                                @empty
-                                                        <option value="output, {{ $output->id }}">
-                                                            {{ $output->code }} {{ $number++ }}
-                                                            {{ $output->output }}
+                                            @if ($duration)
+                                                @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                    @forelse ($output->suboutputs as $suboutput)
+                                                        <option value="suboutput, {{ $suboutput->id }}">
+                                                            {{ $suboutput->output->code }} {{ $number++ }}
+                                                            {{ $suboutput->output->output }} -
+                                                            {{ $suboutput->suboutput }}
                                                         </option>
-                                                @endforelse
-                                            @endforeach
+                                                    @empty
+                                                            <option value="output, {{ $output->id }}">
+                                                                {{ $output->code }} {{ $number++ }}
+                                                                {{ $output->output }}
+                                                            </option>
+                                                    @endforelse
+                                                @endforeach
+                                            @endif
                                         </select>
                                         @error('subput')
                                             <p class="text-danger">{{ $message }}</p>
@@ -248,13 +254,6 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (false)
-                                        <div class="form-group hstack gap-2">
-                                            <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
-                                                name="required" wire:model="required">
-                                            <label>Required to all Faculty</label>
-                                        </div>
-                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -302,8 +301,8 @@
         </div>
     </div>
 
-    @if (isset($type) && isset($selectedTarget))
-        {{-- Add Rating Modal --}}
+    @if (isset($type) && isset($selectedTarget) && isset($targetOutput))
+    {{-- Add Rating Modal --}}
         <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddRatingModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -314,11 +313,11 @@
 
                     <form wire:submit.prevent="saveRating('{{ 'add' }}')">
                         <div class="modal-body">
-                            @if (isset($selectedTarget->target_output))
-                                <label>Output Finished (Target Output is "{{ $selectedTarget->target_output }}"): </label>
+                            @if (isset($targetOutput))
+                                <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished" max="{{ $selectedTarget->target_output }}">
+                                        wire:model="output_finished" max="{{$targetOutput}}">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
@@ -328,20 +327,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">
                                     <option value="">Efficiency</option>
-                                    @if (isset($selectedTarget->standard->eff_1)) 
-                                        <option value="1">1 - {{ $selectedTarget->standard->eff_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_2)) 
-                                        <option value="2">2 - {{ $selectedTarget->standard->eff_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_3)) 
-                                        <option value="3">3 - {{ $selectedTarget->standard->eff_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_4))
-                                        <option value="4">4 - {{ $selectedTarget->standard->eff_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_5))
-                                        <option value="5">5 - {{ $selectedTarget->standard->eff_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->eff_1)) 
+                                            <option value="1">1 - {{ $standard->eff_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_2)) 
+                                            <option value="2">2 - {{ $standard->eff_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_3)) 
+                                            <option value="3">3 - {{ $standard->eff_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_4))
+                                            <option value="4">4 - {{ $standard->eff_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_5))
+                                            <option value="5">5 - {{ $standard->eff_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('efficiency')
@@ -352,20 +353,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="quality">
                                     <option value="">Quality</option>
-                                    @if (isset($selectedTarget->standard->qua_1)) 
-                                        <option value="1">1 - {{ $selectedTarget->standard->qua_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_2))
-                                        <option value="2">2 - {{ $selectedTarget->standard->qua_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_3))
-                                        <option value="3">3 - {{ $selectedTarget->standard->qua_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_4)) 
-                                        <option value="4">4 - {{ $selectedTarget->standard->qua_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_5)) 
-                                        <option value="5">5 - {{ $selectedTarget->standard->qua_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->qua_1)) 
+                                            <option value="1">1 - {{ $standard->qua_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_2)) 
+                                            <option value="2">2 - {{ $standard->qua_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_3)) 
+                                            <option value="3">3 - {{ $standard->qua_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_4))
+                                            <option value="4">4 - {{ $standard->qua_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_5))
+                                            <option value="5">5 - {{ $standard->qua_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('quality')
@@ -376,20 +379,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="timeliness">
                                     <option value="">Timeliness</option>
-                                    @if (isset($selectedTarget->standard->time_1))
-                                        <option value="1">1 - {{ $selectedTarget->standard->time_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_2)) 
-                                        <option value="2">2 - {{ $selectedTarget->standard->time_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_3)) 
-                                        <option value="3">3 - {{ $selectedTarget->standard->time_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_4)) 
-                                        <option value="4">4 - {{ $selectedTarget->standard->time_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_4)) 
-                                        <option value="5">5 - {{ $selectedTarget->standard->time_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->time_1)) 
+                                            <option value="1">1 - {{ $standard->time_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_2)) 
+                                            <option value="2">2 - {{ $standard->time_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_3)) 
+                                            <option value="3">3 - {{ $standard->time_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_4))
+                                            <option value="4">4 - {{ $standard->time_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_5))
+                                            <option value="5">5 - {{ $standard->time_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('timeliness')
@@ -423,11 +428,11 @@
 
                     <form wire:submit.prevent="saveRating('{{ 'edit' }}')">
                         <div class="modal-body">
-                            @if (isset($selectedTarget->target_output))
-                                <label>Output Finished (Target Output is "{{ $selectedTarget->target_output }}"): </label>
+                            @if (isset($targetOutput))
+                                <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished" max="{{ $selectedTarget->target_output }}">
+                                        wire:model="output_finished" max="{{$targetOutput}}">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
@@ -437,20 +442,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">
                                     <option value="">Efficiency</option>
-                                    @if (isset($selectedTarget->standard->eff_1)) 
-                                        <option value="1">1 - {{ $selectedTarget->standard->eff_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_2)) 
-                                        <option value="2">2 - {{ $selectedTarget->standard->eff_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_3)) 
-                                        <option value="3">3 - {{ $selectedTarget->standard->eff_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_4))
-                                        <option value="4">4 - {{ $selectedTarget->standard->eff_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->eff_5))
-                                        <option value="5">5 - {{ $selectedTarget->standard->eff_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->eff_1)) 
+                                            <option value="1">1 - {{ $standard->eff_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_2)) 
+                                            <option value="2">2 - {{ $standard->eff_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_3)) 
+                                            <option value="3">3 - {{ $standard->eff_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_4))
+                                            <option value="4">4 - {{ $standard->eff_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->eff_5))
+                                            <option value="5">5 - {{ $standard->eff_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('efficiency')
@@ -461,20 +468,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="quality">
                                     <option value="">Quality</option>
-                                    @if (isset($selectedTarget->standard->qua_1)) 
-                                        <option value="1">1 - {{ $selectedTarget->standard->qua_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_2))
-                                        <option value="2">2 - {{ $selectedTarget->standard->qua_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_3))
-                                        <option value="3">3 - {{ $selectedTarget->standard->qua_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_4)) 
-                                        <option value="4">4 - {{ $selectedTarget->standard->qua_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->qua_5)) 
-                                        <option value="5">5 - {{ $selectedTarget->standard->qua_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->qua_1)) 
+                                            <option value="1">1 - {{ $standard->qua_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_2)) 
+                                            <option value="2">2 - {{ $standard->qua_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_3)) 
+                                            <option value="3">3 - {{ $standard->qua_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_4))
+                                            <option value="4">4 - {{ $standard->qua_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->qua_5))
+                                            <option value="5">5 - {{ $standard->qua_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('quality')
@@ -485,20 +494,22 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="timeliness">
                                     <option value="">Timeliness</option>
-                                    @if (isset($selectedTarget->standard->time_1))
-                                        <option value="1">1 - {{ $selectedTarget->standard->time_1 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_2)) 
-                                        <option value="2">2 - {{ $selectedTarget->standard->time_2 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_3)) 
-                                        <option value="3">3 - {{ $selectedTarget->standard->time_3 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_4)) 
-                                        <option value="4">4 - {{ $selectedTarget->standard->time_4 }}</option>
-                                    @endif
-                                    @if (isset($selectedTarget->standard->time_4)) 
-                                        <option value="5">5 - {{ $selectedTarget->standard->time_5 }}</option>
+                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                        @if (!empty($standard->time_1)) 
+                                            <option value="1">1 - {{ $standard->time_1 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_2)) 
+                                            <option value="2">2 - {{ $standard->time_2 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_3)) 
+                                            <option value="3">3 - {{ $standard->time_3 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_4))
+                                            <option value="4">4 - {{ $standard->time_4 }}</option>
+                                        @endif
+                                        @if (!empty($standard->time_5))
+                                            <option value="5">5 - {{ $standard->time_5 }}</option>
+                                        @endif
                                     @endif
                                 </select>
                                 @error('timeliness')
@@ -554,7 +565,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">5:</h5>
                                 <select type="text" class="form-control" wire:model="eff_5">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($effs as $eff)
                                         <option value="{{ $eff }}">{{ $eff }}</option>
                                     @endforeach
@@ -564,7 +575,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">5:</h5>
                                 <select type="text" class="form-control" wire:model="qua_5">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($quas as $qua)
                                         <option value="{{ $qua }}">{{ $qua }}</option>
                                     @endforeach
@@ -574,7 +585,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">5:</h5>
                                 <select type="text" class="form-control" wire:model="time_5">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($times as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
@@ -585,7 +596,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">4:</h5>
                                 <select type="text" class="form-control" wire:model="eff_4">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($effs as $eff)
                                         <option value="{{ $eff }}">{{ $eff }}</option>
                                     @endforeach
@@ -595,7 +606,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">4:</h5>
                                 <select type="text" class="form-control" wire:model="qua_4">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($quas as $qua)
                                         <option value="{{ $qua }}">{{ $qua }}</option>
                                     @endforeach
@@ -605,7 +616,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">4:</h5>
                                 <select type="text" class="form-control" wire:model="time_4">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($times as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
@@ -616,7 +627,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">3:</h5>
                                 <select type="text" class="form-control" wire:model="eff_3">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($effs as $eff)
                                         <option value="{{ $eff }}">{{ $eff }}</option>
                                     @endforeach
@@ -626,7 +637,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">3:</h5>
                                 <select type="text" class="form-control" wire:model="qua_3">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($quas as $qua)
                                         <option value="{{ $qua }}">{{ $qua }}</option>
                                     @endforeach
@@ -636,7 +647,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">3:</h5>
                                 <select type="text" class="form-control" wire:model="time_3">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($times as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
@@ -647,7 +658,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">2:</h5>
                                 <select type="text" class="form-control" wire:model="eff_2">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($effs as $eff)
                                         <option value="{{ $eff }}">{{ $eff }}</option>
                                     @endforeach
@@ -657,7 +668,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">2:</h5>
                                 <select type="text" class="form-control" wire:model="qua_2">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($quas as $qua)
                                         <option value="{{ $qua }}">{{ $qua }}</option>
                                     @endforeach
@@ -667,7 +678,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">2:</h5>
                                 <select type="text" class="form-control" wire:model="time_2">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($times as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
@@ -678,7 +689,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">1:</h5>
                                 <select type="text" class="form-control" wire:model="eff_1">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($effs as $eff)
                                         <option value="{{ $eff }}">{{ $eff }}</option>
                                     @endforeach
@@ -688,7 +699,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">1:</h5>
                                 <select type="text" class="form-control" wire:model="qua_1">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($quas as $qua)
                                         <option value="{{ $qua }}">{{ $qua }}</option>
                                     @endforeach
@@ -698,7 +709,7 @@
                             <div class="hstack gap-4 w-100">
                                 <h5 class="my-auto">1:</h5>
                                 <select type="text" class="form-control" wire:model="time_1">
-                                    <option value="null"></option>
+                                    <option value=""></option>
                                     @foreach ($times as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
@@ -1588,6 +1599,9 @@
                 </div>
                 <form wire:submit.prevent="updatePercentage">
                     <div class="modal-body">
+                        @error('sub_percent')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                         <label>Core Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Core Function" class="form-control"
@@ -2218,7 +2232,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Add Target Output</h4>
                 </div>
-                <form wire:submit.prevent="saveTargetOutput">
+                <form wire:submit.prevent="saveIpcr">
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">

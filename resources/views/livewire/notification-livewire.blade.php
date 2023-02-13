@@ -168,13 +168,13 @@
                         } elseif ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'faculty') {
                             $url = 'ipcr/faculty';
                         } elseif ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'staff') {
-                            $url = 'standard/staff';
+                            $url = 'ipcr/standard/staff';
                         } elseif ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'faculty') {
-                            $url = 'standard/faculty';
+                            $url = 'ipcr/standard/faculty';
                         } elseif ($notification->data['type'] == 'opcr' && $notification->data['userType'] == 'office') {
                             $url = 'opcr';
                         } elseif ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'office') {
-                            $url = 'standard/opcr';
+                            $url = 'opcr/standard';
                         }
                     }
                 @endphp

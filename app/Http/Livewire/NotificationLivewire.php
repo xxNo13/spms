@@ -21,9 +21,9 @@ class NotificationLivewire extends Component
                 $notification->markAsRead();
             } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'faculty')) {
                 $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/standard/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'staff')) {
+            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'staff')) {
                 $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/standard/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'faculty')) {
+            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'faculty')) {
                 $notification->markAsRead();
             } elseif (str_replace(url('/'), '', url()->current()) == '/opcr' && isset($notification->data['type']) && ($notification->data['type'] == 'opcr' && $notification->data['userType'] == 'office')) {
                 $notification->markAsRead();
