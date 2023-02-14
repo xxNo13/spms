@@ -144,7 +144,7 @@
                                                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                             <div class="dropdown-menu">
                                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$output->id}})">Delete</a>
+                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
                                                             </div>
                                                         @endif
                                                     </span>

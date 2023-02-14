@@ -9,7 +9,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a
                                 href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">IPCR - Staff</li>
+                        <li class="breadcrumb-item active" aria-current="page">IPCR - Faculty</li>
                     </ol>
                 </nav>
             </div>
@@ -27,7 +27,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                    {{ $review_user['message'] }}
+                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
                     </div>
                 </div>
             @endif
@@ -38,7 +38,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                    {{ $approve_user['message'] }}
+                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
                     </div>
                 </div>
             @endif
@@ -76,21 +76,8 @@
                     <div class="ms-auto hstack gap-3">
 
                         @if ($duration && $duration->end_date >= date('Y-m-d'))
-                            @if (!$percentage)
-                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#AddPercentageModal" title="Add Percentage" wire:click="percentage">
-                                    Add Percentage
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#EditPercentageModal" title="Edit Percentage" wire:click="$emit('percentage', 'edit')">
-                                    Edit Percentage
-                                </button>
-                            @endif
-
                             @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))  
-                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#AddIPCROSTModal" title="Add Output/Suboutput/Target">
+                                <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">
                                     Add OST
                                 </button>
                             @endif
@@ -104,7 +91,6 @@
                                     Submit
                                 </button>
                             @endif
-                                
                         @endif
         
                         @if ($duration && $assess && $assess->approve_status == 1)
@@ -114,34 +100,20 @@
                         @endif
                     </div>
                 </div>
-                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
-                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
-                                </div>
-                            @endif
                             {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $sub_percentage->value }} %
                             @endif
                         </h5>
 
-                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title">
-                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
-                                            </div>
-                                        @endif
                                         {{ $output->code }} {{ $number++ }} - {{ $output->output }}
                                     </h4>
                                     <p class="text-subtitle text-muted"></p>
@@ -151,13 +123,6 @@
                                     
                                     <div class="card-body">
                                         <h6>
-                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
-                                                </div>
-                                            @endif
                                             {{ $suboutput->suboutput }}
                                         </h6>
                                     </div>
@@ -166,15 +131,6 @@
                                             id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                             <div class="d-sm-flex">
                                                 @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <span class="my-auto">
-                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                            </div>
-                                                        @endif
-                                                    </span>
                                                     <div wire:ignore.self
                                                         class="accordion-button collapsed gap-2"
                                                         type="button" data-bs-toggle="collapse"
@@ -302,7 +258,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating">
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -317,7 +273,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -338,15 +294,6 @@
                                             id="{{ 'output' }}{{ $output->id }}">
                                             <div class="d-sm-flex">
                                                 @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <span class="my-auto">
-                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                            </div>
-                                                        @endif
-                                                    </span>
                                                     <div wire:ignore.self
                                                         class="accordion-button collapsed gap-2"
                                                         type="button" data-bs-toggle="collapse"
@@ -474,7 +421,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating">
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -489,7 +436,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -511,18 +458,11 @@
                 @endforeach
                 <div>
                     @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)
-                                ->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                                ->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">
-                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
-                                        </div>
-                                    @endif
                                     {{ $output->code }} {{ $number++ }} - {{ $output->output }}
                                 </h4>
                                 <p class="text-subtitle text-muted"></p>
@@ -532,13 +472,6 @@
                                 
                                 <div class="card-body">
                                     <h6>
-                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
-                                            </div>
-                                        @endif
                                         {{ $suboutput->suboutput }}
                                     </h6>
                                 </div>
@@ -547,15 +480,6 @@
                                         id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                         <div class="d-sm-flex">
                                             @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
                                                 <div wire:ignore.self
                                                     class="accordion-button collapsed gap-2"
                                                     type="button" data-bs-toggle="collapse"
@@ -683,7 +607,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -698,7 +622,7 @@
                                                                                 data-bs-toggle="modal"
                                                                                 data-bs-target="#AddRatingModal"
                                                                                 wire:click="rating({{ $target->id }})"
-                                                                                title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                title="Add Rating">
                                                                                 <i class="bi bi-plus"></i>
                                                                             </button>
                                                                         @endif
@@ -719,15 +643,6 @@
                                         id="{{ 'output' }}{{ $output->id }}">
                                         <div class="d-sm-flex">
                                             @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditIPCROSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
                                                 <div wire:ignore.self
                                                     class="accordion-button collapsed gap-2"
                                                     type="button" data-bs-toggle="collapse"
@@ -855,7 +770,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -870,7 +785,7 @@
                                                                                 data-bs-toggle="modal"
                                                                                 data-bs-target="#AddRatingModal"
                                                                                 wire:click="rating({{ $target->id }})"
-                                                                                title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                title="Add Rating">
                                                                                 <i class="bi bi-plus"></i>
                                                                             </button>
                                                                         @endif
@@ -894,12 +809,5 @@
     </section>
 
     {{ $functs->links('components.pagination') }}
-
-
-    @php
-        $subFuncts = auth()->user()->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->get();
-        $currentPage = $functs->currentPage();
-        $type = "IPCR";
-    @endphp
-    <x-modals :selected="$selected" :targetOutput="$targetOutput" :type="$type" :selectedTarget="$selectedTarget" :currentPage="$currentPage" :duration="$duration" :subFuncts="$subFuncts" />
+    <x-modals :selectedTarget="$selectedTarget" :targetOutput="$targetOutput" />
 </div>

@@ -5,6 +5,7 @@ use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\TtmaLivewire;
 use App\Http\Livewire\StaffLivewire;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\FacultyLivewire;
 use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
@@ -42,6 +43,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {
         Route::get('/staff', StaffLivewire::class)->name('staff');
+        Route::get('/faculty', FacultyLivewire::class)->name('faculty');
         Route::get('/standard/staff', StandardStaffLivewire::class)->name('standard.staff');
         Route::get('/listing/faculty', ListingFacultyLivewire::class)->name('listing.faculty');
         Route::get('/standard/faculty', ListingStandardFacultyLivewire::class)->name('standard.faculty');

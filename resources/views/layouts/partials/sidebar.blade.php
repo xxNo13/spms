@@ -50,6 +50,7 @@
     
     
     <x-maz-sidebar-item alias="ipcr" name="IPCR" icon="bi bi-clipboard2-data-fill">
+        <x-maz-sidebar-sub-item name="Faculty" :link="route('ipcr.faculty')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Staff" :link="route('ipcr.staff')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Standard for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>

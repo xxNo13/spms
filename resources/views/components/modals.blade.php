@@ -285,15 +285,6 @@
                                             <label>Required to all Faculty</label>
                                         </div>
                                     @endif
-                                @elseif ($selected == 'target_output')
-                                    <label>Target Output: </label>
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Target Output" class="form-control"
-                                            name="target_output" wire:model="target_output">
-                                        @error('target_output')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -341,8 +332,8 @@
         </div>
     </div>
 
-    @if (isset($type) && isset($selectedTarget) && isset($targetOutput))
-    {{-- Add Rating Modal --}}
+    @if (isset($selectedTarget) && isset($targetOutput))
+        {{-- Add Rating Modal --}}
         <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddRatingModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -367,7 +358,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">
                                     <option value="">Efficiency</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->eff_1)) 
                                             <option value="1">1 - {{ $standard->eff_1 }}</option>
                                         @endif
@@ -393,7 +384,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="quality">
                                     <option value="">Quality</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->qua_1)) 
                                             <option value="1">1 - {{ $standard->qua_1 }}</option>
                                         @endif
@@ -419,7 +410,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="timeliness">
                                     <option value="">Timeliness</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->time_1)) 
                                             <option value="1">1 - {{ $standard->time_1 }}</option>
                                         @endif
@@ -482,7 +473,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">
                                     <option value="">Efficiency</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->eff_1)) 
                                             <option value="1">1 - {{ $standard->eff_1 }}</option>
                                         @endif
@@ -508,7 +499,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="quality">
                                     <option value="">Quality</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->qua_1)) 
                                             <option value="1">1 - {{ $standard->qua_1 }}</option>
                                         @endif
@@ -534,7 +525,7 @@
                             <div class="form-group">
                                 <select class="form-control" wire:model="timeliness">
                                     <option value="">Timeliness</option>
-                                    @if ($standard = $selectedTarget->standards()->where('user_id', auth()->user()->id)->first())
+                                    @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->time_1)) 
                                             <option value="1">1 - {{ $standard->time_1 }}</option>
                                         @endif
@@ -2441,6 +2432,40 @@
                         <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Target Output Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditTargetOutputModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Edit Target Output</h4>
+                </div>
+                <form wire:submit.prevent="updateIpcr">
+                    <div class="modal-body">
+                        <label>Target Output: </label>
+                        <div class="form-group">
+                            <input type="text" placeholder="Target Output" class="form-control"
+                            wire:model="target_output">
+                            @error('target_output')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Update</span>
                         </button>
                     </div>
                 </form>

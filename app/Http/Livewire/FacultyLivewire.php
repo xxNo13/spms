@@ -5,20 +5,17 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\Funct;
 use App\Models\Office;
-use App\Models\Output;
 use App\Models\Rating;
 use App\Models\Target;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
-use App\Models\SubFunct;
-use App\Models\Suboutput;
 use App\Models\Percentage;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
 use App\Notifications\ApprovalNotification;
 
-class StaffLivewire extends Component
+class FacultyLivewire extends Component
 {
     use WithPagination;
 
@@ -29,17 +26,6 @@ class StaffLivewire extends Component
     public $review_user;
     public $approve_user;
 
-    public $percent = [];
-    public $sub_percent = [];
-
-    public $funct_id;
-    public $sub_funct;
-    public $sub_funct_id;
-    public $output;
-    public $output_id;
-    public $suboutput;
-    public $subput;
-    public $target;
     public $target_id;
     public $target_output;
 
@@ -58,46 +44,28 @@ class StaffLivewire extends Component
 
     public $dummy;
 
+    public $add = false;
+    public $targetsSelected = [];
 
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
-        'percent.core' => ['required_if:selected,percent'],
-        'percent.strategic' => ['required_if:selected,percent'],
-        'percent.support' => ['required_if:selected,percent'],
-
-        'sub_funct' => ['required_if:selected,sub_funct'],
-        'output' => ['required_if:selected,output'],
-        'output_id' => ['nullable', 'required_if:selected,output_id'],
-        'suboutput' => ['required_if:selected,suboutput'],
-        'subput' => ['nullable', 'required_if:selected,target_id'],
-        'target' => ['required_if:selected,target'],
-        'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
-
         'output_finished' => ['required_if:selected,rating'],
         'efficiency' => ['required_without_all:quality,timeliness,dummy'],
         'quality' => ['required_without_all:efficiency,timeliness,dummy'],
         'timeliness' => ['required_without_all:efficiency,quality,dummy'],
+        
+        'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
     ];
 
     protected $messages = [
-        'percent.core.required_if' => 'Core Percentage cannot be null',
-        'percent.strategic.required_if' => 'Strategic Percentage cannot be null',
-        'percent.support.required_if' => 'Support Percentage cannot be null',
-
-        'sub_funct.required_if' => 'Sub Function cannot be null',
-        'output.required_if' => 'Output cannot be null',
-        'output_id.required_if' => 'Output cannot be null',
-        'suboutput.required_if' => 'Suboutput cannot be null',
-        'subput.required_if' => 'Suboutput/Output cannot be null',
-        'target.required_if' => 'Target cannot be null',
-        'target_output.required_if' => 'Target Output cannot be null',
-        'target_output.numeric' => 'Target Output should be a number.',
-
         'output_finished.required_if' => 'Output Finished cannot be null.',
         'efficiency.required_without_all' => 'Efficiency cannot be null.',
         'quality.required_without_all' => 'Quality cannot be null.',
         'timeliness.required_without_all' => 'Timeliness cannot be null.',
+        
+        'target_output.required_if' => 'Target Output cannot be null',
+        'target_output.numeric' => 'Target Output should be a number.',
     ];
     
     public function updated($property)
@@ -108,11 +76,12 @@ class StaffLivewire extends Component
 
     public function mount() {
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = auth()->user()->percentages()->where('type', 'ipcr')->where('user_type', 'staff')->first();
+        $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
+        $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
         if ($this->duration) {
-            $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
-            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
-            $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
+            $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
+            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
+            $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             if ($this->assess) {
                 $this->review_user['name'] = User::where('id', $this->assess->review_id)->pluck('name')->first();
                 $this->review_user['message'] = $this->assess->review_message;
@@ -125,6 +94,10 @@ class StaffLivewire extends Component
 
                 $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->approval->approve_message;
+            }
+
+            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
+                $this->targetsSelected[$target->id] = $target->id;
             }
         }
 
@@ -141,14 +114,19 @@ class StaffLivewire extends Component
         }
 
         $this->dummy = 'has data';
-
     }
 
     public function render()
     {
-        return view('livewire.staff-livewire', [
-            'functs' => Funct::paginate(1)
-        ]);
+        if ($this->add) {
+            return view('components.faculty-add', [
+                'functs' => Funct::all()
+            ]);
+        } else {
+            return view('livewire.faculty-livewire', [
+                'functs' => Funct::paginate(1)
+            ]);
+        }
     }
 
     /////////////////////////// RATING OF IPCR ///////////////////////////
@@ -197,7 +175,7 @@ class StaffLivewire extends Component
             $qua = "";
             $time = "";
             $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->where('user_id', auth()->user()->id)->first();
+            $standard = $this->selectedTarget->standards()->first();
             
             switch($this->quality) {
                 case "5":
@@ -296,7 +274,7 @@ class StaffLivewire extends Component
             $qua = "";
             $time = "";
             $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->where('user_id', auth()->user()->id)->first();
+            $standard = $this->selectedTarget->standards()->first();
             
             switch($this->quality) {
                 case "5":
@@ -434,7 +412,7 @@ class StaffLivewire extends Component
                 'review_id' => $this->review_id,
                 'approve_id' => $this->approve_id,
                 'type' => 'ipcr',
-                'user_type' => 'staff',
+                'user_type' => 'faculty',
                 'duration_id' => $this->duration->id
             ]);
             
@@ -463,38 +441,6 @@ class StaffLivewire extends Component
     public function selectIpcr($type, $id, $category = null) {
         $this->selected = $type;
         switch($type) {
-            case 'sub_funct':
-                $this->sub_funct_id = $id;
-                if ($category) {
-                    $data = SubFunct::find($id);
-
-                    $this->sub_funct = $data->sub_funct;
-                }
-                break; 
-            case 'output':
-                $this->output_id = $id;
-                if ($category) {
-                    $data = Output::find($id);
-
-                    $this->output = $data->output;
-                }
-                break; 
-            case 'suboutput':
-                $this->suboutput_id = $id;
-                if ($category) {
-                    $data = Suboutput::find($id);
-
-                    $this->suboutput = $data->suboutput;
-                }
-                break; 
-            case 'target':
-                $this->target_id = $id;
-                if ($category) {
-                    $data = Target::find($id);
-
-                    $this->target = $data->target;
-                }
-                break;
             case 'target_output':
                 $this->target_id = $id;
                 if ($category) {
@@ -510,79 +456,7 @@ class StaffLivewire extends Component
 
         $this->validate();
 
-        switch (str_replace(url('/'), '', url()->previous())) {
-            case '/ipcr/staff':
-                $this->funct_id = 1;
-                $code = 'CF';
-                break;
-            case '/ipcr/staff?page=2':
-                $this->funct_id = 2;
-                $code = 'STF';
-                break;
-            case '/ipcr/staff?page=3':
-                $this->funct_id = 3;
-                $code = 'SF';
-                break;
-            default:
-                $this->funct_id = 0;
-                break;
-        };
-
         switch ($this->selected) {
-            case 'sub_funct':
-                auth()->user()->sub_functs()->attach(SubFunct::create([
-                    'sub_funct' => $this->sub_funct,
-                    'type' => 'ipcr',
-                    'user_type' => 'staff',
-                    'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
-                ]));
-                break;
-            case 'output':
-                if ($this->sub_funct_id) {
-                    auth()->user()->outputs()->attach(Output::create([
-                        'code' => $code,
-                        'output' => $this->output,
-                        'type' => 'ipcr',
-                        'user_type' => 'staff',
-                        'sub_funct_id' => $this->sub_funct_id,
-                        'duration_id' => $this->duration->id
-                    ]));
-                    break;
-                }
-                auth()->user()->outputs()->attach(Output::create([
-                    'code' => $code,
-                    'output' => $this->output,
-                    'type' => 'ipcr',
-                    'user_type' => 'staff',
-                    'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
-                ]));
-                break;
-            case 'suboutput':
-                auth()->user()->suboutputs()->attach(Suboutput::create([
-                    'suboutput' => $this->suboutput,
-                    'output_id' => $this->output_id,
-                    'duration_id' => $this->duration->id
-                ]));
-                break;
-            case 'target':                
-                $subput = explode(',', $this->subput);
-
-                if ($subput[0] == 'output') {
-                    auth()->user()->targets()->attach(Target::create([
-                        'target' => $this->target,
-                        'output_id' => $subput[1],
-                        'duration_id' => $this->duration->id
-                    ]));
-                } elseif ($subput[0] == 'suboutput') {
-                    auth()->user()->targets()->attach(Target::create([
-                        'target' => $this->target,
-                        'suboutput_id' => $subput[1],
-                        'duration_id' => $this->duration->id
-                    ]));
-                }
-                break;
             case 'target_output':
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output]]);
                 break;
@@ -602,26 +476,6 @@ class StaffLivewire extends Component
         $this->validate();
 
         switch ($this->selected) {
-            case 'sub_funct':
-                SubFunct::where('id', $this->sub_funct_id)->update([
-                    'sub_funct' => $this->sub_funct
-                ]);
-                break;
-            case 'output':
-                Output::where('id', $this->output_id)->update([
-                    'output' => $this->output
-                ]);
-                break;
-            case 'suboutput':
-                Suboutput::where('id', $this->suboutput_id)->update([
-                    'suboutput' => $this->suboutput
-                ]);
-                break;
-            case 'target':  
-                Target::where('id', $this->target_id)->update([
-                    'target' => $this->target
-                ]);
-                break;
             case 'target_output':
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output]]);
                 break;
@@ -638,18 +492,6 @@ class StaffLivewire extends Component
 
     public function delete() {
         switch ($this->selected) {
-            case 'sub_funct':
-                SubFunct::where('id',$this->sub_funct_id)->delete();
-                break;
-            case 'output':
-                Output::where('id',$this->output_id)->delete();
-                break;
-            case 'suboutput':
-                Suboutput::where('id',$this->suboutput_id)->delete();
-                break;
-            case 'target':  
-                Target::where('id',$this->target_id)->delete();
-                break;
             case 'target_output':
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => null]]);
                 break;
@@ -667,146 +509,71 @@ class StaffLivewire extends Component
         $this->dispatchBrowserEvent('close-modal');
     }
 
+    public function add() {
+        $this->add = true;
+    }
+
+    public function getIpcr() {
+        $this->add = false;
+        $target_ids = [];
+        $suboutput_ids = [];
+        $output_ids = [];
+        $sub_funct_ids = [];
+
+        foreach ($this->targetsSelected as $id) {            
+            if ($target = Target::where('id',$id)->first()) {
+                array_push($target_ids, $id);
+                if ($target->output) {
+                    array_push($output_ids, $target->output_id);
+                    if ($target->output->sub_funct) {
+                        array_push($sub_funct_ids, $target->output->sub_funct_id);
+                    }
+                } else if ($target->suboutput) {
+                    array_push($suboutput_ids, $target->suboutput_id);
+                    if ($target->suboutput->output) {
+                        array_push($output_ids, $target->suboutput->output_id);
+                        if ($target->suboutput->output->sub_funct) {
+                            array_push($sub_funct_ids, $target->suboutput->output->sub_funct_id);
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($target_ids) {
+            auth()->user()->targets()->sync($target_ids);
+        } else {
+            auth()->user()->targets()->detach();
+        }
+        if ($suboutput_ids) {
+            auth()->user()->suboutputs()->sync($suboutput_ids);
+        } else {
+            auth()->user()->suboutputs()->detach();
+        }
+        if ($output_ids) {
+            auth()->user()->outputs()->sync($output_ids);
+        } else {
+            auth()->user()->outputs()->detach();
+        }
+        if ($sub_funct_ids) {
+            auth()->user()->sub_functs()->sync($sub_funct_ids);
+        } else {
+            auth()->user()->sub_functs()->detach();
+        }
+
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Added Successfully",
+            'color' => "#435ebe",
+        ]);
+    }  
+
     /////////////////////////// SUBFUNCTION/OUTPUT/SUBOUTPUT/TARGET CONFIGURATION END ///////////////////////////
 
 //--------------------------------------------------------------------------------------------------------------------------------//
 
     /////////////////////////// PERCENTAGE CONFIGURATION ///////////////////////////
 
-    public function percentage($category = null) {
-        $this->selected = 'percent';
-
-        if ($category) {
-            $this->percent = $this->percentage;
-
-            foreach (auth()->user()->sub_percentages()->where('type', 'ipcr')->where('user_type', 'staff')->get() as $sub_percentage) {
-                $this->sub_percent[$sub_percentage->sub_funct_id] = $sub_percentage->value;
-            }
-        }
-    }
     
-    public function checkPercentage() {
-
-        if (array_sum([$this->percent['core'], $this->percent['strategic'], $this->percent['support']]) != 100) {
-            return false;
-        }
-
-        $funct = [
-            'core' => false,
-            'strategic' => false,
-            'support' => false,
-        ];
-
-        foreach (auth()->user()->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->get() as $sub_funct) {
-            switch ($sub_funct->funct_id) {
-                case 1:
-                    $funct['core'] = true;
-                    break;
-                case 2:
-                    $funct['strategic'] = true;
-                    break;
-                case 3:
-                    $funct['support'] = true;
-                    break;
-            }
-        }
-        
-        $total = count(array_filter($funct)) * 100;
-
-        if ($total != array_sum($this->sub_percent)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function savePercentage() {
-        
-        $this->validate();
-
-        if (!$this->checkPercentage()) {
-            return $this->dispatchBrowserEvent('toastify', [
-                'message' => "Percentage is not equal to 100",
-                'color' => "#f3616d",
-            ]);
-        }
-
-        Percentage::create([
-            'core' => $this->percent['core'],
-            'strategic' => $this->percent['strategic'],
-            'support' => $this->percent['support'],
-            'type' => 'ipcr',
-            'user_type' => 'staff',
-            'user_id' => auth()->user()->id,
-            'duration_id' => $this->duration->id,
-        ]);
-
-        foreach (auth()->user()->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->get() as $sub_funct) {
-            SubPercentage::create([
-                'value' => $this->sub_percent[$sub_funct->id],
-                'sub_funct_id' => $sub_funct->id, 
-                'type' => 'ipcr',
-                'user_type' => 'staff',
-                'user_id' => auth()->user()->id,
-                'duration_id' => $this->duration->id,
-            ]);
-        }
-
-
-        $this->dispatchBrowserEvent('toastify', [
-            'message' => "Added Successfully",
-            'color' => "#435ebe",
-        ]);
-
-        $this->mount();
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal');
-    }
-
-    public function updatePercentage() {
-        
-        $this->validate();
-
-        if (!$this->checkPercentage()) {
-            return $this->dispatchBrowserEvent('toastify', [
-                'message' => "Percentage is not equal to 100",
-                'color' => "#f3616d",
-            ]);
-        }
-
-        Percentage::where('id', $this->percent['id'])->update([
-            'core' => $this->percent['core'],
-            'strategic' => $this->percent['strategic'],
-            'support' => $this->percent['support'],
-        ]);
-
-        foreach (auth()->user()->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->get() as $sub_funct) {
-            $sub_percent = SubPercentage::where('sub_funct_id', $sub_funct->id)->where('user_id', auth()->user()->id)->update([
-                'value' => $this->sub_percent[$sub_funct->id],
-            ]);
-
-            if (!$sub_percent) {
-                SubPercentage::create([
-                    'value' => $this->sub_percent[$sub_funct->id],
-                    'sub_funct_id' => $sub_funct->id, 
-                    'type' => 'ipcr',
-                    'user_type' => 'staff',
-                    'user_id' => auth()->user()->id,
-                    'duration_id' => $this->duration->id,
-                ]);
-            }
-        }
-
-
-        $this->dispatchBrowserEvent('toastify', [
-            'message' => "Updated Successfully",
-            'color' => "#28ab55",
-        ]);
-
-        $this->mount();
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal');
-    }
 
     /////////////////////////// PERCENTAGE CONFIGURATION END ///////////////////////////
 
