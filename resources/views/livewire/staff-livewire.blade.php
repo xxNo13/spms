@@ -114,7 +114,7 @@
                         @endif
                     </div>
                 </div>
-                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->get() as $sub_funct)
+                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
@@ -130,7 +130,7 @@
                             @endif
                         </h5>
 
-                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->get() as $output)
+                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -147,7 +147,7 @@
                                     <p class="text-subtitle text-muted"></p>
                                 </div>
 
-                                @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->get() as $suboutput)
+                                @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
                                     
                                     <div class="card-body">
                                         <h6>
@@ -165,7 +165,7 @@
                                         <div class="accordion accordion-flush"
                                             id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                             <div class="d-sm-flex">
-                                                @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
+                                                @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                                     <span class="my-auto">
                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -192,7 +192,7 @@
                                                 @endforeach
                                             </div>
 
-                                            @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
+                                            @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
 
                                                 <div wire:ignore.self
                                                     id="{{ 'target' }}{{ $target->id }}"
@@ -337,7 +337,7 @@
                                         <div class="accordion accordion-flush"
                                             id="{{ 'output' }}{{ $output->id }}">
                                             <div class="d-sm-flex">
-                                                @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                                @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                                     <span class="my-auto">
                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -364,7 +364,7 @@
                                                 @endforeach
                                             </div>
 
-                                            @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                            @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
 
                                                 <div wire:ignore.self
                                                     id="{{ 'target' }}{{ $target->id }}"
@@ -511,7 +511,7 @@
                 @endforeach
                 <div>
                     @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)
-                                ->where('type', 'ipcr')->where('user_type', 'staff')->get() as $output)
+                                ->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">
@@ -528,7 +528,7 @@
                                 <p class="text-subtitle text-muted"></p>
                             </div>
 
-                            @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->get() as $suboutput)
+                            @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
                                 
                                 <div class="card-body">
                                     <h6>
@@ -546,7 +546,7 @@
                                     <div class="accordion accordion-flush"
                                         id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                         <div class="d-sm-flex">
-                                            @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
+                                            @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                                 <span class="my-auto">
                                                     @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -573,7 +573,7 @@
                                             @endforeach
                                         </div>
 
-                                        @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
+                                        @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
 
                                             <div wire:ignore.self
                                                 id="{{ 'target' }}{{ $target->id }}"
@@ -718,7 +718,7 @@
                                     <div class="accordion accordion-flush"
                                         id="{{ 'output' }}{{ $output->id }}">
                                         <div class="d-sm-flex">
-                                            @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                            @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                                 <span class="my-auto">
                                                     @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -745,7 +745,7 @@
                                             @endforeach
                                         </div>
 
-                                        @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                        @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
 
                                             <div wire:ignore.self
                                                 id="{{ 'target' }}{{ $target->id }}"

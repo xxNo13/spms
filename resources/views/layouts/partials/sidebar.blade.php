@@ -51,7 +51,9 @@
     
     <x-maz-sidebar-item alias="ipcr" name="IPCR" icon="bi bi-clipboard2-data-fill">
         <x-maz-sidebar-sub-item name="Staff" :link="route('ipcr.staff')"></x-maz-sidebar-sub-item>
-        <x-maz-sidebar-sub-item name="Standard Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Standard for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Standard for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
     </x-maz-sidebar-item>
     
     <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>

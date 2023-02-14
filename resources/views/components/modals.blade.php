@@ -42,7 +42,7 @@
                             </div>
 
                             <hr>
-
+                            
                             <div class="mt-3">
                                 @if ($selected == 'sub_funct')
                                     <label>Sub Function: </label>
@@ -60,9 +60,17 @@
                                             wire:model="sub_funct_id">
                                             <option value="">Select a Sub Function</option>
                                             @if ($duration)
-                                                @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
-                                                    <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
-                                                @endforeach
+                                                @if (isset($userType) && $userType == 'faculty')
+                                                    @if (isset($subFuncts))
+                                                        @foreach ($subFuncts->where('funct_id', $currentPage) as $sub_funct)
+                                                            <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                @else
+                                                    @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
+                                                        <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                    @endforeach
+                                                @endif
                                             @endif
                                         </select>
                                     </div>
@@ -95,14 +103,27 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                    @forelse ($output->targets as $target)
-                                                    @empty
-                                                        <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
-                                                            {{ $output->output }}
-                                                        </option>
-                                                    @endforelse
-                                                @endforeach
+                                                @if (isset($userType) && $userType == 'faculty')
+                                                    @if (isset($outputs))
+                                                        @foreach ($outputs->where('code', $code) as $output)
+                                                            @forelse ($output->targets as $target)
+                                                            @empty
+                                                                <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                                    {{ $output->output }}
+                                                                </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @endif
+                                                @else
+                                                    @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                        @forelse ($output->targets as $target)
+                                                        @empty
+                                                            <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                                {{ $output->output }}
+                                                            </option>
+                                                        @endforelse
+                                                    @endforeach
+                                                @endif
                                             @endif
                                         </select>
                                         @error('output_id')
@@ -138,20 +159,39 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                    @forelse ($output->suboutputs as $suboutput)
-                                                        <option value="suboutput, {{ $suboutput->id }}">
-                                                            {{ $suboutput->output->code }} {{ $number++ }}
-                                                            {{ $suboutput->output->output }} -
-                                                            {{ $suboutput->suboutput }}
-                                                        </option>
-                                                    @empty
-                                                            <option value="output, {{ $output->id }}">
-                                                                {{ $output->code }} {{ $number++ }}
-                                                                {{ $output->output }}
+                                                @if (isset($userType) && $userType == 'faculty')
+                                                    @if (isset($outputs))
+                                                        @foreach ($outputs->where('code', $code) as $output)
+                                                            @forelse ($output->suboutputs as $suboutput)
+                                                                <option value="suboutput, {{ $suboutput->id }}">
+                                                                    {{ $suboutput->output->code }} {{ $number++ }}
+                                                                    {{ $suboutput->output->output }} -
+                                                                    {{ $suboutput->suboutput }}
+                                                                </option>
+                                                            @empty
+                                                                    <option value="output, {{ $output->id }}">
+                                                                        {{ $output->code }} {{ $number++ }}
+                                                                        {{ $output->output }}
+                                                                    </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @endif
+                                                @else
+                                                    @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                        @forelse ($output->suboutputs as $suboutput)
+                                                            <option value="suboutput, {{ $suboutput->id }}">
+                                                                {{ $suboutput->output->code }} {{ $number++ }}
+                                                                {{ $suboutput->output->output }} -
+                                                                {{ $suboutput->suboutput }}
                                                             </option>
-                                                    @endforelse
-                                                @endforeach
+                                                        @empty
+                                                                <option value="output, {{ $output->id }}">
+                                                                    {{ $output->code }} {{ $number++ }}
+                                                                    {{ $output->output }}
+                                                                </option>
+                                                        @endforelse
+                                                    @endforeach
+                                                @endif
                                             @endif
                                         </select>
                                         @error('subput')
@@ -166,7 +206,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (false)
+                                    @if (isset($userType) && $userType == 'faculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -238,7 +278,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (false)
+                                    @if (isset($userType) && $userType == 'faculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -536,7 +576,7 @@
     {{-- Add Standard Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddStandardModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-full" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Add Standard</h4>
@@ -562,158 +602,233 @@
                             }
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="eff_5">
-                                    <option value=""></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_5">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="qua_5">
-                                    <option value=""></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_5">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="time_5">
-                                    <option value=""></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="time_5">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="eff_4">
-                                    <option value=""></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_4">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="qua_4">
-                                    <option value=""></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_4">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="time_4">
-                                    <option value=""></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="time_4">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="eff_3">
-                                    <option value=""></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_3">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="qua_3">
-                                    <option value=""></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_3">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="time_3">
-                                    <option value=""></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="time_3">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="eff_2">
-                                    <option value=""></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_2">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="qua_2">
-                                    <option value=""></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_2">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="time_2">
-                                    <option value=""></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="time_2">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="eff_1">
-                                    <option value=""></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_1">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="qua_1">
-                                    <option value=""></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_1">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="time_1">
-                                    <option value=""></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="time_1">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -735,7 +850,7 @@
     {{-- Edit Standard Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditStandardModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-full" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Edit Standard</h4>
@@ -761,158 +876,233 @@
                             }
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="eff_5">
-                                    <option value="null"></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_5">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="qua_5">
-                                    <option value="null"></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_5">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">5:</h5>
-                                <select type="text" class="form-control" wire:model="time_5">
-                                    <option value="null"></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" wire:model="time_5">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="eff_4">
-                                    <option value="null"></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_4">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="qua_4">
-                                    <option value="null"></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_4">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">4:</h5>
-                                <select type="text" class="form-control" wire:model="time_4">
-                                    <option value="null"></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:model="time_4">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="eff_3">
-                                    <option value="null"></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_3">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="qua_3">
-                                    <option value="null"></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_3">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">3:</h5>
-                                <select type="text" class="form-control" wire:model="time_3">
-                                    <option value="null"></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:model="time_3">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="eff_2">
-                                    <option value="null"></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_2">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="qua_2">
-                                    <option value="null"></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_2">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">2:</h5>
-                                <select type="text" class="form-control" wire:model="time_2">
-                                    <option value="null"></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:model="time_2">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="eff_1">
-                                    <option value="null"></option>
-                                    @foreach ($effs as $eff)
-                                        <option value="{{ $eff }}">{{ $eff }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="eff_1">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="qua_1">
-                                    <option value="null"></option>
-                                    @foreach ($quas as $qua)
-                                        <option value="{{ $qua }}">{{ $qua }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="qua_1">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="vr"></div>
-                            <div class="hstack gap-4 w-100">
-                                <h5 class="my-auto">1:</h5>
-                                <select type="text" class="form-control" wire:model="time_1">
-                                    <option value="null"></option>
-                                    @foreach ($times as $time)
-                                        <option value="{{ $time }}">{{ $time }}</option>
-                                    @endforeach
-                                </select>
+                            <div class=" w-100">
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:model="time_1">
+                                        <option value=""></option>
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time }}">{{ $time }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('time_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -1515,7 +1705,7 @@
                                         @if ($sub_funct->funct_id == 1)
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
-                                                <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
+                                                <input required type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
                                                     wire:model="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
@@ -1619,7 +1809,7 @@
                                         @if ($sub_funct->funct_id == 1)
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
-                                                <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
+                                                <input required type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
                                                     wire:model="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif

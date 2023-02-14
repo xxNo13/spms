@@ -56,6 +56,8 @@ class StaffLivewire extends Component
 
     public $targetOutput;
 
+    public $dummy;
+
 
     protected $listeners = ['percentage', 'resetIntput'];
 
@@ -66,19 +68,16 @@ class StaffLivewire extends Component
 
         'sub_funct' => ['required_if:selected,sub_funct'],
         'output' => ['required_if:selected,output'],
-        'output_id' => ['required_if:selected,suboutput'],
+        'output_id' => ['nullable', 'required_if:selected,output_id'],
         'suboutput' => ['required_if:selected,suboutput'],
         'subput' => ['nullable', 'required_if:selected,target_id'],
         'target' => ['required_if:selected,target'],
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
 
-        'review_id' => ['required_if:selected,submition'],
-        'approve_id' => ['required_if:selected,submition'],
-
         'output_finished' => ['required_if:selected,rating'],
-        'efficiency' => ['required_without_all:quality,timeliness'],
-        'quality' => ['required_without_all:efficiency,timeliness'],
-        'timeliness' => ['required_without_all:efficiency,quality'],
+        'efficiency' => ['required_without_all:quality,timeliness,dummy'],
+        'quality' => ['required_without_all:efficiency,timeliness,dummy'],
+        'timeliness' => ['required_without_all:efficiency,quality,dummy'],
     ];
 
     protected $messages = [
@@ -95,13 +94,10 @@ class StaffLivewire extends Component
         'target_output.required_if' => 'Target Output cannot be null',
         'target_output.numeric' => 'Target Output should be a number.',
 
-        'review_id' => 'Reviewer cannot be null',
-        'approve_id' => 'Approver cannot be null',
-
-        'output_finished.require_if' => 'Output Finished cannot be null.',
-        'efficiency.require_without_all' => 'Efficiency cannot be null if Quality and Timeliness is null.',
-        'quality.require_without_all' => 'Quality cannot be null if Efficiency and Timeliness is null.',
-        'timeliness.require_without_all' => 'Timeliness cannot be null if Efficiency and Quality is null.',
+        'output_finished.required_if' => 'Output Finished cannot be null.',
+        'efficiency.required_without_all' => 'Efficiency cannot be null.',
+        'quality.required_without_all' => 'Quality cannot be null.',
+        'timeliness.required_without_all' => 'Timeliness cannot be null.',
     ];
     
     public function updated($property)
@@ -143,13 +139,12 @@ class StaffLivewire extends Component
                 $this->highestOffice[$id] = $depth;
             }
         }
+
+        $this->dummy = 'has data';
     }
 
     public function render()
     {
-        
-
-
         return view('livewire.staff-livewire', [
             'functs' => Funct::paginate(1)
         ]);
@@ -291,7 +286,10 @@ class StaffLivewire extends Component
                 'user_id' => auth()->user()->id
             ]);
 
-            session()->flash('message', 'Added Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
         } elseif ($category == 'edit') {
             $divisor = 0;
             $qua = "";
@@ -383,7 +381,10 @@ class StaffLivewire extends Component
                 'average' => $average,
             ]);
 
-            session()->flash('message', 'Updated Successfully!');
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         }
         
         $this->mount();
@@ -505,6 +506,7 @@ class StaffLivewire extends Component
     }
 
     public function saveIpcr() {
+
         $this->validate();
 
         switch (str_replace(url('/'), '', url()->previous())) {
@@ -650,6 +652,9 @@ class StaffLivewire extends Component
             case 'target_output':
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => null]]);
                 break;
+            case 'rating':
+                Rating::where('id', $this->rating_id)->delete();
+                break;
         }
 
         $this->dispatchBrowserEvent('toastify', [
@@ -718,7 +723,12 @@ class StaffLivewire extends Component
         
         $this->validate();
 
-        $this->checkPercentage();
+        if (!$this->checkPercentage()) {
+            return $this->dispatchBrowserEvent('toastify', [
+                'message' => "Percentage is not equal to 100",
+                'color' => "#f3616d",
+            ]);
+        }
 
         Percentage::create([
             'core' => $this->percent['core'],
@@ -815,6 +825,10 @@ class StaffLivewire extends Component
         $this->target_output = '';    
         $this->review_id = '';
         $this->approve_id = '';
+        $this->output_finished = '';
+        $this->efficiency = '';
+        $this->quality = '';
+        $this->timeliness = '';
     }
 
     public function closeModal()

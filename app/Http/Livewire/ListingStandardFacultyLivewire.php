@@ -5,7 +5,6 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\Funct;
 use App\Models\Office;
-use App\Models\Target;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
@@ -13,10 +12,11 @@ use App\Models\Standard;
 use App\Models\Percentage;
 use Livewire\WithPagination;
 use App\Models\StandardValue;
+use App\Models\SubPercentage;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ApprovalNotification;
 
-class StandardStaffLivewire extends Component
+class ListingStandardFacultyLivewire extends Component
 {
     use WithPagination;
 
@@ -86,37 +86,16 @@ class StandardStaffLivewire extends Component
         'time_1.required_without_all' => 'Timeliness score 1 cannot be null.',
     ];
 
-    public function mount(){        
+    public function mount(){ 
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = auth()->user()->percentages()->where('type', 'ipcr')->where('user_type', 'staff')->first();
-        if ($this->duration) {
-            $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
-            if ($this->approval) {
-                $this->review_user['name'] = User::where('id', $this->approval->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->approval->review_message;
-
-                $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
-                $this->approve_user['message'] = $this->approval->approve_message;
-            }
-        }
-
-        $depths;
-
-        foreach(auth()->user()->offices as $office) {
-            $depths[$office->id] = $office->getDepthAttribute();
-        }
-
-        foreach ($depths as $id => $depth) {
-            if (min($depths) == $depth) {
-                $this->highestOffice[$id] = $depth;
-            }
-        }
+        $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
+        $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
     }
 
     public function render()
     {
         $functs = Funct::paginate(1);
-        return view('livewire.standard-staff-livewire',[
+        return view('livewire.listing-standard-faculty-livewire',[
             'functs' => $functs,
             'standardValue' => StandardValue::first()
         ]);
@@ -148,7 +127,6 @@ class StandardStaffLivewire extends Component
                 'time_2' => $this->time_2,
                 'time_1' => $this->time_1,
                 'target_id' => $this->target_id,
-                'user_id' => Auth::user()->id,
                 'duration_id' => $this->duration->id
             ]);
 
@@ -180,7 +158,7 @@ class StandardStaffLivewire extends Component
                 'color' => "#28ab55",
             ]);
         }
-
+        
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal'); 
     }
@@ -223,65 +201,6 @@ class StandardStaffLivewire extends Component
             $this->standard_id = $id;
         }
     }
-    
-    // SUBMITING OF IPCR START ------------>
-
-    public function submit($type) {
-
-        $this->selected = 'submition';
-
-        foreach ($this->highestOffice as $id => $value) {
-
-            $office = Office::find($id);
-
-            if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
-                $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
-                }
-            } else {
-                $office = Office::where('id', $office->parent_id)->first();
-                $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-            
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
-                }
-            }
-
-            $approval = Approval::create([
-                'name' => $type,
-                'user_id' => auth()->user()->id,
-                'review_id' => $this->review_id,
-                'approve_id' => $this->approve_id,
-                'type' => 'standard',
-                'user_type' => 'staff',
-                'duration_id' => $this->duration->id
-            ]);
-            
-            $reviewer = User::where('id', $this->review_id)->first();
-            $approver = User::where('id', $this->approve_id)->first();
-    
-            $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
-            $approver->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
-
-            $this->dispatchBrowserEvent('toastify', [
-                'message' => "Submitted Successfully",
-                'color' => "#435ebe",
-            ]);
-
-            $this->mount();
-            return;
-        }
-    }
-    
-    // <---------------- SUBMITING OF IPCR END
 
     public function resetInput(){
         $this->eff_5 = '';

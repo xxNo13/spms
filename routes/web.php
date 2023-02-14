@@ -10,7 +10,9 @@ use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\SubordinateLivewire;
 use App\Http\Livewire\StandardStaffLivewire;
+use App\Http\Livewire\ListingFacultyLivewire;
 use App\Http\Livewire\RecommendationListLivewire;
+use App\Http\Livewire\ListingStandardFacultyLivewire;
 use App\Http\Livewire\RecommendedForTrainingLivewire;
 
 /*
@@ -41,5 +43,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {
         Route::get('/staff', StaffLivewire::class)->name('staff');
         Route::get('/standard/staff', StandardStaffLivewire::class)->name('standard.staff');
+        Route::get('/listing/faculty', ListingFacultyLivewire::class)->name('listing.faculty');
+        Route::get('/standard/faculty', ListingStandardFacultyLivewire::class)->name('standard.faculty');
     });
 });

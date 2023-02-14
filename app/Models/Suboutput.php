@@ -19,6 +19,10 @@ class Suboutput extends Model
         return $this->belongsTo(Output::class);
     }
 
+    public function targets() {
+        return $this->hasMany(Target::class);
+    }
+
     public function users() {
         return $this->belongsToMany(User::class, 'suboutput_user');
     }

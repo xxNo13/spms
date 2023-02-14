@@ -9,7 +9,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a
                                 href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Standard - Staff</li>
+                        <li class="breadcrumb-item active" aria-current="page">Standard - Faculty</li>
                     </ol>
                 </nav>
             </div>
@@ -17,39 +17,6 @@
     </div>
 
     <section class="section pt-3">
-        {{-- Message for declining --}}
-        <div wire:ignore class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
-            @if ($review_user && $review_user['message'])
-                <div id="reviewToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                    <div class="toast-header">
-                        <strong class="me-auto">{{ $review_user['name'] }} Declining Message:</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                    {{ $review_user['message'] }}
-                    </div>
-                </div>
-            @endif
-            @if ($approve_user && $approve_user['message']) 
-                <div id="approveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                    <div class="toast-header">
-                        <strong class="me-auto">{{ $approve_user['name'] }} Declining Message:</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                    {{ $approve_user['message'] }}
-                    </div>
-                </div>
-            @endif
-        </div>
-    
-        @push ('script')
-            <script>
-                new bootstrap.Toast(document.getElementById('reviewToast')).show()
-                new bootstrap.Toast(document.getElementById('approveToast')).show()
-            </script>
-        @endpush
-
         @foreach ($functs as $funct)
             <div class="hstack mb-3">
                 <h4>
@@ -70,39 +37,23 @@
                         @endswitch
                     @endif
                 </h4>
-                <div class="ms-auto hstack gap-3">
-                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                        <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('approval')">
-                            Submit
-                        </button>
-                    @endif
-
-                    @if ($duration && $approval && $approval->approve_status == 1)
-                        <a href="/print/{{ 'standard' }}?userType=staff&user_id={{ Auth::user()->id }}" target="_blank" class="ms-auto btn icon btn-primary" title="Print IPCR">
-                            <i class="bi bi-printer"></i>
-                        </a>
-                    @endif
-                </div>
             </div>
             @if ($funct->sub_functs)
-                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach ($funct->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $sub_percentage->value }}%
                             @endif
                         </h5>
-                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('duration_id', $duration->id)->get() as $output)
-                            @if ($output->type == 'ipcr' &&
-                                $output->duration_id == $duration->id &&
-                                $output->user_type == 'staff')
+                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                                         <p class="text-subtitle text-muted"></p>
                                     </div>
-                                    @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                                    @forelse ($output->suboutputs()->where('duration_id', $duration->id)->get() as $suboutput)
                                         <div class="card-body">
                                             <h6>{{ $suboutput->suboutput }}</h6>
                                         </div>
@@ -110,7 +61,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                                 <div class="d-sm-flex">
-                                                    @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                                    @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -119,7 +70,7 @@
                                                             aria-controls="{{ 'target' }}{{ $target->id }}"
                                                             role="button">
                                                             @foreach ($target->standards as $standard)
-                                                                @if ($standard->user_id == auth()->user()->id)
+                                                                @if ($standard->user_id == null)
                                                                     <span class="my-auto">
                                                                         <i class="bi bi-check2"></i>
                                                                     </span>
@@ -131,7 +82,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                                @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -152,7 +103,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @forelse ($target->standards as $standard)
-                                                                        @if ($standard->user_id == auth()->user()->id) 
+                                                                        @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->eff_5 }}
@@ -164,7 +115,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -235,7 +186,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -253,7 +204,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -279,7 +230,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
                                                 <div class="d-sm-flex">
-                                                    @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                                    @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -288,7 +239,7 @@
                                                             aria-controls="{{ 'target' }}{{ $target->id }}"
                                                             role="button">
                                                             @foreach ($target->standards as $standard)
-                                                                @if ($standard->user_id == auth()->user()->id)
+                                                                @if ($standard->user_id == null)
                                                                     <span class="my-auto">
                                                                         <i class="bi bi-check2"></i>
                                                                     </span>
@@ -300,7 +251,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                                @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -321,7 +272,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @forelse ($target->standards as $standard)
-                                                                        @if ($standard->user_id == auth()->user()->id) 
+                                                                        @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->eff_5 }}
@@ -333,7 +284,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -404,7 +355,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -422,7 +373,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -445,20 +396,18 @@
                                         </div>
                                     @endforelse
                                 </div>
-                            @endif
                         @endforeach
                     </div>
                     <hr>
                 @endforeach
             @endif
-            @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)->where('duration_id', $duration->id)->get() as $output)
-                @if ($output->type == 'ipcr' && $output->duration_id == $duration->id && $output->user_type == 'staff')
+            @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                             <p class="text-subtitle text-muted"></p>
                         </div>
-                        @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                        @forelse ($output->suboutputs()->where('duration_id', $duration->id)->get() as $suboutput)
                             <div class="card-body">
                                 <h6>{{ $suboutput->suboutput }}</h6>
                             </div>
@@ -466,7 +415,7 @@
                                 <div class="accordion accordion-flush"
                                     id="{{ 'output' }}{{ $output->id }}">
                                     <div class="d-sm-flex">
-                                        @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                        @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
                                             <div wire:ignore.self
                                                 class="accordion-button collapsed gap-2"
                                                 type="button" data-bs-toggle="collapse"
@@ -475,7 +424,7 @@
                                                 aria-controls="{{ 'target' }}{{ $target->id }}"
                                                 role="button">
                                                 @foreach ($target->standards as $standard)
-                                                    @if ($standard->user_id == auth()->user()->id)
+                                                    @if ($standard->user_id == null)
                                                         <span class="my-auto">
                                                             <i class="bi bi-check2"></i>
                                                         </span>
@@ -487,7 +436,7 @@
                                         @endforeach
                                     </div>
 
-                                    @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                    @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
                                         <div wire:ignore.self
                                             id="{{ 'target' }}{{ $target->id }}"
                                             class="accordion-collapse collapse"
@@ -508,7 +457,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @forelse ($target->standards as $standard)
-                                                            @if ($standard->user_id == auth()->user()->id) 
+                                                            @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->eff_5 }}
@@ -520,7 +469,7 @@
                                                                     <td>{{ $standard->time_5 }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                             <button type="button"
                                                                                 class="btn icon btn-success"
                                                                                 wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -591,7 +540,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -609,7 +558,7 @@
                                                             <tr>
                                                                 <td colspan="6"></td>
                                                                 <td>
-                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                         <button type="button"
                                                                             class="btn icon btn-primary"
                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -635,7 +584,7 @@
                                 <div class="accordion accordion-flush"
                                     id="{{ 'output' }}{{ $output->id }}">
                                     <div class="d-sm-flex">
-                                        @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                        @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
                                             <div wire:ignore.self
                                                 class="accordion-button collapsed gap-2"
                                                 type="button" data-bs-toggle="collapse"
@@ -644,7 +593,7 @@
                                                 aria-controls="{{ 'target' }}{{ $target->id }}"
                                                 role="button">
                                                 @foreach ($target->standards as $standard)
-                                                    @if ($standard->user_id == auth()->user()->id)
+                                                    @if ($standard->user_id == null)
                                                         <span class="my-auto">
                                                             <i class="bi bi-check2"></i>
                                                         </span>
@@ -656,7 +605,7 @@
                                         @endforeach
                                     </div>
 
-                                    @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                    @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
                                         <div wire:ignore.self
                                             id="{{ 'target' }}{{ $target->id }}"
                                             class="accordion-collapse collapse"
@@ -677,7 +626,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @forelse ($target->standards as $standard)
-                                                            @if ($standard->user_id == auth()->user()->id) 
+                                                            @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->eff_5 }}
@@ -689,7 +638,7 @@
                                                                     <td>{{ $standard->time_5 }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                             <button type="button"
                                                                                 class="btn icon btn-success"
                                                                                 wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -760,7 +709,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -778,7 +727,7 @@
                                                             <tr>
                                                                 <td colspan="6"></td>
                                                                 <td>
-                                                                    @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)) && ($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
                                                                         <button type="button"
                                                                             class="btn icon btn-primary"
                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -801,7 +750,6 @@
                             </div>
                         @endforelse
                     </div>
-                @endif
             @endforeach
         @endforeach
     </section>

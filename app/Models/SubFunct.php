@@ -21,6 +21,10 @@ class SubFunct extends Model
         return $this->belongsTo(Funct::class);
     }
 
+    public function outputs() {
+        return $this->hasMany(Output::class);
+    }
+
     public function users() {
         return $this->belongsToMany(User::class, 'sub_funct_user');
     }
