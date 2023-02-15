@@ -53,39 +53,13 @@
                             </div>
                         </button>
                     </li>
-                @elseif (isset($notification->data['status']) && $notification->data['status'] == 'Done')
+                @elseif (isset($notification->data['status']) && $notification->data['status'] == 'Message')
                     <li>
                         <button wire:click="read('{{ $notification->id }}', 'ttma')" class="dropdown-item">
                             <div class="d-flex align-items-center">
                                 <div style="width: 90%;">
                                     <div class="text-truncate fw-bold">
-                                        <span>{{ $notification->data['user'] }} Complete Task:</span>
-                                    </div>
-                                    <div class="text-truncate text-capitalize">
-                                        {{ $notification->data['subject'] }} - {{ $notification->data['output'] }}
-                                    </div>
-                                    <div>
-                                        <span
-                                            class="text-muted fst-italic">{{ $notification->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </div>
-                                <div class="text-primary hstack" style="width: 10%;">
-                                    @if (empty($notification->read_at))
-                                        <span class="ms-auto">
-                                            <i class="bi bi-circle-fill"></i>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </button>
-                    </li>
-                @elseif (isset($notification->data['status']) && $notification->data['status'] == 'Declined')
-                    <li>
-                        <button wire:click="read('{{ $notification->id }}', 'ttma')" class="dropdown-item">
-                            <div class="d-flex align-items-center">
-                                <div style="width: 90%;">
-                                    <div class="text-truncate fw-bold">
-                                        <span>{{ $notification->data['user'] }} Decline Complete:</span>
+                                        <span>{{ $notification->data['user'] }} Sent a Message:</span>
                                     </div>
                                     <div class="text-truncate text-capitalize">
                                         {{ $notification->data['subject'] }} - {{ $notification->data['output'] }}

@@ -1,7 +1,7 @@
 <div>
     @if (isset($selected))
         {{-- Add Output/Suboutput/Target Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddIPCROSTModal" tabindex="-1" role="dialog"
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddOSTModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -58,9 +58,9 @@
                                     <div class="form-group">
                                         <select placeholder="Sub Function" class="form-control"
                                             wire:model="sub_funct_id">
-                                            <option value="">Select a Sub Function</option>
+                                            <option value="" selected>Select a Sub Function</option>
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'faculty')
+                                                @if (isset($userType))
                                                     @if (isset($subFuncts))
                                                         @foreach ($subFuncts->where('funct_id', $currentPage) as $sub_funct)
                                                             <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
@@ -87,7 +87,7 @@
                                     <div class="form-group">
                                         <select placeholder="Output" class="form-control" wire:model="output_id"
                                             required>
-                                            <option value="">Select an output</option>
+                                            <option value="" selected>Select an output</option>
                                             @php
                                                 $number = 1;
                                                 switch($currentPage) {
@@ -103,7 +103,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'faculty')
+                                                @if (isset($userType))
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->targets as $target)
@@ -143,7 +143,7 @@
                                     <div class="form-group">
                                         <select placeholder="Output/Suboutput" class="form-control" wire:model="subput"
                                             required>
-                                            <option value="">Select an/a Output/Suboutput</option>s
+                                            <option value="" selected>Select an/a Output/Suboutput</option>s
                                             @php
                                                 $number = 1;
                                                 switch($currentPage) {
@@ -159,7 +159,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'faculty')
+                                                @if (isset($userType))
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->suboutputs as $suboutput)
@@ -232,7 +232,7 @@
         </div>
 
         {{-- Edit Output/Suboutput/Target Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditIPCROSTModal" tabindex="-1" role="dialog"
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditOSTModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1874,111 +1874,6 @@
         </div>
     </div>
 
-    {{-- Decline Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="DeclineModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Disapproving Message</h4>
-                </div>
-                <form wire:submit.prevent="declined">
-                    <div class="modal-body">
-                        <label>Comment: </label>
-                        <div class="form-group">
-                            <textarea placeholder="Comment" class="form-control"
-                                wire:model="comment">
-                            </textarea>
-                            @error('comment')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- MessageTTMA Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="MessageTTMAModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Done Message</h4>
-                </div>
-                <form wire:submit.prevent="message">
-                    <div class="modal-body">
-                        <label>Message: </label>
-                        <div class="form-group">
-                            <textarea placeholder="Message" class="form-control"
-                                wire:model="message">
-                            </textarea>
-                            @error('message')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- EditMessageTTMA Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditMessageTTMAModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Done Message</h4>
-                </div>
-                <form wire:submit.prevent="message">
-                    <div class="modal-body">
-                        <label>Message: </label>
-                        <div class="form-group">
-                            <textarea placeholder="Message" class="form-control"
-                                wire:model="message">
-                            </textarea>
-                            @error('message')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Update</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     {{-- Add Training Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddTrainingModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
@@ -2466,34 +2361,6 @@
                         <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Update</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- Done Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="SaveIPCRModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Save Faculty's IPCR</h4>
-                </div>
-                <form wire:submit.prevent="saveIPCR">
-                    <div class="modal-body">
-                        <p>Save it?</p>
-                        <p>Can't Edit it once you save it.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
                         </button>
                     </div>
                 </form>

@@ -109,4 +109,8 @@ class User extends Authenticatable
         ->withPivot('alloted_budget')
         ->withPivot('responsible');
     }
+
+    public function messages() {
+        return $this->hasMany(Message::class);
+    }
 }

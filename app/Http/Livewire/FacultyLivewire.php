@@ -96,9 +96,19 @@ class FacultyLivewire extends Component
                 $this->approve_user['message'] = $this->approval->approve_message;
             }
 
-            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
-                $this->targetsSelected[$target->id] = $target->id;
+            foreach (auth()->user()->account_types as $account_type){
+                if (str_contains(strtolower($account_type->account_type), 'not')){
+                        foreach(Target::where('required', true)->get() as $target) {
+                        $this->targetsSelected[$target->id] = $target->id;
+                    }
+                } else {
+                    foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
+                        $this->targetsSelected[$target->id] = $target->id;
+                    }
+                }
             }
+
+
         }
 
         $depths;
@@ -510,6 +520,12 @@ class FacultyLivewire extends Component
     }
 
     public function add() {
+        foreach (auth()->user()->account_types as $account_type){
+            if (str_contains(strtolower($account_type->account_type), 'not')){
+                    $this->getIpcr();
+                    return;
+            }
+        }
         $this->add = true;
     }
 

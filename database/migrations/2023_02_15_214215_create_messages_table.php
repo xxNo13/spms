@@ -13,18 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ttmas', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('output');
-            $table->string('remarks')->nullable();
-            $table->unsignedBigInteger('head_id');
-            $table->foreign('head_id')->references('id')->on('users')->onDelete('cascade');
-            $table->date('deadline');
-            $table->foreignId('duration_id')->constrained()->onDelete('cascade');
+            $table->foreignId('ttma_id')->constrained()->onDelete('cascade');
+            $table->string('message');
             $table->timestamps();
-
         });
     }
 
@@ -35,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ttmas');
+        Schema::dropIfExists('messages');
     }
 };

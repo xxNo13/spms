@@ -14,14 +14,20 @@ class Ttma extends Model
         'user_id',
         'output',
         'remarks',
-        'message',
-        'comments',
         'head_id',
         'deadline',
         'duration_id',
     ];
 
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function head() {
+        return $this->belongsTo(User::class, 'head_id');
+    }
+     
+    public function messages() {
+        return $this->hasMany(Message::class);
     }
 }

@@ -105,7 +105,7 @@
                         <h5>
                             {{ $sub_funct->sub_funct }}
                             @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
-                                {{ $sub_percentage->value }} %
+                                {{ $sub_percentage->value }}%
                             @endif
                         </h5>
 

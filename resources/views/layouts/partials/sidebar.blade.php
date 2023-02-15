@@ -52,11 +52,14 @@
     <x-maz-sidebar-item alias="ipcr" name="IPCR" icon="bi bi-clipboard2-data-fill">
         <x-maz-sidebar-sub-item name="Faculty" :link="route('ipcr.faculty')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Staff" :link="route('ipcr.staff')"></x-maz-sidebar-sub-item>
-        <x-maz-sidebar-sub-item name="Standard for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Standards for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>
-        <x-maz-sidebar-sub-item name="Standard for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Standards for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
     </x-maz-sidebar-item>
-    
+    <x-maz-sidebar-item alias="opcr" name="OPCR" icon="bi bi-clipboard-data-fill">
+        <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
+        <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
+    </x-maz-sidebar-item>
     <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="trainings" name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>

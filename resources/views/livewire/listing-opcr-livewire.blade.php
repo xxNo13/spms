@@ -9,7 +9,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a
                                 href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">IPCR - Faculty</li>
+                        <li class="breadcrumb-item active" aria-current="page">OPCR</li>
                     </ol>
                 </nav>
             </div>
@@ -60,7 +60,7 @@
                         @endif
                     </div>
                 </div>
-                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'faculty')->where('type', 'ipcr')->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'office')->where('type', 'opcr')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
                             @if (($duration && $duration->end_date >= date('Y-m-d')))
@@ -76,7 +76,7 @@
                             @endif
                         </h5>
 
-                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach ($sub_funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -168,7 +168,7 @@
                     <hr>
                 @endforeach
                 <div>
-                    @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                    @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">
@@ -267,7 +267,7 @@
 
     @php
         $currentPage = $functs->currentPage();
-        $userType = 'faculty';
+        $userType = 'office';
     @endphp
     <x-modals :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />
 </div>

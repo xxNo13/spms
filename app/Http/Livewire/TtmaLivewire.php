@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Ttma;
 use App\Models\User;
+use App\Models\Message;
 use Livewire\Component;
 use App\Models\Duration;
 use Livewire\WithPagination;
@@ -23,16 +24,17 @@ class TtmaLivewire extends Component
     public $duration;
     public $message;
     public $selected;
-    public $comment;
     public $deadline;
+
+    public $filter = 'give';
 
     protected $rules = [
         'subject' => ['nullable', 'required_if:selected,assign'],
         'user_id' => ['nullable', 'required_if:selected,assign'],
         'output' => ['nullable', 'required_if:selected,assign'],
         'deadline' => ['nullable', 'required_if:selected,assign'],
+        
         'message' => ['nullable', 'required_if:selected,message'],
-        'comment' => ['nullable', 'required_if:selected,decline'],
     ];
 
     protected $messages = [
@@ -40,7 +42,8 @@ class TtmaLivewire extends Component
         'user_id.required_if' => 'Need to assign to a user.',
         'output.required_if' => 'The Output cannot be empty.',
         'deadline.required_if' => 'The Deadline cannot be empty.',
-        'comment.required_if' => 'The reason for declining cannot be empty.',
+
+        'message.required_if' => 'Input message cannot be empty.',
     ];
 
     protected  $queryString = ['search'];
@@ -76,6 +79,7 @@ class TtmaLivewire extends Component
     {   
         $search = $this->search;
         $ttmas = Ttma::query();
+        $assignments = Ttma::query();
 
         if ($search) {
 
@@ -89,6 +93,17 @@ class TtmaLivewire extends Component
                 })->where('duration_id', $this->duration->id)
                 ->where('head_id', Auth::user()->id)
                 ->get();
+            
+                
+                $assignments->where(function ($query) use ($search) {
+                    $query->whereHas('user', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+                        return $query->where('name', 'LIKE', '%' . $search . '%');
+                    })
+                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
+                        ->orWhere('output', 'LIKE', '%' . $search . '%');
+                })->where('duration_id', $this->duration->id)
+                ->where('user_id', Auth::user()->id)
+                ->get();
             } else {
                 $ttmas->where(function ($query) use ($search) {
                     $query->whereHas('user', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
@@ -98,16 +113,25 @@ class TtmaLivewire extends Component
                         ->orWhere('output', 'LIKE', '%' . $search . '%');
                 })->where('head_id', Auth::user()->id)
                     ->get();
+
+                $assignments->where(function ($query) use ($search) {
+                    $query->whereHas('user', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+                        return $query->where('name', 'LIKE', '%' . $search . '%');
+                    })
+                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
+                        ->orWhere('output', 'LIKE', '%' . $search . '%');
+                })->where('user_id', Auth::user()->id)
+                    ->get();
             }
         }
 
         if($this->duration) {
             return view('livewire.ttma-livewire', [
-                'ttmas' => $ttmas
+                'ttmas' => $ttmas->orderBy('created_at', 'DESC')
                         ->where('duration_id', $this->duration->id)
                         ->where('head_id', Auth::user()->id)
                         ->paginate(10),
-                'assignments' => Ttma::orderBy('created_at', 'DESC')
+                'assignments' => $assignments->orderBy('created_at', 'DESC')
                                 ->where('user_id', Auth::user()->id)
                                 ->where('duration_id', $this->duration->id)
                                 ->paginate(10),
@@ -179,41 +203,24 @@ class TtmaLivewire extends Component
         $this->dispatchBrowserEvent('close-modal');
     }
 
-    public function declined() {
-        $this->validate();
-
-        $ttma = Ttma::where('id', $this->ttma_id)->first();
-    
-        $user = User::where('id', $ttma->user_id)->first();
-
-        $user->notify(new AssignmentNotification($ttma, 'Declined'));
-
-        Ttma::where('id', $this->ttma_id)->update([
-            'message' => null,
-            'comments' => $this->comment,
-        ]);
-
-        $this->dispatchBrowserEvent('toastify', [
-            'message' => "Sent Successfully",
-            'color' => "#435ebe",
-        ]);
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal');
-    }
-
     public function message() {
 
         $this->validate();
 
         $ttma = Ttma::where('id', $this->ttma_id)->first();
     
-        $user = User::where('id', $ttma->head_id)->first();
+        if ($ttma->user_id == auth()->user()->id) {
+            $user = User::where('id', $ttma->head_id)->first();
+        } else {
+            $user = User::where('id', $ttma->user_id)->first();
+        }
 
-        $user->notify(new AssignmentNotification($ttma, 'Done'));
+        $user->notify(new AssignmentNotification($ttma, 'Message'));
 
-        Ttma::where('id', $this->ttma_id)->update([
-            'message' => $this->message,
-            'comments' => null,
+        Message::create([
+            'user_id' => auth()->user()->id,
+            'ttma_id' => $ttma->id,
+            'message' => $this->message
         ]);
 
         $this->dispatchBrowserEvent('toastify', [
@@ -221,7 +228,6 @@ class TtmaLivewire extends Component
             'color' => "#435ebe",
         ]);
         $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function done()
@@ -290,7 +296,6 @@ class TtmaLivewire extends Component
         $this->output = '';
         $this->ttma_id = '';
         $this->message = '';
-        $this->comment = '';
         $this->deadline = '';
     }
 

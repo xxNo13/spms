@@ -39,10 +39,8 @@
     });
 
     window.addEventListener('close-modal', event => {
-        $('#AddIPCROSTModal').modal('hide');
-        $('#EditIPCROSTModal').modal('hide');
-        $('#AddOPCROSTModal').modal('hide');
-        $('#EditOPCROSTModal').modal('hide');
+        $('#AddOSTModal').modal('hide');
+        $('#EditOSTModal').modal('hide');
         $('#DeleteModal').modal('hide');
         $('#AddRatingModal').modal('hide');
         $('#EditRatingModal').modal('hide');

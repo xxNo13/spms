@@ -16,211 +16,182 @@
         </div>
     </div>
 
-    @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show"
-            class="toastify on  toastify-right toastify-bottom" aria-live="polite"
-            style="background: rgb(79, 190, 135); transform: translate(0px, 0px); bottom: 15px;">
-            {{ session('message') }}
-        </div>
-    @endif
-
     <section class="section pt-3">
-        <div class="card">
-            <div class="card-header hstack">
-                <h4 class="card-title my-auto">Your Assignments</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-lg text-center">
-                        <thead>
-                            <tr>
-                                <th>TASK ID No.</th>
-                                <th>SUBJECT</th>
-                                <th>OUTPUT</th>
-                                <th>DATE ASSIGNED</th>
-                                <th>DATE ACCOMPLISHED</th>
-                                <th>DATE DEADLINE</th>
-                                <th style="white-space: nowrap;">OFFICER MESSAGE</th>
-                                <th>REMARKS</th>
-                                <th style="white-space: nowrap;">HEAD COMMENTS</th>
-                                <th>ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($assignments as $ttma)
-                                @if ($duration && $ttma->duration_id == $duration->id)
-                                    <tr>
-                                        <td>{{ sprintf('%03u', $ttma->id) }}</td>
-                                        <td>{{ $ttma->subject }}</td>
-                                        <td>{{ $ttma->output }}</td>
-                                        <td>{{ date('M d, Y', strtotime($ttma->created_at)) }}</td>
-                                        <td>
-                                            @if ($ttma->remarks)
-                                                {{ date('M d, Y', strtotime($ttma->updated_at)) }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="
-                                            @if ($ttma->deadline < date('Y-m-d') && empty($ttma->remarks))
-                                                text-danger
-                                            @endif">
-                                                {{ date('M d, Y', strtotime($ttma->deadline)) }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $ttma->message }}</td>
-                                        <td>{{ $ttma->remarks }}</td>
-                                        <td>{{ $ttma->comments }}</td>
-                                        <td>
-                                            @if (!$ttma->message)
-                                                <button type="button" class="btn icon btn-info"
-                                                    data-bs-toggle="modal" data-bs-target="#MessageTTMAModal"
-                                                    wire:click="select('message',{{ $ttma->id }})">
-                                                    <i class="bi bi-check"></i>
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-                            @empty
-                                <tr>
-                                    <td colspan="10">No record available!</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                        <tfoot>
-                            <div class="hstack">
-                                <div class="ms-auto">
-                                    {{ $assignments->links('components.pagination') }}
-                                </div>
-                            </div>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
+        <div class="col-12 text-end my-3">
+            @foreach (auth()->user()->offices as $office)
+                @if ($office->pivot->isHead)
+                    @if ($duration && $duration->end_date >= date('Y-m-d'))
+                        <button type="button" class="btn icon btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#AddTTMAModal" wire:click="select('assign')">
+                            Add Assignment
+                        </button>
+                    @endif
+                    @break
+                @endif
+            @endforeach
         </div>
-
-        @if (Auth::user()->offices()->wherePivot('isHead', true)->first())
-            <hr>
-
-            <div class="card">
-                <div class="card-header hstack">
-                    <h4 class="card-title my-auto">Subordinate's Assignments</h4>
-                    <div class="hstack ms-auto gap-3">
-                        <div class="ms-auto my-auto form-group position-relative has-icon-right">
-                            <input type="text" class="form-control" placeholder="Search.." wire:model="search">
-                            <div class="form-control-icon">
-                                <i class="bi bi-search"></i>
-                            </div>
-                        </div>
-                        @if ($duration)
-                            <a href="/print/ttma" target="_blank" class="ms-auto btn icon btn-primary" title="Print TTMA">
-                                <i class="bi bi-printer"></i>
-                            </a>
-                        @endif
+        <div class="my-3">
+            <div class="hstack gap-3">
+                <div class="">
+                    <input type="radio" class="btn-check" name="options" id="give" wire:model="filter" value="give">
+                    <label class="btn btn-outline-primary" for="give">Given Assignment</label>
+        
+                    <input type="radio" class="btn-check" name="options" id="receive" wire:model="filter" value="receive">
+                    <label class="btn btn-outline-primary" for="receive">Received Assignment</label>
+                </div>
+                <div class="ms-auto my-auto form-group position-relative has-icon-right">
+                    <input type="text" class="form-control" placeholder="Search.." wire:model="search">
+                    <div class="form-control-icon">
+                        <i class="bi bi-search"></i>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-lg text-center">
-                            <thead>
-                                <tr>
-                                    <th>TASK ID No.</th>
-                                    <th>SUBJECT</th>
-                                    <th>ACTION OFFICER</th>
-                                    <th>OUTPUT</th>
-                                    <th>DATE ASSIGNED</th>
-                                    <th>DATE ACCOMPLISHED</th>
-                                    <th>DATE DEADLINE</th>
-                                    <th style="white-space: nowrap;">OFFICER MESSAGE</th>
-                                    <th>REMARKS</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($ttmas as $ttma)
-                                    @if ($duration && $ttma->duration_id == $duration->id)
-                                        <tr>
-                                            <td>{{ sprintf('%03u', $ttma->id) }}</td>
-                                            <td>{{ $ttma->subject }}</td>
-                                            <td>{{ $ttma->user->name }}</td>
-                                            <td>{{ $ttma->output }}</td>
-                                            <td>{{ date('M d, Y', strtotime($ttma->created_at)) }}</td>
-                                            <td>
-                                                @if ($ttma->remarks)
-                                                    {{ date('M d, Y', strtotime($ttma->updated_at)) }}
+            </div>
+        </div>
+
+        @if ($filter == 'give')
+            <div class="card collapse-icon accordion-icon-rotate">
+                <div class="card-header">
+                <h4 class="card-title pl-1">Given Assignments</h4>
+                </div>
+                <div wire:poll class="card-body">
+                    @foreach ($ttmas as $ttma) 
+                        <div class="accordion" id="cardAccordion">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{$ttma->id}}">
+                                        <button wire:ignore.self class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $ttma->id }}" aria-expanded="false" aria-controls="collapse{{ $ttma->id }}">
+                                            Task No. {{ $ttma->id }} - {{ $ttma->user_id == auth()->user()->id ? $ttma->head->name : $ttma->user->name }}
+                                            <span class="ms-auto hstack gap-2">
+                                                @if ($ttma->remarks == 'Done') 
+                                                    <div class="rounded-pill bg-primary p-2 text-white">Done</div>
+                                                @elseif ($ttma->remarks == 'Undone')
+                                                    <div class="rounded-pill bg-danger p-2 text-white">Undone</div>
+                                                @else
+                                                    <div class="rounded-pill bg-warning p-2 text-dark">Working</div>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <span class="
-                                                @if ($ttma->deadline < date('Y-m-d') && empty($ttma->remarks))
-                                                    text-danger
-                                                @endif">
-                                                    {{ date('M d, Y', strtotime($ttma->deadline)) }}
-                                                </span>
-                                            </td>
-                                            <td>{{ $ttma->message }}</td>
-                                            <td>{{ $ttma->remarks }}</td>
-                                            <td>
-                                                @if ($ttma->message && !$ttma->comments && (!$ttma->remarks && ($ttma->duration_id == $duration->id)) && ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d')))
-                                                    <div class="hstack gap-2">
-                                                        <button type="button" class="btn icon btn-info"
-                                                            data-bs-toggle="modal" data-bs-target="#DoneModal"
-                                                            wire:click="select('assign', {{ $ttma->id }})">
-                                                            <i class="bi bi-check"></i>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div wire:ignore.self id="collapse{{ $ttma->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{$ttma->id}}" data-bs-parent="#accordionExample" style="">
+                                        <div class="accordion-body w-100">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    {{ $ttma->subject }} - {{ $ttma->output }}
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    Deadline: {{ date('M d, Y', strtotime($ttma->deadline)) }}
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-2 mt-auto mb-2">
+                                                    @if (!$ttma->remarks && $ttma->head_id == auth()->user()->id)
+                                                        <button type="button" class="btn icon btn-outline-info" data-bs-toggle="modal" data-bs-target="#DoneModal" wire:click="select('assign', {{ $ttma->id }})">
+                                                            Mark as Done
                                                         </button>
-                                                        <button type="button" class="btn icon btn-danger"
-                                                            data-bs-toggle="modal" data-bs-target="#DeclineModal"
-                                                            wire:click="select('decline', {{ $ttma->id }})">
-                                                            <i class="bi bi-x"></i>
-                                                        </button>
+                                                    @endif
+                                                </div>  
+                                                <div class="col-10 ms-auto bg-light p-2 rounded">
+                                                    <h6>Messages:</h6>
+                                                    <hr>
+                                                    <div class="overflow-auto" style="height: 225px;">
+                                                        @foreach ($ttma->messages as $message) 
+                                                            @if ($message->user_id == auth()->user()->id) 
+                                                                <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
+                                                                    {{ $message->message }}
+                                                                </div>
+                                                            @else
+                                                                <div class="my-3 rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
+                                                                    {{ $message->message }}
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
                                                     </div>
-                                                @elseif (!$ttma->comments && (!$ttma->remarks && ($ttma->duration_id == $duration->id)) && ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d')))
-                                                   <div class="hstack gap-2">
-                                                        <button type="button" class="btn icon btn-success"
-                                                            data-bs-toggle="modal" data-bs-target="#EditTTMAModal"
-                                                            wire:click="select('assign', {{ $ttma->id }}, '{{ 'edit' }}')">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </button>
-                                                        <button type="button" class="btn icon btn-danger"
-                                                            data-bs-toggle="modal" data-bs-target="#DeleteModal"
-                                                            wire:click="select('assign',{{ $ttma->id }})">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
-                                                   </div>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @elseif($loop->last)
-                                        <tr>
-                                            <td colspan="10">No record available!</td>
-                                        </tr>
-                                    @endif
-                                @empty
-                                    <tr>
-                                        <td colspan="10">No record available!</td>
-                                    </tr>
-                                @endforelse
-                                @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
-                                    <tr>
-                                        <td colspan="9"></td>
-                                        <td>
-                                            <button type="button" class="btn icon btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#AddTTMAModal" wire:click="select('assign')">
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                            <tfoot>
-                                <div class="hstack">
-                                    <div class="ms-auto">
-                                        {{ $ttmas->links('components.pagination') }}
+                                                    <hr>
+                                                    <form wire:submit.prevent="message" class="col-12 hstack gap-2">
+                                                        <input type="text" class="form-control" wire:model="message" {{ $ttma->remarks ? 'disabled' : '' }}>
+                                                        <button class="btn btn-primary" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </tfoot>
-                        </table>
-                    </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <div class="card collapse-icon accordion-icon-rotate">
+                <div class="card-header">
+                <h4 class="card-title pl-1">Revieved Assignments</h4>
+                </div>
+                <div wire:poll class="card-body">
+                    @foreach ($assignments as $ttma) 
+                        <div class="accordion" id="cardAccordion">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{$ttma->id}}">
+                                        <button wire:ignore.self class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $ttma->id }}" aria-expanded="false" aria-controls="collapse{{ $ttma->id }}">
+                                            Task No. {{ $ttma->id }} - {{ $ttma->user_id == auth()->user()->id ? $ttma->head->name : $ttma->user->name }}
+                                            <span class="ms-auto hstack gap-2">
+                                                @if ($ttma->remarks == 'Done') 
+                                                    <div class="rounded-pill bg-primary p-2 text-white">Done</div>
+                                                @elseif ($ttma->remarks == 'Undone')
+                                                    <div class="rounded-pill bg-danger p-2 text-white">Undone</div>
+                                                @else
+                                                    <div class="rounded-pill bg-warning p-2 text-dark">Working</div>
+                                                @endif
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div wire:ignore.self id="collapse{{ $ttma->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{$ttma->id}}" data-bs-parent="#accordionExample" style="">
+                                        <div class="accordion-body w-100">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    {{ $ttma->subject }} - {{ $ttma->output }}
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    Deadline: {{ date('M d, Y', strtotime($ttma->deadline)) }}
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-2 mt-auto mb-2">
+                                                    @if (!$ttma->remarks && $ttma->head_id == auth()->user()->id)
+                                                        <button type="button" class="btn icon btn-outline-info" data-bs-toggle="modal" data-bs-target="#DoneModal" wire:click="select('assign', {{ $ttma->id }})">
+                                                            Mark as Done
+                                                        </button>
+                                                    @endif
+                                                </div>  
+                                                <div class="col-10 ms-auto bg-light p-2 rounded">
+                                                    <h6>Messages:</h6>
+                                                    <hr>
+                                                    <div class="overflow-auto" style="height: 225px;">
+                                                        @foreach ($ttma->messages as $message) 
+                                                            @if ($message->user_id == auth()->user()->id) 
+                                                                <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
+                                                                    {{ $message->message }}
+                                                                </div>
+                                                            @else
+                                                                <div class="my-3 rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
+                                                                    {{ $message->message }}
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <hr>
+                                                    <form wire:submit.prevent="message" class="col-12 hstack gap-2">
+                                                        <input type="text" class="form-control" wire:model="message" {{ $ttma->remarks ? 'disabled' : '' }}>
+                                                        <button class="btn btn-primary" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         @endif

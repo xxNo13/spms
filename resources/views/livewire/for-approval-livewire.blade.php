@@ -39,14 +39,14 @@
             <div class="card-body">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="true">To Review</a>
+                        <a class="nav-link" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="true">To Review</a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="approval-tab" data-bs-toggle="tab" href="#approval" role="tab" aria-controls="approval" aria-selected="false" tabindex="-1">To Approve</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade active show" id="review" role="tabpanel" aria-labelledby="review-tab">
+                    <div class="tab-pane fade show" id="review" role="tabpanel" aria-labelledby="review-tab">
                         <div class="table-responsive">
                             <table class="table table-lg text-center">
                                 <thead>

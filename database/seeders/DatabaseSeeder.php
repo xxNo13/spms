@@ -76,16 +76,6 @@ class DatabaseSeeder extends Seeder
         Funct::factory()->create([
             'funct' => 'Support Function'
         ]);
-
-        SubFunct::factory()->create([
-            'sub_funct' => 'Institutional Obligations',
-            'funct_id' => 3
-        ]);
-
-        SubFunct::factory()->create([
-            'sub_funct' => 'Intervening Functions',
-            'funct_id' => 3
-        ]);
         
         StandardValue::factory()->create([
             'efficiency' => '100%
