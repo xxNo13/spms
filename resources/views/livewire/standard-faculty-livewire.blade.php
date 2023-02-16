@@ -43,6 +43,9 @@
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
+                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                                {{ $sub_percentage->value }}%
+                            @endif
                         </h5>
                         @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
                                 <div class="card">
@@ -99,7 +102,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    @forelse ($target->standards as $standard)
+                                                                    @foreach ($target->standards as $standard)
                                                                         @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
@@ -110,28 +113,6 @@
                                                                                 </td>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->time_5 }}
-                                                                                </td>
-                                                                                <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-success"
-                                                                                            wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#EditStandardModal"
-                                                                                            title="Edit Standard">
-                                                                                            <i
-                                                                                                class="bi bi-pencil-square"></i>
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-danger"
-                                                                                            wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#DeleteModal"
-                                                                                            title="Delete Standard">
-                                                                                            <i
-                                                                                                class="bi bi-trash"></i>
-                                                                                        </button>
-                                                                                    @endif
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -179,42 +160,8 @@
                                                                                 </td>
                                                                             </tr>
                                                                             @break
-                                                                        @elseif ($Loop->last)
-                                                                            <tr>
-                                                                                <td colspan="6"></td>
-                                                                                <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-primary"
-                                                                                            wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#AddStandardModal"
-                                                                                            title="Add Standard">
-                                                                                            <i
-                                                                                                class="bi bi-plus"></i>
-                                                                                        </button>
-                                                                                    @endif
-                                                                                </td>
-                                                                            </tr>
                                                                         @endif
-                                                                    @empty
-                                                                        <tr>
-                                                                            <td colspan="6"></td>
-                                                                            <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                    <button type="button"
-                                                                                        class="btn icon btn-primary"
-                                                                                        wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                        data-bs-toggle="modal"
-                                                                                        data-bs-target="#AddStandardModal"
-                                                                                        title="Add Standard">
-                                                                                        <i
-                                                                                            class="bi bi-plus"></i>
-                                                                                    </button>
-                                                                                @endif
-                                                                            </td>
-                                                                        </tr>
-                                                                    @endforelse
+                                                                    @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -259,7 +206,6 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <td colspan="6">Rating</td>
-                                                                        <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2">E</td>
@@ -268,7 +214,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    @forelse ($target->standards as $standard)
+                                                                    @foreach ($target->standards as $standard)
                                                                         @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
@@ -279,28 +225,6 @@
                                                                                 </td>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->time_5 }}
-                                                                                </td>
-                                                                                <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-success"
-                                                                                            wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#EditStandardModal"
-                                                                                            title="Edit Standard">
-                                                                                            <i
-                                                                                                class="bi bi-pencil-square"></i>
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-danger"
-                                                                                            wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#DeleteModal"
-                                                                                            title="Delete Standard">
-                                                                                            <i
-                                                                                                class="bi bi-trash"></i>
-                                                                                        </button>
-                                                                                    @endif
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -348,42 +272,8 @@
                                                                                 </td>
                                                                             </tr>
                                                                             @break
-                                                                        @elseif ($Loop->last)
-                                                                            <tr>
-                                                                                <td colspan="6"></td>
-                                                                                <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-primary"
-                                                                                            wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#AddStandardModal"
-                                                                                            title="Add Standard">
-                                                                                            <i
-                                                                                                class="bi bi-plus"></i>
-                                                                                        </button>
-                                                                                    @endif
-                                                                                </td>
-                                                                            </tr>
                                                                         @endif
-                                                                    @empty
-                                                                        <tr>
-                                                                            <td colspan="6"></td>
-                                                                            <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                                    <button type="button"
-                                                                                        class="btn icon btn-primary"
-                                                                                        wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                        data-bs-toggle="modal"
-                                                                                        data-bs-target="#AddStandardModal"
-                                                                                        title="Add Standard">
-                                                                                        <i
-                                                                                            class="bi bi-plus"></i>
-                                                                                    </button>
-                                                                                @endif
-                                                                            </td>
-                                                                        </tr>
-                                                                    @endforelse
+                                                                    @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -444,7 +334,6 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
-                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">E</td>
@@ -453,7 +342,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @forelse ($target->standards as $standard)
+                                                        @foreach ($target->standards as $standard)
                                                             @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
@@ -464,28 +353,6 @@
                                                                     </td>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->time_5 }}
-                                                                    </td>
-                                                                    <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-success"
-                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#EditStandardModal"
-                                                                                title="Edit Standard">
-                                                                                <i
-                                                                                    class="bi bi-pencil-square"></i>
-                                                                            </button>
-                                                                            <button type="button"
-                                                                                class="btn icon btn-danger"
-                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#DeleteModal"
-                                                                                title="Delete Standard">
-                                                                                <i
-                                                                                    class="bi bi-trash"></i>
-                                                                            </button>
-                                                                        @endif
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -533,42 +400,8 @@
                                                                     </td>
                                                                 </tr>
                                                                 @break
-                                                            @elseif ($Loop->last)
-                                                                <tr>
-                                                                    <td colspan="6"></td>
-                                                                    <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-primary"
-                                                                                wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#AddStandardModal"
-                                                                                title="Add Standard">
-                                                                                <i
-                                                                                    class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
                                                             @endif
-                                                        @empty
-                                                            <tr>
-                                                                <td colspan="6"></td>
-                                                                <td>
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                        <button type="button"
-                                                                            class="btn icon btn-primary"
-                                                                            wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#AddStandardModal"
-                                                                            title="Add Standard">
-                                                                            <i
-                                                                                class="bi bi-plus"></i>
-                                                                        </button>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-                                                        @endforelse
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -613,7 +446,6 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
-                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">E</td>
@@ -622,7 +454,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @forelse ($target->standards as $standard)
+                                                        @foreach ($target->standards as $standard)
                                                             @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
@@ -633,28 +465,6 @@
                                                                     </td>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->time_5 }}
-                                                                    </td>
-                                                                    <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-success"
-                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#EditStandardModal"
-                                                                                title="Edit Standard">
-                                                                                <i
-                                                                                    class="bi bi-pencil-square"></i>
-                                                                            </button>
-                                                                            <button type="button"
-                                                                                class="btn icon btn-danger"
-                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#DeleteModal"
-                                                                                title="Delete Standard">
-                                                                                <i
-                                                                                    class="bi bi-trash"></i>
-                                                                            </button>
-                                                                        @endif
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -702,42 +512,8 @@
                                                                     </td>
                                                                 </tr>
                                                                 @break
-                                                            @elseif ($Loop->last)
-                                                                <tr>
-                                                                    <td colspan="6"></td>
-                                                                    <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-primary"
-                                                                                wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#AddStandardModal"
-                                                                                title="Add Standard">
-                                                                                <i
-                                                                                    class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
                                                             @endif
-                                                        @empty
-                                                            <tr>
-                                                                <td colspan="6"></td>
-                                                                <td>
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                        <button type="button"
-                                                                            class="btn icon btn-primary"
-                                                                            wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#AddStandardModal"
-                                                                            title="Add Standard">
-                                                                            <i
-                                                                                class="bi bi-plus"></i>
-                                                                        </button>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-                                                        @endforelse
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -753,5 +529,4 @@
 
 
     {{ $functs->links('components.pagination') }}
-    <x-modals :standardValue="$standardValue"  />
 </div>

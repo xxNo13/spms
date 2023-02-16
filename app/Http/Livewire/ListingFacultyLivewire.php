@@ -33,8 +33,6 @@ class ListingFacultyLivewire extends Component
     public $target;
     public $target_id;
 
-    public $sub_percentages;
-
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -71,8 +69,9 @@ class ListingFacultyLivewire extends Component
 
     public function mount() {
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
-        $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
+        if ($this->duration) {
+            $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
+        }
     }
 
     public function render()
@@ -303,32 +302,6 @@ class ListingFacultyLivewire extends Component
             return false;
         }
 
-        $funct = [
-            'core' => false,
-            'strategic' => false,
-            'support' => false,
-        ];
-
-        foreach (SubFunct::where('type', 'ipcr')->where('user_type', 'faculty')->get() as $sub_funct) {
-            switch ($sub_funct->funct_id) {
-                case 1:
-                    $funct['core'] = true;
-                    break;
-                case 2:
-                    $funct['strategic'] = true;
-                    break;
-                case 3:
-                    $funct['support'] = true;
-                    break;
-            }
-        }
-        
-        $total = count(array_filter($funct)) * 100;
-
-        if ($total != array_sum($this->sub_percent)) {
-            return false;
-        }
-
         return true;
     }
 
@@ -351,17 +324,6 @@ class ListingFacultyLivewire extends Component
             'user_type' => 'faculty',
             'duration_id' => $this->duration->id,
         ]);
-
-        foreach (SubFunct::where('type', 'ipcr')->where('user_type', 'faculty')->get() as $sub_funct) {
-            SubPercentage::create([
-                'value' => $this->sub_percent[$sub_funct->id],
-                'sub_funct_id' => $sub_funct->id, 
-                'type' => 'ipcr',
-                'user_type' => 'faculty',
-                'duration_id' => $this->duration->id,
-            ]);
-        }
-
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Added Successfully",
@@ -389,22 +351,6 @@ class ListingFacultyLivewire extends Component
             'strategic' => $this->percent['strategic'],
             'support' => $this->percent['support'],
         ]);
-
-        foreach (SubFunct::where('type', 'ipcr')->where('user_type', 'faculty')->get() as $sub_funct) {
-            if ($sub_percent = SubPercentage::where('sub_funct_id', $sub_funct->id)->where('user_id', null)->update([
-                'value' => $this->sub_percent[$sub_funct->id],
-            ])) {
-
-            } else {
-                SubPercentage::create([
-                    'value' => $this->sub_percent[$sub_funct->id],
-                    'sub_funct_id' => $sub_funct->id, 
-                    'type' => 'ipcr',
-                    'user_type' => 'faculty',
-                    'duration_id' => $this->duration->id,
-                ]);
-            }
-        }
 
 
         $this->dispatchBrowserEvent('toastify', [

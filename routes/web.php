@@ -7,14 +7,17 @@ use App\Http\Livewire\TtmaLivewire;
 use App\Http\Livewire\StaffLivewire;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\FacultyLivewire;
+use App\Http\Controllers\PdfController;
 use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\AssignPmtLivewire;
 use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\ListingOpcrLivewire;
 use App\Http\Livewire\SubordinateLivewire;
+use App\Http\Livewire\StandardOpcrLivewire;
 use App\Http\Livewire\StandardStaffLivewire;
 use App\Http\Livewire\ListingFacultyLivewire;
+use App\Http\Livewire\StandardFacultyLivewire;
 use App\Http\Livewire\RecommendationListLivewire;
 use App\Http\Livewire\ListingStandardOpcrLivewire;
 use App\Http\Livewire\ListingStandardFacultyLivewire;
@@ -48,15 +51,30 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {
         Route::get('/staff', StaffLivewire::class)->name('staff');
-        Route::get('/faculty', FacultyLivewire::class)->name('faculty');
         Route::get('/standard/staff', StandardStaffLivewire::class)->name('standard.staff');
+        Route::get('/faculty', FacultyLivewire::class)->name('faculty');
+        Route::get('/standard/faculty', StandardFacultyLivewire::class)->name('standard.faculty');
         Route::get('/listing/faculty', ListingFacultyLivewire::class)->name('listing.faculty');
-        Route::get('/standard/faculty', ListingStandardFacultyLivewire::class)->name('standard.faculty');
+        Route::get('/listing/standard/faculty', ListingStandardFacultyLivewire::class)->name('listing.standard.faculty');
     });
 
     Route::group(['prefix' => 'opcr', 'as' => 'opcr.'], function() {
         Route::get('/', OpcrLivewire::class)->name('opcr');
+        Route::get('/standard', StandardOpcrLivewire::class)->name('standard');
         Route::get('/listing', ListingOpcrLivewire::class)->name('listing');
-        Route::get('/standard', ListingStandardOpcrLivewire::class)->name('standard');
+        Route::get('/listing/standard', ListingStandardOpcrLivewire::class)->name('listing.standard');
+    });
+
+    Route::group(['prefix' => 'print', 'as' => 'print.'], function() {
+        Route::get('/ipcr/faculty/{id}', [PdfController::class, 'ipcrFaculty'])->name('ipcr.faculty');
+        Route::get('/ipcr/staff/{id}', [PdfController::class, 'ipcrStaff'])->name('ipcr.staff');
+        Route::get('/opcr/{id}', [PdfController::class, 'opcr'])->name('opcr');
+        Route::get('/ttma', [PdfController::class, 'ttma'])->name('ttma');
+
+        
+        Route::get('/rankings/faculty', [PdfController::class, 'rankingFaculty'])->name('rankings.faculty');
+        Route::get('/rankings/staff', [PdfController::class, 'rankingStaff'])->name('rankings.staff');
+        Route::get('/rankings/{id}', [PdfController::class, 'rankingPerOffice'])->name('rankings.office');
+        Route::get('/rankings/opcr', [PdfController::class, 'rankingOpcr'])->name('rankings.opcr');
     });
 });

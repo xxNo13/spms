@@ -88,8 +88,9 @@ class StandardStaffLivewire extends Component
 
     public function mount(){        
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = auth()->user()->percentages()->where('type', 'ipcr')->where('user_type', 'staff')->first();
         if ($this->duration) {
+            $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', auth()->user()->id)->where('duration_id', $this->duration->id)->first();
+            
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
             if ($this->approval) {
                 $this->review_user['name'] = User::where('id', $this->approval->review_id)->pluck('name')->first();

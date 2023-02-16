@@ -94,7 +94,7 @@
                         @endif
         
                         @if ($duration && $assess && $assess->approve_status == 1)
-                            <a href="#" target="_blank" class="btn icon btn-primary" title="Print IPCR">
+                            <a href="#" target="_blank" class="btn icon btn-primary" title="Print OPCR">
                                 <i class="bi bi-printer"></i>
                             </a>
                         @endif
@@ -104,7 +104,7 @@
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $sub_percentage->value }}%
                             @endif
                         </h5>

@@ -477,8 +477,7 @@
                     <hr>
                 @endforeach
                 <div>
-                    @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)
-                                ->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                    @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">

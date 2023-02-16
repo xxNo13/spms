@@ -78,7 +78,7 @@
                     @endif
 
                     @if ($duration && $approval && $approval->approve_status == 1)
-                        <a href="/print/{{ 'standard' }}?userType=staff&user_id={{ Auth::user()->id }}" target="_blank" class="ms-auto btn icon btn-primary" title="Print IPCR">
+                        <a href="#" target="_blank" class="btn icon btn-primary" title="Print OPCR">
                             <i class="bi bi-printer"></i>
                         </a>
                     @endif

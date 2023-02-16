@@ -88,8 +88,9 @@ class ListingStandardFacultyLivewire extends Component
 
     public function mount(){ 
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
-        $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
+        if ($this->duration) {
+            $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
+        }
     }
 
     public function render()

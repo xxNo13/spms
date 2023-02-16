@@ -1722,7 +1722,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1747,7 +1747,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1772,7 +1772,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 

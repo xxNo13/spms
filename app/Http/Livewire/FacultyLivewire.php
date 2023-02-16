@@ -76,9 +76,9 @@ class FacultyLivewire extends Component
 
     public function mount() {
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
-        $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
         if ($this->duration) {
+            $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
+
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
@@ -96,18 +96,12 @@ class FacultyLivewire extends Component
                 $this->approve_user['message'] = $this->approval->approve_message;
             }
 
-            foreach (auth()->user()->account_types as $account_type){
-                if (str_contains(strtolower($account_type->account_type), 'not')){
-                        foreach(Target::where('required', true)->get() as $target) {
-                        $this->targetsSelected[$target->id] = $target->id;
-                    }
-                } else {
-                    foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
-                        $this->targetsSelected[$target->id] = $target->id;
-                    }
-                }
+            foreach(Target::where('required', true)->get() as $target) {
+                $this->targetsSelected[$target->id] = $target->id;
             }
-
+            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
+                $this->targetsSelected[$target->id] = $target->id;
+            }
 
         }
 
@@ -536,6 +530,8 @@ class FacultyLivewire extends Component
         $output_ids = [];
         $sub_funct_ids = [];
 
+        $selected_targets = 0;
+
         foreach ($this->targetsSelected as $id) {            
             if ($target = Target::where('id',$id)->first()) {
                 array_push($target_ids, $id);
@@ -555,6 +551,32 @@ class FacultyLivewire extends Component
                 }
             }
         }
+
+        foreach (Funct::all() as $funct) {
+            if (str_contains(strtolower($funct->funct), "core")) { 
+                foreach ($funct->sub_functs()->orderBy('created_at', 'DESC')->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get() as $sub_funct) {
+                    foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get() as $output) {
+                        foreach ($output->suboutputs as $suboutputs) {
+                            foreach ($suboutputs->targets as $target) {
+                                if (in_array($target->id, $target_ids)) {
+                                    $selected_targets++;
+                                }
+                            }
+                        }
+                        foreach ($output->targets as $target) {
+                            if (in_array($target->id, $target_ids)) {
+                                $selected_targets++;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+
+        $sub_percent1 = ($selected_targets/18)*100;
+        $sub_percent2 = 100 - $sub_percent1;
 
         if ($target_ids) {
             auth()->user()->targets()->sync($target_ids);
@@ -577,10 +599,47 @@ class FacultyLivewire extends Component
             auth()->user()->sub_functs()->detach();
         }
 
+        $first = true;
+        foreach (array_unique($sub_funct_ids) as $id) {
+            if ($first) {
+                $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
+                    'value' => $sub_percent2,
+                ]);
+    
+                if (!$sub_percent) {
+                    SubPercentage::create([
+                        'value' => $sub_percent2,
+                        'sub_funct_id' => $id, 
+                        'type' => 'ipcr',
+                        'user_type' => 'faculty',
+                        'user_id' => auth()->user()->id,
+                        'duration_id' => $this->duration->id,
+                    ]);
+                }
+                $first = false;
+            } else {
+                $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
+                    'value' => $sub_percent1,
+                ]);
+    
+                if (!$sub_percent) {
+                    SubPercentage::create([
+                        'value' => $sub_percent1,
+                        'sub_funct_id' => $id, 
+                        'type' => 'ipcr',
+                        'user_type' => 'faculty',
+                        'user_id' => auth()->user()->id,
+                        'duration_id' => $this->duration->id,
+                    ]);
+                }
+            }
+        }
+
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Added Successfully",
             'color' => "#435ebe",
         ]);
+        $this->mount();
     }  
 
     /////////////////////////// SUBFUNCTION/OUTPUT/SUBOUTPUT/TARGET CONFIGURATION END ///////////////////////////
