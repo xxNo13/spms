@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Pmt;
 use App\Models\User;
 use App\Models\Funct;
 use App\Models\Office;
@@ -92,6 +93,34 @@ after deadline'
         ]);
 
         ScoreEquivalent::factory(1)->create();
+        
+        Pmt::factory()->create([
+            'position' => 'College Vice President'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Director of Finance'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Director of Planning'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Director of Human Resource'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Head of Evaluation Comitee'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Representative of Faculty'
+        ]);
+
+        Pmt::factory()->create([
+            'position' => 'Representative of Staff'
+        ]);
 
         $this->call([
             UserSeeder::class

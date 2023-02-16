@@ -57,6 +57,7 @@
         <x-maz-sidebar-sub-item name="Standards for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
     </x-maz-sidebar-item>
     <x-maz-sidebar-item alias="opcr" name="OPCR" icon="bi bi-clipboard-data-fill">
+        <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
         <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
     </x-maz-sidebar-item>
@@ -67,6 +68,7 @@
     <x-maz-sidebar-item alias="recommendation.list" name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="recommended.for.training" name="Recommended for Trainings" :link="route('recommended.for.training')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+    <x-maz-sidebar-item alias="assign.pmt" name="Assign PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
     
     {{-- 
     @if ($pmo)

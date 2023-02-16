@@ -2,11 +2,13 @@
 
 use App\Http\Livewire\Dummy;
 use App\Http\Livewire\Dashboard;
+use App\Http\Livewire\OpcrLivewire;
 use App\Http\Livewire\TtmaLivewire;
 use App\Http\Livewire\StaffLivewire;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\FacultyLivewire;
 use App\Http\Livewire\TrainingLivewire;
+use App\Http\Livewire\AssignPmtLivewire;
 use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\ListingOpcrLivewire;
@@ -42,6 +44,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/recommendation-list', RecommendationListLivewire::class)->name('recommendation.list');
     Route::get('/recommended-for-training', RecommendedForTrainingLivewire::class)->name('recommended.for.training');
     Route::get('/for-approval', ForApprovalLivewire::class)->name('for.approval');
+    Route::get('/assign-pmt', AssignPmtLivewire::class)->name('assign.pmt');
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {
         Route::get('/staff', StaffLivewire::class)->name('staff');
@@ -52,6 +55,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
 
     Route::group(['prefix' => 'opcr', 'as' => 'opcr.'], function() {
+        Route::get('/', OpcrLivewire::class)->name('opcr');
         Route::get('/listing', ListingOpcrLivewire::class)->name('listing');
         Route::get('/standard', ListingStandardOpcrLivewire::class)->name('standard');
     });

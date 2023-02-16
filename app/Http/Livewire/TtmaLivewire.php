@@ -26,7 +26,7 @@ class TtmaLivewire extends Component
     public $selected;
     public $deadline;
 
-    public $filter = 'give';
+    public $filter = 'receive';
 
     protected $rules = [
         'subject' => ['nullable', 'required_if:selected,assign'],

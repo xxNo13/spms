@@ -1235,6 +1235,41 @@
         </div>
     @endif
 
+    {{-- Decline Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="DeclineModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Declining Message</h4>
+                </div>
+                <form wire:submit.prevent="declined">
+                    <div class="modal-body">
+                        <label>Comment: </label>
+                        <div class="form-group">
+                            <textarea placeholder="Comment" class="form-control"
+                                wire:model="comment">
+                            </textarea>
+                            @error('comment')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- Done Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="DoneModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
@@ -2308,7 +2343,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Add Target Output</h4>
                 </div>
-                <form wire:submit.prevent="saveIpcr">
+                <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "saveOpcr" : "saveIpcr" }}">
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">
@@ -2318,6 +2353,24 @@
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
+                        @if (isset($type) && $type == 'office')
+                            <label>Alloted Budget: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Alloted Budget" class="form-control"
+                                wire:model="alloted_budget">
+                                @error('alloted_budget')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Responsible Person/Office: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Responsible Person/Office" class="form-control"
+                                wire:model="responsible">
+                                @error('responsible')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
@@ -2342,7 +2395,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Edit Target Output</h4>
                 </div>
-                <form wire:submit.prevent="updateIpcr">
+                <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "saveOpcr" : "saveIpcr" }}">
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">
@@ -2352,6 +2405,24 @@
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
+                        @if (isset($type) && $type == 'office')
+                            <label>Alloted Budget: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Alloted Budget" class="form-control"
+                                wire:model="alloted_budget">
+                                @error('alloted_budget')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Responsible Person/Office: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Responsible Person/Office" class="form-control"
+                                wire:model="responsible">
+                                @error('responsible')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light-secondary" wire:click="closeModal">

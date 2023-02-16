@@ -55,6 +55,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
     
+    public function pmt() {
+        return $this->hasOne(Pmt::class);
+    }
+    
     public function trainings() {
         return $this->hasMany(Training::class);
     }

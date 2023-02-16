@@ -16,6 +16,9 @@
         </div>
     </div>
 
+    @php
+        $head = false;
+    @endphp
     <section class="section pt-3">
         <div class="col-12 text-end my-3">
             @foreach (auth()->user()->offices as $office)
@@ -26,19 +29,24 @@
                             Add Assignment
                         </button>
                     @endif
+                    @php
+                        $head = true;
+                    @endphp
                     @break
                 @endif
             @endforeach
         </div>
         <div class="my-3">
             <div class="hstack gap-3">
-                <div class="">
-                    <input type="radio" class="btn-check" name="options" id="give" wire:model="filter" value="give">
-                    <label class="btn btn-outline-primary" for="give">Given Assignment</label>
-        
-                    <input type="radio" class="btn-check" name="options" id="receive" wire:model="filter" value="receive">
-                    <label class="btn btn-outline-primary" for="receive">Received Assignment</label>
-                </div>
+                @if ($head) 
+                    <div class="my-auto">
+                        <input type="radio" class="btn-check" name="options" id="receive" wire:model="filter" value="receive">
+                        <label class="btn btn-outline-primary" for="receive">Received Assignment</label>
+
+                        <input type="radio" class="btn-check" name="options" id="give" wire:model="filter" value="give">
+                        <label class="btn btn-outline-primary" for="give">Given Assignment</label>
+                    </div>
+                @endif
                 <div class="ms-auto my-auto form-group position-relative has-icon-right">
                     <input type="text" class="form-control" placeholder="Search.." wire:model="search">
                     <div class="form-control-icon">
@@ -53,7 +61,7 @@
                 <div class="card-header">
                 <h4 class="card-title pl-1">Given Assignments</h4>
                 </div>
-                <div wire:poll class="card-body">
+                <div class="card-body">
                     @foreach ($ttmas as $ttma) 
                         <div class="accordion" id="cardAccordion">
                             <div class="accordion" id="accordionExample">
@@ -93,7 +101,7 @@
                                                 <div class="col-10 ms-auto bg-light p-2 rounded">
                                                     <h6>Messages:</h6>
                                                     <hr>
-                                                    <div class="overflow-auto" style="height: 225px;">
+                                                    <div wire:poll class="overflow-auto" style="height: 225px;">
                                                         @foreach ($ttma->messages as $message) 
                                                             @if ($message->user_id == auth()->user()->id) 
                                                                 <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
@@ -121,12 +129,12 @@
                     @endforeach
                 </div>
             </div>
-        @else
+        @elseif ($filter == 'receive')
             <div class="card collapse-icon accordion-icon-rotate">
                 <div class="card-header">
                 <h4 class="card-title pl-1">Revieved Assignments</h4>
                 </div>
-                <div wire:poll class="card-body">
+                <div class="card-body">
                     @foreach ($assignments as $ttma) 
                         <div class="accordion" id="cardAccordion">
                             <div class="accordion" id="accordionExample">
@@ -166,7 +174,7 @@
                                                 <div class="col-10 ms-auto bg-light p-2 rounded">
                                                     <h6>Messages:</h6>
                                                     <hr>
-                                                    <div class="overflow-auto" style="height: 225px;">
+                                                    <div wire:poll class="overflow-auto" style="height: 225px;">
                                                         @foreach ($ttma->messages as $message) 
                                                             @if ($message->user_id == auth()->user()->id) 
                                                                 <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
