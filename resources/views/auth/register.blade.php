@@ -1,10 +1,7 @@
-<x-guest-layout>
+<x-app-layout>
     <div id="auth-left">
-        <div class="auth-logo">
-            <a href="index.html"><img src="{{ asset('/images/logo/logo.png') }}" alt="Logo"></a>
-        </div>
         <h1 class="auth-title">Sign Up</h1>
-        <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
+        <p class="auth-subtitle mb-5">Input data to register.</p>
 
         <form action="" method="POST">
             @csrf
@@ -20,18 +17,53 @@
                     <i class="bi bi-envelope"></i>
                 </div>
             </div>
-            <div class="form-group position-relative has-icon-left mb-4">
-                <input type="password" class="form-control form-control-xl" name="password" placeholder="Password">
-                <div class="form-control-icon">
-                    <i class="bi bi-shield-lock"></i>
-                </div>
+            <input type="password" class="form-control form-control-xl" name="password" placeholder="Password" hidden value="password">
+            <input type="password" class="form-control form-control-xl" name="password_confirmation" placeholder="Confirm Password" hidden value="password">
+            
+            
+
+            <hr>
+
+            <!-- Offices -->
+            <div class="form-group">
+                <label for="office">Offices</label>
+                <select name="office[]" id="office" class="form-select" multiple="multiple">
+                    <option></option>
+                    <livewire:offices-livewire />
+                </select>
             </div>
-            <div class="form-group position-relative has-icon-left mb-4">
-                <input type="password" class="form-control form-control-xl" name="password_confirmation" placeholder="Confirm Password">
-                <div class="form-control-icon">
-                    <i class="bi bi-shield-lock"></i>
-                </div>
+
+            <!-- Account Types -->
+            <div class="form-group" wire:ignore>
+                <label for="account_type">Account Types</label>
+                <select name="account_type[]" id="account_type" class="form-select" multiple="multiple">
+                    <option></option>
+                    <livewire:account-types-livewire />
+                </select>
             </div>
+
+            @push('script')
+                <script>
+                    $('#office').select2({
+                        placeholder: "Select an Office",
+                        multiple: true,
+                    });
+                    
+                    $('#account_type').select2({
+                        placeholder: "Select an Account Type",
+                        multiple: true,
+                    });
+
+                    $('select[name="account_type[]"]').on('change',function(){
+                        var $this = $(this); 
+                        $('select[name="account_type[]"]').find('option[value="1"]').prop('disabled', ($this.val().indexOf("2") > -1) ); // disabled or enabled 
+                        $('select[name="account_type[]"]').find('option[value="2"]').prop('disabled', ($this.val().indexOf("1") > -1) ); // disabled or enabled 
+                    });
+
+                    $('select[name="account_type[]"]').trigger('change');
+                </script>
+            @endpush
+            
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                 <div class="mt-4">
                     <x-jet-label for="terms">
@@ -50,10 +82,5 @@
             @endif
             <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Sign Up</button>
         </form>
-        <div class="text-center mt-5 text-lg fs-4">
-            <p class='text-gray-600'>Already have an account? <a href="{{ route('login') }}"
-                    class="font-bold">Log
-                    in</a>.</p>
-        </div>
     </div>
-</x-guest-layout>
+</x-app-layout>

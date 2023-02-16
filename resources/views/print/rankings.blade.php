@@ -143,7 +143,7 @@
                                 $total = 0;
                                 $numberSubF = 0;
                             @endphp
-                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                            @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                 @php $percent = $sub_percentage->value @endphp
                             @endif
                             @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
@@ -320,203 +320,205 @@
             @endif
             
             @if ($staff)
-                @php
-                    $totalCF = 0;
-                    $totalSTF = 0;
-                    $totalSF = 0;
-                    $numberCF = 0;
-                    $numberSTF = 0;
-                    $numberSF = 0;
-                    $total1 = 0;
-                    $total2 = 0;
-                    $total3 = 0;
-                @endphp
-                @foreach ($functs as $funct)
+                @if ($percent = $user->percentages()->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first())
                     @php
-                        $total = 0;
-                        $number = 0;
-                        $numberSubF = 0;
+                        $totalCF = 0;
+                        $totalSTF = 0;
+                        $totalSF = 0;
+                        $numberCF = 0;
+                        $numberSTF = 0;
+                        $numberSF = 0;
+                        $total1 = 0;
+                        $total2 = 0;
+                        $total3 = 0;
                     @endphp
-                    @if ($funct->sub_functs)
-                        @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $subFunct)
-                            @php
-                                $total = 0;
-                                $numberSubF = 0;
-                            @endphp
-                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
-                                @php $percent = $sub_percentage->value @endphp
-                            @endif
-                            @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
-                                @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
-                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                        @switch($funct->funct)
-                                            @case('Core Function')
-                                                @php
-                                                    $totalCF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberCF++;
-                                                @endphp
-                                                @break
-                                            @case('Strategic Function')
-                                                @php
-                                                    $totalSTF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberSTF++;
-                                                @endphp
-                                                @break
-                                            @case('Support Function')
-                                                @php
-                                                    $totalSF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberSF++;
-                                                @endphp
-                                                @break
-                                        @endswitch
-                                    @endforeach
-                                @empty
-                                    @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                        @switch($funct->funct)
-                                            @case('Core Function')
-                                                @php
-                                                    $totalCF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberCF++;
-                                                @endphp
-                                                @break
-                                            @case('Strategic Function')
-                                                @php
-                                                    $totalSTF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberSTF++;
-                                                @endphp
-                                                @break
-                                            @case('Support Function')
-                                                @php
-                                                    $totalSF += $rating->average;
-                                                    $numberSubF++;
-                                                    $numberSF++;
-                                                @endphp
-                                                @break
-                                        @endswitch
-                                    @endforeach
-                                @endforelse
+                    @foreach ($functs as $funct)
+                        @php
+                            $total = 0;
+                            $number = 0;
+                            $numberSubF = 0;
+                        @endphp
+                        @if ($funct->sub_functs)
+                            @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $subFunct)
+                                @php
+                                    $total = 0;
+                                    $numberSubF = 0;
+                                @endphp
+                                @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                                    @php $percent = $sub_percentage->value @endphp
+                                @endif
+                                @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                                    @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                                        @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                            @switch($funct->funct)
+                                                @case('Core Function')
+                                                    @php
+                                                        $totalCF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberCF++;
+                                                    @endphp
+                                                    @break
+                                                @case('Strategic Function')
+                                                    @php
+                                                        $totalSTF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberSTF++;
+                                                    @endphp
+                                                    @break
+                                                @case('Support Function')
+                                                    @php
+                                                        $totalSF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberSF++;
+                                                    @endphp
+                                                    @break
+                                            @endswitch
+                                        @endforeach
+                                    @empty
+                                        @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                            @switch($funct->funct)
+                                                @case('Core Function')
+                                                    @php
+                                                        $totalCF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberCF++;
+                                                    @endphp
+                                                    @break
+                                                @case('Strategic Function')
+                                                    @php
+                                                        $totalSTF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberSTF++;
+                                                    @endphp
+                                                    @break
+                                                @case('Support Function')
+                                                    @php
+                                                        $totalSF += $rating->average;
+                                                        $numberSubF++;
+                                                        $numberSF++;
+                                                    @endphp
+                                                    @break
+                                            @endswitch
+                                        @endforeach
+                                    @endforelse
+                                @endforeach
+                                @switch($funct->funct)
+                                    @case('Core Function')
+                                        @php
+                                            $totalCF += (($total/$numberSubF)*($percent/100))*($percent->core/100)
+                                        @endphp
+                                        @break
+                                    @case('Strategic Function')
+                                        @php
+                                            $totalSTF += (($total/$numberSubF)*($percent/100))*($percent->strategic/100)
+                                        @endphp
+                                        @break
+                                    @case('Support Function')
+                                        @php
+                                            $totalSF += (($total/$numberSubF)*($percent/100))*($percent->support/100)
+                                        @endphp
+                                        @break
+                                @endswitch
                             @endforeach
-                            @switch($funct->funct)
-                                @case('Core Function')
-                                    @php
-                                        $totalCF += (($total/$numberSubF)*($percent/100))*($percentage->core/100)
-                                    @endphp
-                                    @break
-                                @case('Strategic Function')
-                                    @php
-                                        $totalSTF += (($total/$numberSubF)*($percent/100))*($percentage->strategic/100)
-                                    @endphp
-                                    @break
-                                @case('Support Function')
-                                    @php
-                                        $totalSF += (($total/$numberSubF)*($percent/100))*($percentage->support/100)
-                                    @endphp
-                                    @break
-                            @endswitch
+                        @endif
+                        @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                            @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                                @switch($funct->funct)
+                                    @case('Core Function')
+                                        @php
+                                            $totalCF += $rating->average;
+                                            $numberSubF++;
+                                            $numberCF++;
+                                        @endphp
+                                        @break
+                                    @case('Strategic Function')
+                                        @php
+                                            $totalSTF += $rating->average;
+                                            $numberSubF++;
+                                            $numberSTF++;
+                                        @endphp
+                                        @break
+                                    @case('Support Function')
+                                        @php
+                                            $totalSF += $rating->average;
+                                            $numberSubF++;
+                                            $numberSF++;
+                                        @endphp
+                                        @break
+                                @endswitch
+                            @empty
+                                @switch($funct->funct)
+                                    @case('Core Function')
+                                        @php
+                                            $totalCF += $rating->average;
+                                            $numberSubF++;
+                                            $numberCF++;
+                                        @endphp
+                                        @break
+                                    @case('Strategic Function')
+                                        @php
+                                            $totalSTF += $rating->average;
+                                            $numberSubF++;
+                                            $numberSTF++;
+                                        @endphp
+                                        @break
+                                    @case('Support Function')
+                                        @php
+                                            $totalSF += $rating->average;
+                                            $numberSubF++;
+                                            $numberSF++;
+                                        @endphp
+                                        @break
+                                @endswitch
+                            @endforelse
                         @endforeach
-                    @endif
-                    @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
-                        @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
-                            @switch($funct->funct)
-                                @case('Core Function')
-                                    @php
-                                        $totalCF += $rating->average;
-                                        $numberSubF++;
-                                        $numberCF++;
-                                    @endphp
-                                    @break
-                                @case('Strategic Function')
-                                    @php
-                                        $totalSTF += $rating->average;
-                                        $numberSubF++;
-                                        $numberSTF++;
-                                    @endphp
-                                    @break
-                                @case('Support Function')
-                                    @php
-                                        $totalSF += $rating->average;
-                                        $numberSubF++;
-                                        $numberSF++;
-                                    @endphp
-                                    @break
-                            @endswitch
-                        @empty
-                            @switch($funct->funct)
-                                @case('Core Function')
-                                    @php
-                                        $totalCF += $rating->average;
-                                        $numberSubF++;
-                                        $numberCF++;
-                                    @endphp
-                                    @break
-                                @case('Strategic Function')
-                                    @php
-                                        $totalSTF += $rating->average;
-                                        $numberSubF++;
-                                        $numberSTF++;
-                                    @endphp
-                                    @break
-                                @case('Support Function')
-                                    @php
-                                        $totalSF += $rating->average;
-                                        $numberSubF++;
-                                        $numberSF++;
-                                    @endphp
-                                    @break
-                            @endswitch
-                        @endforelse
                     @endforeach
-                @endforeach
-                @foreach ($functs as $funct)
-                    @if ($funct->funct == 'Core Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
-                            @php
-                                $total1 = $totalCF
-                            @endphp
-                            @break
-                        @empty
-                            @if ($numberCF == 0 && $total1 == 0)
-                                @php $total1 = 0 @endphp
-                            @elseif ($numberCF != 0 && $total1 == 0)
-                                @php $total1 = ($totalCF/$numberCF)*($percentage->core/100) @endphp
-                            @endif
-                        @endforelse
-                    @elseif ($funct->funct == 'Strategic Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
-                            @php
-                                $total2 = $totalSTF
-                            @endphp
-                            @break
-                        @empty
-                            @if ($numberSTF == 0 && $total2 == 0)
-                                @php $total2 = 0 @endphp
-                            @elseif ($numberSTF != 0 && $total2 == 0)
-                                @php $total2 = ($totalSTF/$numberSTF)*($percentage->strategic/100) @endphp
-                            @endif
-                        @endforelse
-                    @elseif ($funct->funct == 'Support Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
-                            @php
-                                $total3 = $totalSF
-                            @endphp
-                            @break
-                        @empty
-                            @if ($numberSF == 0 && $total3 == 0)
-                                @php $total3 = 0 @endphp
-                            @elseif ($numberSF != 0 && $total3 == 0)
-                                @php $total3 = ($totalSF/$numberSF)*($percentage->support/100) @endphp
-                            @endif
-                        @endforelse
-                    @endif
-                @endforeach
-                @php
-                    $totals[$user->id . ','. 'staff'] = round($total1+$total2+$total3, 2);
-                @endphp
+                    @foreach ($functs as $funct)
+                        @if ($funct->funct == 'Core Function')
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                @php
+                                    $total1 = $totalCF
+                                @endphp
+                                @break
+                            @empty
+                                @if ($numberCF == 0 && $total1 == 0)
+                                    @php $total1 = 0 @endphp
+                                @elseif ($numberCF != 0 && $total1 == 0)
+                                    @php $total1 = ($totalCF/$numberCF)*($percent->core/100) @endphp
+                                @endif
+                            @endforelse
+                        @elseif ($funct->funct == 'Strategic Function')
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                @php
+                                    $total2 = $totalSTF
+                                @endphp
+                                @break
+                            @empty
+                                @if ($numberSTF == 0 && $total2 == 0)
+                                    @php $total2 = 0 @endphp
+                                @elseif ($numberSTF != 0 && $total2 == 0)
+                                    @php $total2 = ($totalSTF/$numberSTF)*($percent->strategic/100) @endphp
+                                @endif
+                            @endforelse
+                        @elseif ($funct->funct == 'Support Function')
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                @php
+                                    $total3 = $totalSF
+                                @endphp
+                                @break
+                            @empty
+                                @if ($numberSF == 0 && $total3 == 0)
+                                    @php $total3 = 0 @endphp
+                                @elseif ($numberSF != 0 && $total3 == 0)
+                                    @php $total3 = ($totalSF/$numberSF)*($percent->support/100) @endphp
+                                @endif
+                            @endforelse
+                        @endif
+                    @endforeach
+                    @php
+                        $totals[$user->id . ','. 'staff'] = round($total1+$total2+$total3, 2);
+                    @endphp
+                @endif
             @endif
         @endforeach
         @if (isset($totals))

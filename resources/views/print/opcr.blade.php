@@ -239,7 +239,7 @@
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
                                             @foreach ($target->ratings as $rating)
-                                                @if ($rating->user_id == auth()->user()->id)
+                                                @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
                                                         @if ($rating->efficiency)
@@ -297,7 +297,7 @@
                                             <tr>
                                                 <td>{{ $target->target }}</td>
                                                 @foreach ($target->ratings as $rating)
-                                                    @if ($rating->user_id == auth()->user()->id)
+                                                    @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
                                                             @if ($rating->efficiency)
@@ -368,7 +368,7 @@
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
                                             @foreach ($target->ratings as $rating)
-                                                @if ($rating->user_id == auth()->user()->id)
+                                                @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
                                                         @if ($rating->efficiency)
@@ -426,7 +426,7 @@
                                             <tr>
                                                 <td>{{ $target->target }}</td>
                                                 @foreach ($target->ratings as $rating)
-                                                    @if ($rating->user_id == auth()->user()->id)
+                                                    @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
                                                             @if ($rating->efficiency)
@@ -643,7 +643,7 @@
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
                                     @foreach ($target->ratings as $rating)
-                                        @if ($rating->user_id == auth()->user()->id)
+                                        @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
                                                 @if ($rating->efficiency)
@@ -701,7 +701,7 @@
                                     <tr>
                                         <td>{{ $target->target }}</td>
                                         @foreach ($target->ratings as $rating)
-                                            @if ($rating->user_id == auth()->user()->id)
+                                            @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
                                                     @if ($rating->efficiency)
@@ -772,7 +772,7 @@
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
                                     @foreach ($target->ratings as $rating)
-                                        @if ($rating->user_id == auth()->user()->id)
+                                        @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
                                                 @if ($rating->efficiency)
@@ -830,7 +830,7 @@
                                     <tr>
                                         <td>{{ $target->target }}</td>
                                         @foreach ($target->ratings as $rating)
-                                            @if ($rating->user_id == auth()->user()->id)
+                                            @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
                                                     @if ($rating->efficiency)

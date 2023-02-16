@@ -31,7 +31,7 @@ class FacultyLivewire extends Component
 
     public $review_id;
     public $approve_id;
-    public $highestOffice;
+    public $highestOffice = [];
     
     public $rating_id;
     public $selectedTarget;
@@ -105,7 +105,7 @@ class FacultyLivewire extends Component
 
         }
 
-        $depths;
+        $depths = [];
 
         foreach(auth()->user()->offices as $office) {
             $depths[$office->id] = $office->getDepthAttribute();

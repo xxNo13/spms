@@ -37,6 +37,13 @@
                         @endswitch
                     @endif
                 </h4>
+                <div class="ms-auto hstack gap-3">
+                    @if ($duration && $approval && $approval->approve_status == 1)
+                        <a href="{{ route('print.standard.faculty', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Standard">
+                            <i class="bi bi-printer"></i>
+                        </a>
+                    @endif
+                </div>
             </div>
             @if ($funct->sub_functs)
                 @foreach ($funct->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)

@@ -78,7 +78,7 @@
                     @endif
 
                     @if ($duration && $approval && $approval->approve_status == 1)
-                        <a href="#" target="_blank" class="btn icon btn-primary" title="Print OPCR">
+                        <a href="{{ route('print.standard.staff', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Standard">
                             <i class="bi bi-printer"></i>
                         </a>
                     @endif

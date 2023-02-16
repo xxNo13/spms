@@ -6,6 +6,7 @@ use App\Models\Funct;
 use Livewire\Component;
 use App\Models\Duration;
 use App\Models\Percentage;
+use App\Models\SubPercentage;
 
 class StandardOpcrLivewire extends Component
 {

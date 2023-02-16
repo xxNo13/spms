@@ -108,7 +108,7 @@
                         @endif
         
                         @if ($duration && $assess && $assess->approve_status == 1)
-                            <a href="#" target="_blank" class="btn icon btn-primary" title="Print OPCR">
+                            <a href="{{ route('print.ipcr.staff', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print IPCR">
                                 <i class="bi bi-printer"></i>
                             </a>
                         @endif

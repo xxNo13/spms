@@ -14,6 +14,25 @@
                 </nav>
             </div>
         </div>
+        
+        @if ($duration)
+            <div class="row">
+                <div class="hstack gap-3 justify-content-center">
+                    <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Faculty">
+                        <i class="bi bi-printer"></i>
+                        Ranking of Faculty
+                    </a>
+                    <a href="{{ route('print.rankings.staff') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Staff">
+                        <i class="bi bi-printer"></i>
+                        Ranking of Staff
+                    </a>
+                    <a href="{{ route('print.rankings.opcr') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of OPCR">
+                        <i class="bi bi-printer"></i>
+                        Ranking of OPCR
+                    </a>
+                </div>
+            </div>
+        @endif
         <div class="row my-3">
             <div class="col-12 hstack gap-5 justify-content-center">
                 <a href="#durations" class="btn btn-outline-primary">Semester Duration</a>

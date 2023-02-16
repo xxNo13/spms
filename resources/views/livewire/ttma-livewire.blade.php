@@ -28,6 +28,11 @@
                             data-bs-target="#AddTTMAModal" wire:click="select('assign')">
                             Add Assignment
                         </button>
+                        @if ($duration)
+                            <a href="{{ route('print.ttma') }}" target="_blank" class="btn icon btn-primary" title="Print TTMA">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                        @endif
                     @endif
                     @php
                         $head = true;

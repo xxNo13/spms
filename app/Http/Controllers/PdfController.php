@@ -16,19 +16,45 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 class PdfController extends Controller
 {
     public function ipcrFaculty($id, Request $request) {
+        $faculty = false;
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->account_types as $account_type) {
+            if (str_contains(strtolower($account_type), 'faculty')) {
+                $faculty = true;
+                break;
+            } 
+        }
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
+
+        if (($yours && $faculty) || $head) {
+            
+        } else {
+            abort(403);
+        }
+
+
         if (isset($request->duration_id)) {
             $duration = Duration::fund($request->duration_id);
         } else {
             $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         }
-        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->first();
-        $sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->get();
 
         $scoreEquivalent = ScoreEquivalent::first();
 
         $user = User::find($id);
 
         if ($duration) {
+            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
+
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'faculty')->first();
             
             $approval_reviewer = User::find($approval->review_id);
@@ -60,20 +86,99 @@ class PdfController extends Controller
         return $pdf->stream('ipcr-faculty.pdf');
     }
     
-    public function ipcrStaff($id, Request $request) {
+    public function standardFaculty($id, Request $request) {
+        $faculty = false;
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->account_types as $account_type) {
+            if (str_contains(strtolower($account_type), 'faculty')) {
+                $faculty = true;
+                break;
+            } 
+        }
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
+
+        if (($yours && $faculty) || $head) {
+            
+        } else {
+            abort(403);
+        }
+
+
         if (isset($request->duration_id)) {
             $duration = Duration::fund($request->duration_id);
         } else {
             $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         }
-        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', null)->first();
-        $sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', null)->get();
+        $scoreEquivalent = ScoreEquivalent::first();
+
+        if($duration) {
+            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
+        }
+
+        $user = User::find($id);
+
+        $data = [
+            'functs' => Funct::all(),
+            'duration' => $duration,
+            'percentage' => $percentage,
+            'scoreEquivalent' => $scoreEquivalent,
+            'user_id' => $user->id,
+            'user' => $user,
+        ];
+
+        $pdf = PDF::loadView('print.standard-faculty', $data)->setPaper('a4','landscape');
+        return $pdf->stream('standard-faculty.pdf');
+    }
+    
+    public function ipcrStaff($id, Request $request) {
+        $staff = false;
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->account_types as $account_type) {
+            if (str_contains(strtolower($account_type), 'staff')) {
+                $staff = true;
+                break;
+            } 
+        }
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
+
+        if (($yours && $staff) || $head) {
+            
+        } else {
+            abort(403);
+        }
+
+
+        if (isset($request->duration_id)) {
+            $duration = Duration::fund($request->duration_id);
+        } else {
+            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        }
 
         $scoreEquivalent = ScoreEquivalent::first();
 
         $user = User::find($id);
 
         if ($duration) {
+            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
+
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first();
             
             $approval_reviewer = User::find($approval->review_id);
@@ -95,7 +200,6 @@ class PdfController extends Controller
             'assess_approver' => $assess_approver,
             'duration' => $duration,
             'percentage' => $percentage,
-            'sub_percentages' => $sub_percentages,
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
@@ -104,21 +208,93 @@ class PdfController extends Controller
         $pdf = PDF::loadView('print.ipcr-staff', $data)->setPaper('a4','landscape');
         return $pdf->stream('ipcr-staff.pdf');
     }
+    
+    public function standardStaff($id, Request $request) {
+        $staff = false;
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->account_types as $account_type) {
+            if (str_contains(strtolower($account_type), 'staff')) {
+                $staff = true;
+                break;
+            } 
+        }
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
 
-    public function opcr($id, Request $request) {
+        if (($yours && $staff) || $head) {
+            
+        } else {
+            abort(403);
+        }
+
+
         if (isset($request->duration_id)) {
             $duration = Duration::fund($request->duration_id);
         } else {
             $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         }
-        $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->first();
-        $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->get();
+        $scoreEquivalent = ScoreEquivalent::first();
+
+        if($duration) {
+            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', null)->where('duration_id', $duration->id)->first();
+        }
+
+        $user = User::find($id);
+
+        $data = [
+            'functs' => Funct::all(),
+            'duration' => $duration,
+            'percentage' => $percentage,
+            'scoreEquivalent' => $scoreEquivalent,
+            'user_id' => $user->id,
+            'user' => $user,
+        ];
+
+        $pdf = PDF::loadView('print.standard-staff', $data)->setPaper('a4','landscape');
+        return $pdf->stream('standard-staff.pdf');
+    }
+
+    public function opcr($id, Request $request) {
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
+
+        if ($yours || $head) {
+        } else {
+            abort(403);
+        }
+
+        
+        if (isset($request->duration_id)) {
+            $duration = Duration::fund($request->duration_id);
+        } else {
+            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        }
 
         $scoreEquivalent = ScoreEquivalent::first();
 
         $user = User::find($id);
 
         if ($duration) {
+            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
+            $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
             
             $approval_reviewer = User::find($approval->review_id);
@@ -149,8 +325,69 @@ class PdfController extends Controller
         $pdf = PDF::loadView('print.opcr', $data)->setPaper('a4','landscape');
         return $pdf->stream('opcr.pdf');
     }
+    
+    public function standardOpcr($id, Request $request) {
+        $head = false;
+        $yours = false;
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($id == auth()->user()->id) {
+            $yours = true;
+        }
+
+        if ($yours || $head) {
+        } else {
+            abort(403);
+        }
+
+
+        if (isset($request->duration_id)) {
+            $duration = Duration::fund($request->duration_id);
+        } else {
+            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        }
+        $scoreEquivalent = ScoreEquivalent::first();
+
+        if($duration) {
+            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
+            $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+        }
+
+        $user = User::find($id);
+
+        $data = [
+            'functs' => Funct::all(),
+            'duration' => $duration,
+            'percentage' => $percentage,
+            'sub_percentages' => $sub_percentages,
+            'scoreEquivalent' => $scoreEquivalent,
+            'user_id' => $user->id,
+            'user' => $user,
+        ];
+
+        $pdf = PDF::loadView('print.standard-opcr', $data)->setPaper('a4','landscape');
+        return $pdf->stream('standard-opcr.pdf');
+    }
 
     public function ttma() {
+        $head = false;
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if ($head) {
+            
+        } else {
+            abort(403);
+        }
+
+
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         $ttmas = Ttma::where('duration_id', $duration->id)->where('head_id', auth()->user()->id)->get();
 
@@ -164,8 +401,25 @@ class PdfController extends Controller
     }
 
     public function rankingPerOffice($office_id) {
+        $head = false;
+        $office = false;
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+            }
+            if ($office->id == $office_id) {
+                $office = true;
+            }
+        }
+
+        if ($head && $office) {
+        } else {
+            abort(403);
+        }
+
+
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('userType', 'faculty')->where('duration_id', $duration->id)->get();
+        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
 
         $users = User::query();
 
@@ -181,7 +435,7 @@ class PdfController extends Controller
         $data = [
             'functs' => $functs,    
             'duration' => $duration,
-            'percentages' => $percentages,
+            'percentage' => $percentage,
             'scoreEq$scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];
@@ -192,8 +446,21 @@ class PdfController extends Controller
     }
 
     public function rankingFaculty() {
+        $pmo = false;
+        foreach (auth()->user()->offices as $office) {
+            if (str_contains(strtolower($office->office_name), 'pm')) {
+                $pmo = true;
+            }
+        }
+
+        if ($pmo) {
+        } else {
+            abort(403);
+        }
+
+
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('userType', 'faculty')->where('duration_id', $duration->id)->get();
+        $percentages = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->get();
 
         $users = User::query();
 
@@ -220,8 +487,21 @@ class PdfController extends Controller
     }
 
     public function rankingStaff() {
+        $pmo = false;
+        foreach (auth()->user()->offices as $office) {
+            if (str_contains(strtolower($office->office_name), 'pm')) {
+                $pmo = true;
+            }
+        }
+
+        if ($pmo) {
+        } else {
+            abort(403);
+        }
+
+
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('userType', 'staff')->where('duration_id', $duration->id)->get();
+        $percentages = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get();
 
         $users = User::query();
 
@@ -248,8 +528,22 @@ class PdfController extends Controller
     }
 
     public function rankingOpcr() {
+        $pmo = false;
+        foreach (auth()->user()->offices as $office) {
+            if (str_contains(strtolower($office->office_name), 'pm')) {
+                $pmo = true;
+            }
+        }
+
+        if ($pmo) {
+        } else {
+            abort(403);
+        }
+
+
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('userType', 'staff')->where('duration_id', $duration->id)->get();
+        $percentages = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+        $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
 
         $users = User::query();
 
@@ -266,6 +560,7 @@ class PdfController extends Controller
             'functs' => $functs,    
             'duration' => $duration,
             'percentages' => $percentages,
+            'sub_percentages' => $sub_percentages,
             'scoreEq$scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];

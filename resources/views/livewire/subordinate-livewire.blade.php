@@ -16,32 +16,16 @@
     </div>
 
     @if ($duration)
-        <div class="row text-center">
-            <div class="col-6">
-                <a href="/print/rankings" target="_blank" class="ms-auto btn icon btn-primary" title="Print Ranking IPCR">
-                    <i class="bi bi-printer"></i>
-                    Ranking of IPCR in your Office
-                </a>
-            </div>
-            <div class="col-6">
-                <a href="/print/rankings/opcr" target="_blank" class="ms-auto btn icon btn-primary" title="Print Ranking IPCR">
-                    <i class="bi bi-printer"></i>
-                    Rankings of OPCR
-                </a>
-            </div>
-        </div>
-        <div class="row text-center mt-2">
-            <div class="col-6">
-                <a href="/print/rankings/faculty" target="_blank" class="ms-auto btn icon btn-primary" title="Print Ranking IPCR">
-                    <i class="bi bi-printer"></i>
-                    Rankings of IPCR per Faculty
-                </a>
-            </div>
-            <div class="col-6">
-                <a href="/print/rankings/staff" target="_blank" class="ms-auto btn icon btn-primary" title="Print Ranking IPCR">
-                    <i class="bi bi-printer"></i>
-                    Rankings of IPCR per Staff
-                </a>
+        <div class="row">
+            <div class="hstack gap-3 justify-content-center">
+                @foreach (auth()->user()->offices as $office)
+                    @if ($office->pivot->isHead)
+                        <a href="{{ route('print.rankings.office', ['id' => $office->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of {{ $office->office_name }}">
+                            <i class="bi bi-printer"></i>
+                            Ranking of {{ $office->office_name }}
+                        </a>
+                    @endif
+                @endforeach
             </div>
         </div>
     @endif
