@@ -18,37 +18,20 @@ class AssignPmtLivewire extends Component
     public $staff_users;
 
     public $ids = [];
+    public $planning;
     public $isHead;
 
     public function mount() {
-        $vice_users = User::query();
-        $finance_users = User::query();
-        $planning_users = User::query();
-        $resource_users = User::query();
-        $evaluation_users = User::query();
-
         $vice = [];
         $finance = [];
         $planning = [];
         $resource = [];
         $evaluation = [];
 
-        $depths;
-        $viceOffice;
-
-        foreach(Office::all() as $office) {
-            $depths[$office->id] = $office->getDepthAttribute();
-        }
-
-        foreach ($depths as $id => $depth) {
-            if (1 == $depth) {
-                $viceOffice[$id] = $depth;
-            }
-        }
-
-        foreach ($viceOffice as $id => $depth) {
-            $vice_users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($id){
-                        return $query->where('id', $id);
+        $viceOffice = Office::where('office_name', 'LIKE', '% vice%')->get();
+        foreach ($viceOffice as $office) {
+            $vice_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
+                        return $query->where('id', $office->id);
                     });
             foreach ($vice_users->get() as $vice_user) {            
                 array_push($vice, $vice_user);
@@ -58,8 +41,8 @@ class AssignPmtLivewire extends Component
 
         $financeOffice = Office::where('office_name', 'LIKE', '%finance%')->get();
         foreach ($financeOffice as $office) {
-            $finance_users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
-                        return $query->where('id', $offce->id);
+            $finance_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
+                        return $query->where('id', $office->id);
                     });
             foreach ($finance_users->get() as $finance_user) {            
                 array_push($finance, $finance_user);
@@ -69,7 +52,7 @@ class AssignPmtLivewire extends Component
 
         $planningOffice = Office::where('office_name', 'LIKE', '%planning%')->get();
         foreach ($planningOffice as $office) {
-            $planning_users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
+            $planning_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
                         return $query->where('id', $office->id);
                     });
             foreach ($planning_users->get() as $planning_user) {            
@@ -80,7 +63,7 @@ class AssignPmtLivewire extends Component
 
         $resourceOffice = Office::where('office_name', 'LIKE', '%resource%')->get();
         foreach ($resourceOffice as $office) {
-            $resource_users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
+            $resource_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
                         return $query->where('id', $office->id);
                     });
             foreach ($resource_users->get() as $resource_user) {            
@@ -91,7 +74,7 @@ class AssignPmtLivewire extends Component
 
         $evaluationOffice = Office::where('office_name', 'LIKE', '%evaluation%')->get();
         foreach ($evaluationOffice as $office) {
-            $evaluation_users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
+            $evaluation_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
                         return $query->where('id', $office->id);
                     });
             foreach ($evaluation_users->get() as $evaluation_user) {            
@@ -101,11 +84,11 @@ class AssignPmtLivewire extends Component
         $this->evaluation_users = array_unique($evaluation);
 
         $this->faculty_users = User::whereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query){
-                            return $query->where('account_type', 'LIKE', 'faculty');
+                            return $query->where('account_type', 'LIKE', '%faculty%');
                         })->get();
 
         $this->staff_users = User::whereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query){
-                            return $query->where('account_type', 'LIKE', 'staff');
+                            return $query->where('account_type', 'LIKE', '%staff%');
                         })->get();
 
         foreach (Pmt::all() as $pmt) {
@@ -126,7 +109,7 @@ class AssignPmtLivewire extends Component
 
     public function save() {
         foreach ($this->ids as $id => $user_id) {
-            if ($user_id === "") {
+            if ($user_id == "") {
                 Pmt::where('id', $id)->update([
                     'user_id' => null,
                     'isHead' => 0

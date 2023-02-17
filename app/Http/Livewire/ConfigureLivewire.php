@@ -181,6 +181,7 @@ class ConfigureLivewire extends Component
             Office::where('id', $this->office_id)->update([
                 'office_name' => $this->office_name,
                 'office_abbr' => $this->office_abbr, 
+                'parent_id' => $this->parent_id,
                 'building' => $this->building
             ]);
 

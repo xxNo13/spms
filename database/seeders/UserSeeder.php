@@ -16,14 +16,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
+        User::create([
             'name' => 'User',
             'email' => 'user@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$cSqURtekr48ONKZGezKPNe/eNezGSHvwNlYh87VsKgVPQYYAP4bay', // password
             'remember_token' => Str::random(10),
         ]);
 
-        $user->offices()->attach([1,2]);
+        User::factory(10)->create();
     }
 }

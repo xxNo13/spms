@@ -8,14 +8,14 @@
         <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
 
         @if (session('status'))
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ session('status') }}
-        </div>
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
         @endif
         @if ($errors->any())
-        <div class="alert alert-danger">
-            {{ $errors->first() }}
-        </div>
+            <div class="alert alert-danger">
+                {{ $errors->first() }}
+            </div>
         @endif
         <form action="{{ route('login') }}" method="POST">
             @csrf

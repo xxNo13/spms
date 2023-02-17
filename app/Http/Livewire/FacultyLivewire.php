@@ -410,6 +410,14 @@ class FacultyLivewire extends Component
                 }
             }
 
+            if (empty($this->review_id) && empty($this->approve_id)) {
+                $this->dispatchBrowserEvent('toastify', [
+                    'message' => "No Head found!",
+                    'color' => "#f3616d",
+                ]);
+                return;
+            }
+
             $approval = Approval::create([
                 'name' => $type,
                 'user_id' => auth()->user()->id,
@@ -515,7 +523,7 @@ class FacultyLivewire extends Component
 
     public function add() {
         foreach (auth()->user()->account_types as $account_type){
-            if (str_contains(strtolower($account_type->account_type), 'not')){
+            if (str_contains(strtolower($account_type->account_type), 'no')){
                     $this->getIpcr();
                     return;
             }

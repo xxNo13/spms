@@ -33,39 +33,6 @@ class DatabaseSeeder extends Seeder
             'account_type' => 'Staff'
         ]);
 
-        Office::factory()->create([
-            'office_name' => 'Human Resource Management Office',
-            'office_abbr' => 'HRMO',
-            'building' => 'Administration Bldg.'
-        ]);
-
-        Office::factory()->create([
-            'office_name' => 'Planning Management Office',
-            'office_abbr' => 'PMO',
-            'building' => 'Administration Bldg.'
-        ]);
-
-        Office::factory()->create([
-            'office_name' => 'Belongs to Planning',
-            'office_abbr' => 'BtP',
-            'building' => 'Administration Bldg.',
-            'parent_id' => 2
-        ]);
-
-        Office::factory()->create([
-            'office_name' => 'Belongs to Planning 2',
-            'office_abbr' => 'BtP',
-            'building' => 'Administration Bldg.',
-            'parent_id' => 2
-        ]);
-
-        Office::factory()->create([
-            'office_name' => 'Belongs to HR',
-            'office_abbr' => 'BtHR',
-            'building' => 'Administration Bldg.',
-            'parent_id' => 1
-        ]);
-
         Funct::factory()->create([
             'funct' => 'Core Function'
         ]);
@@ -123,13 +90,25 @@ after deadline'
         ]);
 
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
+            OfficeSeeder::class,
         ]);
 
-        $users = User::factory(10)->create();
+        $offices = Office::all();
 
-        foreach ($users as $user) {
-            $user->offices()->sync(rand(3,5));
-        }
+        User::all()->each(function ($user) use ($offices) { 
+            $user->offices()->attach(
+                $offices->random(rand(1, 2))->pluck('id')->toArray()
+            ); 
+        });
+
+        $account_types = AccountType::all();
+
+        User::all()->each(function ($user) use ($account_types) { 
+            $user->account_types()->attach(
+                $account_types->random(1)->pluck('id')->toArray()
+            ); 
+        });
+
     }
 }

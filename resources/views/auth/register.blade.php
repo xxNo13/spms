@@ -2,7 +2,17 @@
     <div id="auth-left">
         <h1 class="auth-title">Sign Up</h1>
         <p class="auth-subtitle mb-5">Input data to register.</p>
-
+        
+        @if (session('message'))
+            <div x-data="{show: true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="alert alert-success" role="alert">
+                {{ session('message') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                {{ $errors->first() }}
+            </div>
+        @endif
         <form action="" method="POST">
             @csrf
             <div class="form-group position-relative has-icon-left mb-4">
@@ -17,10 +27,6 @@
                     <i class="bi bi-envelope"></i>
                 </div>
             </div>
-            <input type="password" class="form-control form-control-xl" name="password" placeholder="Password" hidden value="password">
-            <input type="password" class="form-control form-control-xl" name="password_confirmation" placeholder="Confirm Password" hidden value="password">
-            
-            
 
             <hr>
 

@@ -36,54 +36,54 @@
                                     <td>
                                         {{ $pmt->position }}
                                     </td>
-                                    <td>
+                                    <td wire:ignore>
                                         @if (str_contains(strtolower($pmt->position), 'vice'))
-                                            <select name="vice" id="vice" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a College Vice President</option>
+                                            <select style="width: 75%;" name="vice" id="vice" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($vice_users as $user) 
-                                                    <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'finance'))
-                                            <select name="finance" id="finance" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Director of Finance</option>
+                                            <select style="width: 75%;" name="finance" id="finance" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($finance_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'planning'))
-                                            <select name="planning" id="planning" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Director of Planning</option>
+                                            <select style="width: 75%;" name="planning" id="planning" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($planning_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'resource'))
-                                            <select name="resource" id="resource" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Director of Human Resource</option>
+                                            <select style="width: 75%;" name="resource" id="resource" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($resource_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'evaluation'))
-                                            <select name="evaluation" id="evaluation" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Head of Evaluation Comitee</option>
+                                            <select style="width: 75%;" name="evaluation" id="evaluation" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($evaluation_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'faculty'))
-                                            <select name="faculty" id="faculty" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Representative of Faculty</option>
+                                            <select style="width: 75%;" name="faculty" id="faculty" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($faculty_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'staff'))
-                                            <select name="staff" id="staff" class="form-select" wire:model="ids.{{$pmt->id}}" >
-                                                <option value="">Select a Representative of Staff</option>
+                                            <select style="width: 75%;" name="staff" id="staff" class="form-select" wire:model="ids.{{$pmt->id}}" >
+                                                <option></option>
                                                 @foreach ($staff_users as $user) 
-                                                    <option value="{{ $user['id'] }}" >{{ $user['name'] }}</option>
+                                                    <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @endif
@@ -99,6 +99,66 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @push('script')
+                        <script>
+                            $('#vice').select2({
+                                placeholder: "Select an Position for Vice President",
+                            });
+                            $('#vice').on('change', function () {
+                                var data = $('#vice').select2("val");
+                                @this.set('ids.1', data);
+                            });
+
+                            $('#finance').select2({
+                                placeholder: "Select an Position for Director of Finance",
+                            });
+                            $('#finance').on('change', function () {
+                                var data = $('#finance').select2("val");
+                                @this.set('ids.2', data);
+                            });
+
+                            $('#planning').select2({
+                                placeholder: "Select an Position for Director of Planning",
+                            });
+                            $('#planning').on('change', function () {
+                                var data = $('#planning').select2("val");
+                                @this.set('ids.3', data);
+                            });
+
+                            
+                            $('#resource').select2({
+                                placeholder: "Select an Position for Director of Human Resource",
+                            });
+                            $('#resource').on('change', function () {
+                                var data = $('#resource').select2("val");
+                                @this.set('ids.4', data);
+                            });
+
+                            $('#evaluation').select2({
+                                placeholder: "Select an Position for Head of Evaluation Comitee",
+                            });
+                            $('#evaluation').on('change', function () {
+                                var data = $('#evaluation').select2("val");
+                                @this.set('ids.5', data);
+                            });
+
+                            $('#faculty').select2({
+                                placeholder: "Select an Position for Representative of Faculty",
+                            });
+                            $('#faculty').on('change', function () {
+                                var data = $('#faculty').select2("val");
+                                @this.set('ids.6', data);
+                            });
+
+                            $('#staff').select2({
+                                placeholder: "Select an Position for Representative of Staff",
+                            });
+                            $('#staff').on('change', function () {
+                                var data = $('#staff').select2("val");
+                                @this.set('ids.7', data);
+                            });
+                        </script>
+                    @endpush
                 </div>
             </div>
         </div>

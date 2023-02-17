@@ -59,7 +59,7 @@
                 <div class="hstack mb-3 gap-2">
                     <h4>
                         {{ $funct->funct }}
-                        @if ($percentage)
+                        @if (isset($percentage))
                             @switch($funct->funct)
                                 @case('Core Function')
                                     {{ $percentage->core }}%
@@ -114,23 +114,405 @@
                         @endif
                     </div>
                 </div>
-                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
-                    <div>
-                        <h5>
-                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
-                                </div>
-                            @endif
-                            {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
-                                {{ $sub_percentage->value }}%
-                            @endif
-                        </h5>
+                @if ($duration)
+                    @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        <div>
+                            <h5>
+                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
+                                    </div>
+                                @endif
+                                {{ $sub_funct->sub_funct }}
+                                @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
+                                    {{ $sub_percentage->value }}%
+                                @endif
+                            </h5>
 
-                        @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                            @foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
+                                                </div>
+                                            @endif
+                                            {{ $output->code }} {{ $number++ }} - {{ $output->output }}
+                                        </h4>
+                                        <p class="text-subtitle text-muted"></p>
+                                    </div>
+
+                                    @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                                        
+                                        <div class="card-body">
+                                            <h6>
+                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
+                                                    </div>
+                                                @endif
+                                                {{ $suboutput->suboutput }}
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="accordion accordion-flush"
+                                                id="{{ 'suboutput' }}{{ $suboutput->id }}">
+                                                <div class="d-sm-flex">
+                                                    @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                            @endif
+                                                            {{ $target->target }}
+                                                        </div>  
+                                                    @endforeach
+                                                </div>
+
+                                                @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+
+                                                    <div wire:ignore.self
+                                                        id="{{ 'target' }}{{ $target->id }}"
+                                                        class="accordion-collapse collapse"
+                                                        aria-labelledby="flush-headingOne"
+                                                        data-bs-parent="#{{ 'suboutput' }}{{ $suboutput->id }}">
+                                                        <div class="accordion-body table-responsive">
+                                                            <table class="table table-lg text-center">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td rowspan="2">Target Output</td>
+                                                                        <td rowspan="2">Actual
+                                                                            Accomplishment</td>
+                                                                        <td colspan="4">Rating</td>
+                                                                        <td rowspan="2">Remarks</td>
+                                                                        <td rowspan="2">Actions</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>E</td>
+                                                                        <td>Q</td>
+                                                                        <td>T</td>
+                                                                        <td>A</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        @if ($target->pivot->target_output)
+                                                                            <td style="white-space: nowrap;">
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                                    <div class="dropdown-menu">
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                    </div>
+                                                                                @endif
+                                                                                {{ $target->pivot->target_output }}
+                                                                            </td>
+                                                                        @else
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                                <td class="text-center">
+                                                                                    <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
+                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                        <i class="bi bi-plus"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            @else
+                                                                                <td></td>
+                                                                            @endif
+                                                                        @endif
+                            
+                                                                        @forelse ($target->ratings as $rating)
+                                                                            @if ($rating->user_id == auth()->user()->id) 
+                                                                                <td>{{ $rating->accomplishment }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->efficiency)
+                                                                                        {{ $rating->efficiency }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->quality)
+                                                                                        {{ $rating->quality }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->timeliness)
+                                                                                        {{ $rating->timeliness }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>{{ $rating->average }}
+                                                                                </td>
+                                                                                <td>{{ $rating->remarks }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-success"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#EditRatingModal"
+                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                            title="Edit Rating">
+                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-danger"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#DeleteModal"
+                                                                                            title="Delete Rating"
+                                                                                            wire:click="rating({{ 0 }}, {{ $rating->id }})">
+                                                                                            <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </td>
+                                                                                @break
+                                                                            @elseif ($loop->last)
+                                                                                <td colspan="6"></td>
+                                                                                <td>
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#AddRatingModal"
+                                                                                            wire:click="rating({{ $target->id }})"
+                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                            <i class="bi bi-plus"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </td>
+                                                                            @endif
+                                                                        @empty
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#AddRatingModal"
+                                                                                        wire:click="rating({{ $target->id }})"
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        <i class="bi bi-plus"></i>
+                                                                                    </button>
+                                                                                @endif
+                                                                            </td>
+                                                                        @endforelse
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="card-body">
+                                            <div class="accordion accordion-flush"
+                                                id="{{ 'output' }}{{ $output->id }}">
+                                                <div class="d-sm-flex">
+                                                    @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                            @endif
+                                                            {{ $target->target }}
+                                                        </div>  
+                                                    @endforeach
+                                                </div>
+
+                                                @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+
+                                                    <div wire:ignore.self
+                                                        id="{{ 'target' }}{{ $target->id }}"
+                                                        class="accordion-collapse collapse"
+                                                        aria-labelledby="flush-headingOne"
+                                                        data-bs-parent="#{{ 'output' }}{{ $output->id }}">
+                                                        <div class="accordion-body table-responsive">
+                                                            <table class="table table-lg text-center">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td rowspan="2">Target Output</td>
+                                                                        <td rowspan="2">Actual
+                                                                            Accomplishment</td>
+                                                                        <td colspan="4">Rating</td>
+                                                                        <td rowspan="2">Remarks</td>
+                                                                        <td rowspan="2">Actions</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>E</td>
+                                                                        <td>Q</td>
+                                                                        <td>T</td>
+                                                                        <td>A</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        @if ($target->pivot->target_output)
+                                                                            <td style="white-space: nowrap;">
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                                    <div class="dropdown-menu">
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                    </div>
+                                                                                @endif
+                                                                                {{ $target->pivot->target_output }}
+                                                                            </td>
+                                                                        @else
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                                <td class="text-center">
+                                                                                    <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
+                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                        <i class="bi bi-plus"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            @else
+                                                                                <td></td>
+                                                                            @endif
+                                                                        @endif
+                            
+                                                                        @forelse ($target->ratings as $rating)
+                                                                            @if ($rating->user_id == auth()->user()->id) 
+                                                                                <td>{{ $rating->accomplishment }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->efficiency)
+                                                                                        {{ $rating->efficiency }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->quality)
+                                                                                        {{ $rating->quality }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if ($rating->timeliness)
+                                                                                        {{ $rating->timeliness }}
+                                                                                    @else
+                                                                                        NR
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>{{ $rating->average }}
+                                                                                </td>
+                                                                                <td>{{ $rating->remarks }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-success"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#EditRatingModal"
+                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                            title="Edit Rating">
+                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-danger"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#DeleteModal"
+                                                                                            title="Delete Rating"
+                                                                                            wire:click="rating({{ 0 }}, {{ $rating->id }})">
+                                                                                            <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </td>
+                                                                                @break
+                                                                            @elseif ($loop->last)
+                                                                                <td colspan="6"></td>
+                                                                                <td>
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#AddRatingModal"
+                                                                                            wire:click="rating({{ $target->id }})"
+                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                            <i class="bi bi-plus"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </td>
+                                                                            @endif
+                                                                        @empty
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#AddRatingModal"
+                                                                                        wire:click="rating({{ $target->id }})"
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        <i class="bi bi-plus"></i>
+                                                                                    </button>
+                                                                                @endif
+                                                                            </td>
+                                                                        @endforelse
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            @endforeach
+                        </div>
+                        <hr>
+                    @endforeach
+                    <div>
+                        @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)
+                                    ->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -500,6 +882,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
+
                                             @endforeach
                                         </div>
                                     </div>
@@ -507,388 +890,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <hr>
-                @endforeach
-                <div>
-                    @foreach (auth()->user()->outputs()->where('funct_id', $funct->id)
-                                ->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">
-                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
-                                        </div>
-                                    @endif
-                                    {{ $output->code }} {{ $number++ }} - {{ $output->output }}
-                                </h4>
-                                <p class="text-subtitle text-muted"></p>
-                            </div>
-
-                            @forelse (auth()->user()->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
-                                
-                                <div class="card-body">
-                                    <h6>
-                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
-                                            </div>
-                                        @endif
-                                        {{ $suboutput->suboutput }}
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="accordion accordion-flush"
-                                        id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                        <div class="d-sm-flex">
-                                            @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                        <span class="my-auto">
-                                                            <i class="bi bi-check2"></i>
-                                                        </span>
-                                                    @endif
-                                                    {{ $target->target }}
-                                                </div>  
-                                            @endforeach
-                                        </div>
-
-                                        @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-
-                                            <div wire:ignore.self
-                                                id="{{ 'target' }}{{ $target->id }}"
-                                                class="accordion-collapse collapse"
-                                                aria-labelledby="flush-headingOne"
-                                                data-bs-parent="#{{ 'suboutput' }}{{ $suboutput->id }}">
-                                                <div class="accordion-body table-responsive">
-                                                    <table class="table table-lg text-center">
-                                                        <thead>
-                                                            <tr>
-                                                                <td rowspan="2">Target Output</td>
-                                                                <td rowspan="2">Actual
-                                                                    Accomplishment</td>
-                                                                <td colspan="4">Rating</td>
-                                                                <td rowspan="2">Remarks</td>
-                                                                <td rowspan="2">Actions</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>E</td>
-                                                                <td>Q</td>
-                                                                <td>T</td>
-                                                                <td>A</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                @if ($target->pivot->target_output)
-                                                                    <td style="white-space: nowrap;">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                                            <div class="dropdown-menu">
-                                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('target_output', {{$target->id}})">Delete</a>
-                                                                            </div>
-                                                                        @endif
-                                                                        {{ $target->pivot->target_output }}
-                                                                    </td>
-                                                                @else
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                        <td class="text-center">
-                                                                            <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        </td>
-                                                                    @else
-                                                                        <td></td>
-                                                                    @endif
-                                                                @endif
-                    
-                                                                @forelse ($target->ratings as $rating)
-                                                                    @if ($rating->user_id == auth()->user()->id) 
-                                                                        <td>{{ $rating->accomplishment }}
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->efficiency)
-                                                                                {{ $rating->efficiency }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->quality)
-                                                                                {{ $rating->quality }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->timeliness)
-                                                                                {{ $rating->timeliness }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>{{ $rating->average }}
-                                                                        </td>
-                                                                        <td>{{ $rating->remarks }}
-                                                                        </td>
-                                                                        <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-success"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#EditRatingModal"
-                                                                                    wire:click="editRating({{ $rating->id }})"
-                                                                                    title="Edit Rating">
-                                                                                    <i class="bi bi-pencil-square"></i>
-                                                                                </button>
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-danger"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#DeleteModal"
-                                                                                    title="Delete Rating"
-                                                                                    wire:click="rating({{ 0 }}, {{ $rating->id }})">
-                                                                                    <i class="bi bi-trash"></i>
-                                                                                </button>
-                                                                            @endif
-                                                                        </td>
-                                                                        @break
-                                                                    @elseif ($loop->last)
-                                                                        <td colspan="6"></td>
-                                                                        <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-primary"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#AddRatingModal"
-                                                                                    wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
-                                                                                    <i class="bi bi-plus"></i>
-                                                                                </button>
-                                                                            @endif
-                                                                        </td>
-                                                                    @endif
-                                                                @empty
-                                                                    <td colspan="6"></td>
-                                                                    <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-primary"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#AddRatingModal"
-                                                                                wire:click="rating({{ $target->id }})"
-                                                                                title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        @endif
-                                                                    </td>
-                                                                @endforelse
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="card-body">
-                                    <div class="accordion accordion-flush"
-                                        id="{{ 'output' }}{{ $output->id }}">
-                                        <div class="d-sm-flex">
-                                            @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                        <span class="my-auto">
-                                                            <i class="bi bi-check2"></i>
-                                                        </span>
-                                                    @endif
-                                                    {{ $target->target }}
-                                                </div>  
-                                            @endforeach
-                                        </div>
-
-                                        @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-
-                                            <div wire:ignore.self
-                                                id="{{ 'target' }}{{ $target->id }}"
-                                                class="accordion-collapse collapse"
-                                                aria-labelledby="flush-headingOne"
-                                                data-bs-parent="#{{ 'output' }}{{ $output->id }}">
-                                                <div class="accordion-body table-responsive">
-                                                    <table class="table table-lg text-center">
-                                                        <thead>
-                                                            <tr>
-                                                                <td rowspan="2">Target Output</td>
-                                                                <td rowspan="2">Actual
-                                                                    Accomplishment</td>
-                                                                <td colspan="4">Rating</td>
-                                                                <td rowspan="2">Remarks</td>
-                                                                <td rowspan="2">Actions</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>E</td>
-                                                                <td>Q</td>
-                                                                <td>T</td>
-                                                                <td>A</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                @if ($target->pivot->target_output)
-                                                                    <td style="white-space: nowrap;">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                                            <div class="dropdown-menu">
-                                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('target_output', {{$target->id}})">Delete</a>
-                                                                            </div>
-                                                                        @endif
-                                                                        {{ $target->pivot->target_output }}
-                                                                    </td>
-                                                                @else
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                        <td class="text-center">
-                                                                            <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        </td>
-                                                                    @else
-                                                                        <td></td>
-                                                                    @endif
-                                                                @endif
-                    
-                                                                @forelse ($target->ratings as $rating)
-                                                                    @if ($rating->user_id == auth()->user()->id) 
-                                                                        <td>{{ $rating->accomplishment }}
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->efficiency)
-                                                                                {{ $rating->efficiency }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->quality)
-                                                                                {{ $rating->quality }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>
-                                                                            @if ($rating->timeliness)
-                                                                                {{ $rating->timeliness }}
-                                                                            @else
-                                                                                NR
-                                                                            @endif
-                                                                        </td>
-                                                                        <td>{{ $rating->average }}
-                                                                        </td>
-                                                                        <td>{{ $rating->remarks }}
-                                                                        </td>
-                                                                        <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-success"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#EditRatingModal"
-                                                                                    wire:click="editRating({{ $rating->id }})"
-                                                                                    title="Edit Rating">
-                                                                                    <i class="bi bi-pencil-square"></i>
-                                                                                </button>
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-danger"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#DeleteModal"
-                                                                                    title="Delete Rating"
-                                                                                    wire:click="rating({{ 0 }}, {{ $rating->id }})">
-                                                                                    <i class="bi bi-trash"></i>
-                                                                                </button>
-                                                                            @endif
-                                                                        </td>
-                                                                        @break
-                                                                    @elseif ($loop->last)
-                                                                        <td colspan="6"></td>
-                                                                        <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-primary"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#AddRatingModal"
-                                                                                    wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
-                                                                                    <i class="bi bi-plus"></i>
-                                                                                </button>
-                                                                            @endif
-                                                                        </td>
-                                                                    @endif
-                                                                @empty
-                                                                    <td colspan="6"></td>
-                                                                    <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-primary"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#AddRatingModal"
-                                                                                wire:click="rating({{ $target->id }})"
-                                                                                title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
-                                                                                <i class="bi bi-plus"></i>
-                                                                            </button>
-                                                                        @endif
-                                                                    </td>
-                                                                @endforelse
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endforelse
-                        </div>
-                    @endforeach
-                </div>
+                @endif
             </div>
         @endforeach
     </section>

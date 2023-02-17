@@ -32,8 +32,8 @@
             text: event.detail.message,
             duration: 3000,
             close: true,
-            gravity:"bottom",
-            position: "right",
+            gravity:"top",
+            position: "center",
             backgroundColor: event.detail.color,
         }).showToast();
     });

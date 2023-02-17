@@ -25,7 +25,7 @@
                 <div class="hstack mb-3 gap-2">
                     <h4>
                         {{ $funct->funct }}
-                        @if ($percentage)
+                        @if (isset($percentage))
                             @switch($funct->funct)
                                 @case('Core Function')
                                     {{ $percentage->core }}%
@@ -60,23 +60,116 @@
                         @endif
                     </div>
                 </div>
-                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'office')->where('type', 'opcr')->where('duration_id', $duration->id)->get() as $sub_funct)
-                    <div>
-                        <h5>
-                            @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
-                                </div>
-                            @endif
-                            {{ $sub_funct->sub_funct }}
-                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
-                                {{ $sub_percentage->value }}%
-                            @endif
-                        </h5>
+                @if ($duration)
+                    @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'office')->where('type', 'opcr')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        <div>
+                            <h5>
+                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
+                                    </div>
+                                @endif
+                                {{ $sub_funct->sub_funct }}
+                                @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                    {{ $sub_percentage->value }}%
+                                @endif
+                            </h5>
 
-                        @foreach ($sub_funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                            @foreach ($sub_funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
+                                                </div>
+                                            @endif
+                                            {{ $output->code }} {{ $number++ }} - {{ $output->output }}
+                                        </h4>
+                                        <p class="text-subtitle text-muted"></p>
+                                    </div>
+
+                                    @forelse ($output->suboutputs as $suboutput)
+                                        <div class="card-body">
+                                            <h6>
+                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
+                                                    </div>
+                                                @endif
+                                                {{ $suboutput->suboutput }}
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="accordion accordion-flush"
+                                                id="{{ 'suboutput' }}{{ $suboutput->id }}">
+                                                <div class="d-sm-flex">
+                                                    @foreach ($suboutput->targets as $target)
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            {{ $target->target }}
+                                                        </div>  
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="card-body">
+                                            <div class="accordion accordion-flush"
+                                                id="{{ 'output' }}{{ $output->id }}">
+                                                <div class="d-sm-flex">
+                                                    @foreach ($output->targets as $target)
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            {{ $target->target }}
+                                                        </div>  
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            @endforeach
+                        </div>
+                        <hr>
+                    @endforeach
+                    <div>
+                        @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -94,6 +187,7 @@
                                 </div>
 
                                 @forelse ($output->suboutputs as $suboutput)
+                                    
                                     <div class="card-body">
                                         <h6>
                                             @if (($duration && $duration->end_date >= date('Y-m-d')))
@@ -165,99 +259,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <hr>
-                @endforeach
-                <div>
-                    @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">
-                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
-                                        </div>
-                                    @endif
-                                    {{ $output->code }} {{ $number++ }} - {{ $output->output }}
-                                </h4>
-                                <p class="text-subtitle text-muted"></p>
-                            </div>
-
-                            @forelse ($output->suboutputs as $suboutput)
-                                
-                                <div class="card-body">
-                                    <h6>
-                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
-                                            </div>
-                                        @endif
-                                        {{ $suboutput->suboutput }}
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="accordion accordion-flush"
-                                        id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                        <div class="d-sm-flex">
-                                            @foreach ($suboutput->targets as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    {{ $target->target }}
-                                                </div>  
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="card-body">
-                                    <div class="accordion accordion-flush"
-                                        id="{{ 'output' }}{{ $output->id }}">
-                                        <div class="d-sm-flex">
-                                            @foreach ($output->targets as $target)
-                                                <span class="my-auto">
-                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                        </div>
-                                                    @endif
-                                                </span>
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    {{ $target->target }}
-                                                </div>  
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforelse
-                        </div>
-                    @endforeach
-                </div>
+                @endif
             </div>
         @endforeach
     </section>
@@ -269,5 +271,7 @@
         $currentPage = $functs->currentPage();
         $userType = 'office';
     @endphp
-    <x-modals :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />
+    @if ($duration)
+        <x-modals :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />
+    @endif
 </div>

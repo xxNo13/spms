@@ -21,7 +21,7 @@
             <div class="hstack mb-3">
                 <h4>
                     {{ $funct->funct }}
-                    @if ($percentage)
+                    @if (isset($percentage))
                         @switch($funct->funct)
                             @case('Core Function')
                                 {{ $percentage->core }}%
@@ -38,7 +38,7 @@
                     @endif
                 </h4>
             </div>
-            @if ($funct->sub_functs)
+            @if ($duration)
                 @foreach ($funct->sub_functs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
@@ -400,8 +400,7 @@
                     </div>
                     <hr>
                 @endforeach
-            @endif
-            @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
@@ -750,7 +749,8 @@
                             </div>
                         @endforelse
                     </div>
-            @endforeach
+                @endforeach
+            @endif
         @endforeach
     </section>
 

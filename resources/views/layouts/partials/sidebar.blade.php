@@ -80,7 +80,7 @@
 
         @if ($pmo || $hrmo)
             <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
+            <x-maz-sidebar-sub-item name="Listing Standards for OPCR" :link="route('opcr.listing.standard')"></x-maz-sidebar-sub-item>
         @endif
     </x-maz-sidebar-item>
 
