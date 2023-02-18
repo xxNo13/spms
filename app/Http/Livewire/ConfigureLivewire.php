@@ -27,7 +27,7 @@ class ConfigureLivewire extends Component
     public $office_id;
     public $office_name;
     public $office_abbr;
-    public $building;
+    public $parent_id;
     public $account_type_id;
     public $account_type;
     public $duration_id;
@@ -57,7 +57,6 @@ class ConfigureLivewire extends Component
         'end_date' => ['required_if:type,duration'],
         'office_name' => ['required_if:type,office'],
         'office_abbr' => ['required_if:type,office'],
-        'building' =>  ['required_if:type,office'],
         'account_type' => ['required_if:type,account_type'],
         'out_from' => ['nullable', 'required_if:type,scoreEq', 'numeric', 'max:5', 'gt:verysat_to'],
         'out_to' => ['nullable', 'required_if:type,scoreEq', 'numeric', 'max:5', 'gte:out_from'],
@@ -80,7 +79,6 @@ class ConfigureLivewire extends Component
         'end_date.required_if' => "End of Semeter cannot be null.",
         'office_name.required_if' => 'Office Name cannot be null.',
         'office_abbr.required_if' => 'Office Abbreviation cannot be null.',
-        'building.required_if' =>  'Building Name cannot be null.',
         'account_type.required_if' => 'Account Type cannot be null.',
 
         'out_from.required_if' => 'Outstanding Score From cannot be null.',
@@ -148,9 +146,12 @@ class ConfigureLivewire extends Component
         $this->duration = Duration::orderBy('id', 'DESC')->first();
         $offices = Office::query();
         if ($this->searchoffice) {
-            $offices->where('office_name', 'like', "%{$this->searchoffice}%")
-                ->orwhere('office_abbr', 'like', "%{$this->searchoffice}%")
-                ->orwhere('building', 'like', "%{$this->searchoffice}%");
+            $search = $this->searchoffice;
+            $offices->whereHas('parent', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+                    return $query->where('office_name', 'like', "%{$search}%");
+                })
+                ->orwhere('office_name', 'like', "%{$search}%")
+                ->orwhere('office_abbr', 'like', "%{$search}%");
         }
 
         $account_types = AccountType::query();
@@ -165,6 +166,7 @@ class ConfigureLivewire extends Component
             'startDate' => $this->start_date,
             'scoreEq' => ScoreEquivalent::first(),
             'standardValue' => StandardValue::first(),
+            'allOffices' => Office::all(),
         ]);
     }
 
@@ -181,8 +183,7 @@ class ConfigureLivewire extends Component
             Office::where('id', $this->office_id)->update([
                 'office_name' => $this->office_name,
                 'office_abbr' => $this->office_abbr, 
-                'parent_id' => $this->parent_id,
-                'building' => $this->building
+                'parent_id' => $this->parent_id
             ]);
 
             $this->dispatchBrowserEvent('toastify', [
@@ -193,7 +194,7 @@ class ConfigureLivewire extends Component
             Office::create([
                 'office_name' => $this->office_name, 
                 'office_abbr' => $this->office_abbr,
-                'building' => $this->building
+                'parent_id' => $this->parent_id
             ]);
 
             $this->dispatchBrowserEvent('toastify', [
@@ -289,7 +290,7 @@ class ConfigureLivewire extends Component
 
                 $this->office_name = $data->office_name;
                 $this->office_abbr = $data->office_abbr;
-                $this->building = $data->building;
+                $this->parent_id = $data->parent_id;
             }
         } elseif ($type == 'account_type') {
             $this->account_type_id = $id;
@@ -362,7 +363,7 @@ class ConfigureLivewire extends Component
         $this->office_id = '';
         $this->office_name = '';
         $this->office_abbr = '';
-        $this->building = '';
+        $this->parent_id = '';
         $this->type = '';
         $this->category = '';
         $this->account_type_id = '';

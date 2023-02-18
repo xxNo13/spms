@@ -61,7 +61,7 @@ class AssignPmtLivewire extends Component
         }
         $this->planning_users = array_unique($planning);
 
-        $resourceOffice = Office::where('office_name', 'LIKE', '%resource%')->get();
+        $resourceOffice = Office::where('office_name', 'LIKE', '%resource manage%')->get();
         foreach ($resourceOffice as $office) {
             $resource_users = User::whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office){
                         return $query->where('id', $office->id);

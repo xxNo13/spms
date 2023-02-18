@@ -105,7 +105,7 @@
                         <div class="row">
                             <div class="col-md-3 col-lg-12 col-xl-12 col-xxl-4 d-flex justify-content-start ">
                                 <div class="avatar avatar-xl mb-2 mx-auto">
-                                    <img src="{{ asset('/images/faces/1.jpg') }}">
+                                    <img src="{{ Auth::user()->profile_photo_url }}">
                                 </div>
                             </div>
                             <div

@@ -15,12 +15,12 @@
                 $head = true;
             @endphp
         @endif  
-        @if (str_contains(strtolower($office->office_abbr), 'pm'))
+        @if (str_contains(strtolower($office->office_name), 'planning'))
             @php
                 $pmo = true;
             @endphp
         @endif  
-        @if (str_contains(strtolower($office->office_abbr), 'hr'))
+        @if (str_contains(strtolower($office->office_name), 'resource manage'))
             @php
                 $hrmo = true;
             @endphp
@@ -55,34 +55,38 @@
     <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="recommendation.list" name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
     
-    <x-maz-sidebar-item alias="ipcr" link="#" name="IPCR" icon="bi bi-clipboard2-data-fill">
-        @if ($faculty)
-            <x-maz-sidebar-sub-item name="Faculty" :link="route('ipcr.faculty')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Standards for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
-        @endif
+    @if ($faculty || $staff || $pmo || $hrmo || $head)
+        <x-maz-sidebar-item alias="ipcr" link="#" name="IPCR" icon="bi bi-clipboard2-data-fill">
+            @if ($faculty)
+                <x-maz-sidebar-sub-item name="Faculty" :link="route('ipcr.faculty')"></x-maz-sidebar-sub-item>
+                <x-maz-sidebar-sub-item name="Standards for Faculty" :link="route('ipcr.standard.faculty')"></x-maz-sidebar-sub-item>
+            @endif
 
-        @if ($staff)
-            <x-maz-sidebar-sub-item name="Staff" :link="route('ipcr.staff')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Standards for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
-        @endif
+            @if ($staff)
+                <x-maz-sidebar-sub-item name="Staff" :link="route('ipcr.staff')"></x-maz-sidebar-sub-item>
+                <x-maz-sidebar-sub-item name="Standards for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
+            @endif
 
-        @if ($pmo || $hrmo || $head)
-            <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Listing Standards for Faculty" :link="route('ipcr.listing.standard.faculty')"></x-maz-sidebar-sub-item>
-        @endif
-    </x-maz-sidebar-item>
+            @if ($pmo || $hrmo || $head)
+                <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>
+                <x-maz-sidebar-sub-item name="Listing Standards for Faculty" :link="route('ipcr.listing.standard.faculty')"></x-maz-sidebar-sub-item>
+            @endif
+        </x-maz-sidebar-item>
+    @endif
     
-    <x-maz-sidebar-item alias="opcr" link="#" name="OPCR" icon="bi bi-clipboard-data-fill">
-        @if ($head)
-            <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
-        @endif
+    @if ($head || $pmo || $hrmo)
+        <x-maz-sidebar-item alias="opcr" link="#" name="OPCR" icon="bi bi-clipboard-data-fill">
+            @if ($head)
+                <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
+                <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
+            @endif
 
-        @if ($pmo || $hrmo)
-            <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
-            <x-maz-sidebar-sub-item name="Listing Standards for OPCR" :link="route('opcr.listing.standard')"></x-maz-sidebar-sub-item>
-        @endif
-    </x-maz-sidebar-item>
+            @if ($pmo || $hrmo)
+                <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
+                <x-maz-sidebar-sub-item name="Listing Standards for OPCR" :link="route('opcr.listing.standard')"></x-maz-sidebar-sub-item>
+            @endif
+        </x-maz-sidebar-item>
+    @endif
 
     @if ($head)    
         <x-maz-sidebar-item alias="trainings" name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Pmt;
 use App\Models\User;
 use App\Models\Funct;
 use Livewire\Component;
@@ -30,6 +31,7 @@ class ForApprovalLivewire extends Component
     public $percentage;
     public $selected;
     public $filterA;
+    public $pmts;
 
     protected  $queryString = ['search'];
 
@@ -92,6 +94,7 @@ class ForApprovalLivewire extends Component
 
     public function render()
     {
+        $this->pmts = Pmt::all()->pluck('user_id')->toArray();
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         
         if ($this->view && $this->category == 'ipcr'){
@@ -151,10 +154,10 @@ class ForApprovalLivewire extends Component
                 ]);
             }
         } else {
-            $search = $this->search;
             $approvals = Approval::query();
 
-            if ($search) {
+            if ($this->search) {
+                $search = $this->search;
                 if ($this->duration) {
                     $approvals->where(function ($query) use ($search) {
                         $query->whereHas('user', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){

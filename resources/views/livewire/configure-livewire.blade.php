@@ -263,7 +263,7 @@
                                         <option value="id">ID</option>
                                         <option value="office">Office Name</option>
                                         <option value="abr">Office Abbreviation</option>
-                                        <option value="building">Building</option>
+                                        <option value="parent_id">Head Office</option>
                                     </select>
                                 </div>
                                 <div class="my-auto form-group position-relative">
@@ -300,7 +300,7 @@
                                             <th>ID</th>
                                             <th>OFFICE NAME</th>
                                             <th>OFFICE ABBREVIATION</th>
-                                            <th>BUILDING</th>
+                                            <th>HEAD OFFICE</th>
                                             <th>ACTION</th>
                                         </tr>
                                     </thead>
@@ -310,7 +310,7 @@
                                                 <td>{{ $office->id }}</td>
                                                 <td>{{ $office->office_name }}</td>
                                                 <td>{{ $office->office_abbr }}</td>
-                                                <td>{{ $office->building }}</td>
+                                                <td>{{ $office->parent ? $office->parent->office_name : '' }}</td>
                                                 <td>
                                                     <div class="hstack gap-2 justify-content-center">
                                                         <button type="button" class="btn icon btn-success"
@@ -444,5 +444,8 @@
         </div>
     </section>
 
-    <x-modals :startDate="$startDate" />
+    @php
+        $parentId = $parent_id;
+    @endphp
+    <x-modals :startDate="$startDate" :offices="$allOffices" :parentId="$parentId" />
 </div>

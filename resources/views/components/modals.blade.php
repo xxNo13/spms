@@ -1114,7 +1114,7 @@
 
     @if (isset($users))
         {{-- Add TTMA Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddTTMAModal" tabindex="-1" role="dialog"
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddTTMAModal" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1132,8 +1132,8 @@
                                 @enderror
                             </div>
                             <label>Action Officer: </label>
-                            <div class="form-group">
-                                <select name="user_id" class="form-select" wire:model="user_id">
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="user_id" id="user_id" class="form-select" wire:model="user_id">
                                     <option>Select an Action Officer</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -1143,6 +1143,18 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#user_id").select2({
+                                        placeholder: "Select an Action Officer.",
+                                        dropdownParent: $("#AddTTMAModal")
+                                    });
+                                    $('#user_id').on('change', function () {
+                                        var data = $('#user_id').select2("val");
+                                        @this.set('user_id', data);
+                                    });
+                                </script>
+                            @endpush
                             <label>Output: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Output" class="form-control" wire:model="output">
@@ -1188,19 +1200,6 @@
                                 <input type="text" placeholder="Subject" class="form-control"
                                     wire:model="subject">
                                 @error('subject')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Action Officer: </label>
-                            <div class="form-group">
-                                <select type="text" placeholder="Action Officer" class="form-control"
-                                    wire:model="user_id">
-                                    <option value="">Select Action Officer</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -1297,99 +1296,133 @@
         </div>
     </div>
 
-    {{-- Add Office Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddOfficeModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Add Office</h4>
+    @if (isset($offices))
+        {{-- Add Office Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddOfficeModal" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Add Office</h4>
+                    </div>
+                    <form wire:submit.prevent="save">
+                        <div class="modal-body">
+                            <label>Office Name: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
+                                @error('office_name')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office Abbreviation: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="office_abbr">
+                                @error('abr')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office which it belongs: </label>
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="parent_id" id="parent_id" class="form-select" wire:model="parent_id" >
+                                    <option></option>
+                                    @foreach ($offices as $office) 
+                                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @if (isset($offices))
+                            @push ('script')
+                                <script>
+                                    $("#parent_id").select2({
+                                        placeholder: "Select an Office which it belongs.",
+                                        dropdownParent: $("#AddOfficeModal")
+                                    });
+                                    $('#parent_id').on('change', function () {
+                                        var data = $('#parent_id').select2("val");
+                                        @this.set('parent_id', data);
+                                    });
+                                </script>
+                            @endpush
+                        @endif
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Save</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <form wire:submit.prevent="save">
-                    <div class="modal-body">
-                        <label>Office Name: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
-                            @error('office_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Office Abbreviation: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="abr">
-                            @error('abr')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Building: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Building" class="form-control" wire:model="building">
-                            @error('building')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
 
-    {{-- Edit Office Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditOfficeModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Edit Office</h4>
+        {{-- Edit Office Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditOfficeModal" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Edit Office</h4>
+                    </div>
+                    <form wire:submit.prevent="save">
+                        <div class="modal-body">
+                            <label>Office Name: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
+                                @error('office_name')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office Abbreviation: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="office_abbr">
+                                @error('abr')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office which it belongs: </label>
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="edit_parent_id" id="edit_parent_id" class="form-select" wire:model="parent_id" >
+                                    <option></option>
+                                    @foreach ($offices as $office) 
+                                        <option value="{{ $office->id }}" @if (isset($parentId) && $parentId == $office->id) selected @endif>{{ $office->office_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @if (isset($offices))
+                            @push ('script')
+                                <script>
+                                    $("#edit_parent_id").select2({
+                                        placeholder: "Select an Office which it belongs.",
+                                        dropdownParent: $("#EditOfficeModal")
+                                    });
+                                    $('#edit_parent_id').on('change', function () {
+                                        var data = $('#edit_parent_id').select2("val");
+                                        @this.set('parent_id', data);
+                                    });
+                                </script>
+                            @endpush
+                        @endif
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Update</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <form wire:submit.prevent="save">
-                    <div class="modal-body">
-                        <label>Office Name: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
-                            @error('office_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Office Abbreviation: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="abr">
-                            @error('abr')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Building: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Building" class="form-control" wire:model="building">
-                            @error('building')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Update</span>
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
+    @endif
 
     {{-- Add Institute Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddInstituteModal" tabindex="-1" role="dialog"

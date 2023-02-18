@@ -17,10 +17,10 @@ class PmoOrHrmoOrHead
     public function handle(Request $request, Closure $next)
     {
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_abbr), 'pm')) {
+            if (str_contains(strtolower($office->office_name), 'planning')) {
                 return $next($request);
             }
-            if (str_contains(strtolower($office->office_abbr), 'hr')) {
+            if (str_contains(strtolower($office->office_name), 'resource manage')) {
                 return $next($request);
             }
         }

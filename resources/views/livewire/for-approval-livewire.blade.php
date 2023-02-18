@@ -61,14 +61,14 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($approvals->sortByDesc('updated_at') as $approval)
-                                        @if ((Auth::user()->id == $approval->review_id) &&
+                                        @if ((Auth::user()->id == $approval->review_id || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
                                             ($duration && $approval->duration_id == $duration->id))
                                             <tr>
                                                 <td>{{ $approval->user->name }}</td>
                                                 <td>{{ $approval->user->email }}</td>
                                                 <td>
                                                     <div class="d-md-flex flex-column gap-3 justify-content-center">
-                                                        @foreach ($approval->user->offices as $office)
+                                                        @foreach ($approval->user->offices()->wherePivot('isHead', true)->get() as $office)
                                                             @if ($loop->last)
                                                                 {{ $office->office_abbr }}
                                                                 @break
@@ -93,14 +93,16 @@
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                <button type="button" class="btn icon btn-info"
-                                                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
-                                                                    <i class="bi bi-check"></i>
-                                                                </button>
-                                                                <button type="button" class="btn icon btn-danger"
-                                                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                    <i class="bi bi-x"></i>
-                                                                </button>
+                                                                @if (Auth::user()->id == $approval->review_id)
+                                                                    <button type="button" class="btn icon btn-info"
+                                                                        wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                                                        <i class="bi bi-check"></i>
+                                                                    </button>
+                                                                    <button type="button" class="btn icon btn-danger"
+                                                                        wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                        <i class="bi bi-x"></i>
+                                                                    </button>
+                                                                @endif
                                                                 <button type="button" class="btn icon btn-secondary"
                                                                     wire:click="viewed({{ $approval->user_id }}, '{{ $approval->type }}', '{{ 'for-approval' }}', '{{ $approval->user_type }}')">
                                                                     <i class="bi bi-eye"></i>
@@ -142,7 +144,7 @@
                                                 <td>{{ $approval->user->email }}</td>
                                                 <td>
                                                     <div class="d-md-flex flex-column gap-3 justify-content-center">
-                                                        @foreach ($approval->user->offices as $office)
+                                                        @foreach ($approval->user->offices()->wherePivot('isHead', true)->get() as $office)
                                                             @if ($loop->last)
                                                                 {{ $office->office_abbr }}
                                                                 @break

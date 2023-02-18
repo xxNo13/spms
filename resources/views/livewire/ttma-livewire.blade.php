@@ -77,7 +77,10 @@
                                             <span class="ms-auto hstack gap-2">
                                                 @if ($ttma->remarks == 'Done') 
                                                     <div class="rounded-pill bg-primary p-2 text-white">Done</div>
-                                                @elseif ($ttma->remarks == 'Undone')
+                                                    @if ($ttma->deadline < date('Y-m-d', strtotime($ttma->updated_at)))
+                                                        <div class="rounded-pill bg-danger p-2 text-white">Late</div>
+                                                    @endif
+                                                @elseif (!$ttma->remarks && $ttma->deadline < date('Y-m-d'))
                                                     <div class="rounded-pill bg-danger p-2 text-white">Undone</div>
                                                 @else
                                                     <div class="rounded-pill bg-warning p-2 text-dark">Working</div>
@@ -96,8 +99,20 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-2 mt-auto mb-2">
+                                                <div class="col-2 mt-auto mx-auto mb-2">
                                                     @if (!$ttma->remarks && $ttma->head_id == auth()->user()->id)
+                                                        <div class="mb-2">
+                                                            <button type="button" class="btn icon btn-outline-success"
+                                                                data-bs-toggle="modal" data-bs-target="#EditTTMAModal"
+                                                                wire:click="select('assign', {{ $ttma->id }}, '{{ 'edit' }}')">
+                                                                Edit
+                                                            </button>
+                                                            <button type="button" class="btn icon btn-outline-danger"
+                                                                data-bs-toggle="modal" data-bs-target="#DeleteModal"
+                                                                wire:click="select('assign',{{ $ttma->id }})">
+                                                                Delete
+                                                            </button>
+                                                        </div>
                                                         <button type="button" class="btn icon btn-outline-info" data-bs-toggle="modal" data-bs-target="#DoneModal" wire:click="select('assign', {{ $ttma->id }})">
                                                             Mark as Done
                                                         </button>

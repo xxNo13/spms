@@ -17,7 +17,7 @@ class Pmo
     public function handle(Request $request, Closure $next)
     {
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_abbr), 'pm')) {
+            if (str_contains(strtolower($office->office_name), 'planning')) {
                 return $next($request);
             }
         }
