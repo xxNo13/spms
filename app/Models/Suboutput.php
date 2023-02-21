@@ -12,7 +12,8 @@ class Suboutput extends Model
     protected $fillable = [
         'suboutput',
         'output_id',
-        'duration_id'
+        'duration_id',
+        'added_by'
     ];
 
     public function output() {

@@ -117,7 +117,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -188,7 +188,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -206,7 +206,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -288,7 +288,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -359,7 +359,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -377,7 +377,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -474,7 +474,7 @@
                                                                     <td>{{ $standard->time_5 }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-success"
                                                                                 wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -545,7 +545,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -563,7 +563,7 @@
                                                             <tr>
                                                                 <td colspan="6"></td>
                                                                 <td>
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                         <button type="button"
                                                                             class="btn icon btn-primary"
                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -645,7 +645,7 @@
                                                                     <td>{{ $standard->time_5 }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-success"
                                                                                 wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -716,7 +716,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -734,7 +734,7 @@
                                                             <tr>
                                                                 <td colspan="6"></td>
                                                                 <td>
-                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                         <button type="button"
                                                                             class="btn icon btn-primary"
                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"

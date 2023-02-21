@@ -77,8 +77,8 @@ class ListingFacultyLivewire extends Component
     public function render()
     {
         if ($this->duration) {
-            $this->subFuncts = SubFunct::where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get();
-            $this->outputs = Output::where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get();
+            $this->subFuncts = SubFunct::where('type', 'ipcr')->where('added_by', auth()->user()->id)->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get();
+            $this->outputs = Output::where('type', 'ipcr')->where('added_by', auth()->user()->id)->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->get();
         }
 
         return view('livewire.listing-faculty-livewire', [
@@ -155,7 +155,8 @@ class ListingFacultyLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'added_by' => auth()->user()->id
                 ]);
                 break;
             case 'output':
@@ -166,7 +167,8 @@ class ListingFacultyLivewire extends Component
                         'type' => 'ipcr',
                         'user_type' => 'faculty',
                         'sub_funct_id' => $this->sub_funct_id,
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'added_by' => auth()->user()->id
                     ]);
                     break;
                 }
@@ -176,14 +178,16 @@ class ListingFacultyLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'added_by' => auth()->user()->id
                 ]);
                 break;
             case 'suboutput':
                 Suboutput::create([
                     'suboutput' => $this->suboutput,
                     'output_id' => $this->output_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'added_by' => auth()->user()->id
                 ]);
                 break;
             case 'target':                
@@ -194,14 +198,16 @@ class ListingFacultyLivewire extends Component
                         'target' => $this->target,
                         'output_id' => $subput[1],
                         'required' => $this->required,
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'added_by' => auth()->user()->id
                     ]);
                 } elseif ($subput[0] == 'suboutput') {
                     Target::create([
                         'target' => $this->target,
                         'suboutput_id' => $subput[1],
                         'required' => $this->required,
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'added_by' => auth()->user()->id
                     ]);
                 }
                 break;

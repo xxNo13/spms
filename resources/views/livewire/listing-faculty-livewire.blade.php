@@ -61,10 +61,10 @@
                     </div>
                 </div>
                 @if ($duration)
-                    @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'faculty')->where('type', 'ipcr')->where('duration_id', $duration->id)->get() as $sub_funct)
+                    @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'faculty')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $sub_funct)
                         <div>
                             <h5>
-                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $sub_funct->added_by == auth()->user()->id)
                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
@@ -74,12 +74,12 @@
                                 {{ $sub_funct->sub_funct }}
                             </h5>
 
-                            @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                            @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                                 
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">
-                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $output->added_by == auth()->user()->id)
                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
@@ -94,7 +94,7 @@
                                     @forelse ($output->suboutputs as $suboutput)
                                         <div class="card-body">
                                             <h6>
-                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $suboutput->added_by == auth()->user()->id)
                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
@@ -111,7 +111,7 @@
                                                     @foreach ($suboutput->targets as $target)
                                                         <div class="col-12 col-sm-4 d-flex">
                                                             <span class="my-auto">
-                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                     <div class="dropdown-menu">
                                                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
@@ -141,7 +141,7 @@
                                                     @foreach ($output->targets as $target)
                                                         <div class="col-12 col-sm-4 d-flex">
                                                             <span class="my-auto">
-                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                     <div class="dropdown-menu">
                                                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
@@ -170,12 +170,12 @@
                         <hr>
                     @endforeach
                     <div>
-                        @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title">
-                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $output->added_by == auth()->user()->id)
                                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
@@ -191,7 +191,7 @@
                                     
                                     <div class="card-body">
                                         <h6>
-                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $suboutput->added_by == auth()->user()->id)
                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
@@ -208,7 +208,7 @@
                                                 @foreach ($suboutput->targets as $target)
                                                     <div class="col-12 col-sm-4 d-flex">
                                                         <span class="my-auto">
-                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                 <div class="dropdown-menu">
                                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
@@ -238,7 +238,7 @@
                                                 @foreach ($output->targets as $target)
                                                     <div class="col-12 col-sm-4 d-flex">
                                                         <span class="my-auto">
-                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                 <div class="dropdown-menu">
                                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
@@ -274,7 +274,7 @@
 
     @php
         $currentPage = $functs->currentPage();
-        $userType = 'faculty';
+        $userType = 'listing';
     @endphp
     @if ($duration) 
         <x-modals :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />

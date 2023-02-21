@@ -229,12 +229,20 @@ class ForApprovalLivewire extends Component
             ]);
             $head = User::where('id', $approval->approve_id)->first();
 
-        } elseif ($approval->review_id == Auth::user()->id && $type == 'Reviewed'){
-            Approval::where('id', $id)->update([
-                'review_status' => 1,
-                'review_date' => Carbon::now(),
-            ]);
-            $head = User::where('id', $approval->review_id)->first();
+        } elseif (($approval->review_id == Auth::user()->id || $approval->review2_id == Auth::user()->id) && $type == 'Reviewed'){
+            if (auth()->user()->id == $approval->review_id) {
+                Approval::where('id', $id)->update([
+                    'review_status' => 1,
+                    'review_date' => Carbon::now(),
+                ]);
+                $head = User::where('id', $approval->review_id)->first();
+            } elseif (auth()->user()->id == $approval->review2_id) {
+                Approval::where('id', $id)->update([
+                    'review2_status' => 1,
+                    'review2_date' => Carbon::now(),
+                ]);
+                $head = User::where('id', $approval->review2_id)->first();
+            }
             
         }
 
@@ -258,15 +266,31 @@ class ForApprovalLivewire extends Component
     public function declined(){
         $this->validate();
 
-        if ($this->approving->review_id == Auth::user()->id){
-            Approval::where('id', $this->approving->id)->update([
-                'review_status' => 2,
-                'review_date' => Carbon::now(),
-                'review_message' => $this->comment,
-                'approve_status' => 3,
-                'approve_date' => Carbon::now(),
-            ]);
-            $head = User::where('id', $this->approving->review_id)->first();
+        if ($this->approving->review_id == Auth::user()->id || $this->approving->review2_id == Auth::user()->id){
+
+            if (auth()->user()->id == $this->approving->review_id) {
+                Approval::where('id', $this->approving->id)->update([
+                    'review_status' => 2,
+                    'review_date' => Carbon::now(),
+                    'review2_status' => 3,
+                    'review2_date' => Carbon::now(),
+                    'review_message' => $this->comment,
+                    'approve_status' => 3,
+                    'approve_date' => Carbon::now(),
+                ]);
+                $head = User::where('id', $this->approving->review_id)->first();
+            } elseif (auth()->user()->id == $this->approving->review2_id) {
+                Approval::where('id', $this->approving->id)->update([
+                    'review_status' => 3,
+                    'review_date' => Carbon::now(),
+                    'review2_status' => 2,
+                    'review2_date' => Carbon::now(),
+                    'review2_message' => $this->comment,
+                    'approve_status' => 3,
+                    'approve_date' => Carbon::now(),
+                ]);
+                $head = User::where('id', $this->approving->review2_id)->first();
+            }
         } elseif ($this->approving->approve_id == Auth::user()->id){
             Approval::where('id', $this->approving->id)->update([
                 'approve_status' => 2,

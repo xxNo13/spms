@@ -14,7 +14,8 @@ class SubFunct extends Model
         'type',
         'user_type',
         'duration_id',
-        'funct_id'
+        'funct_id',
+        'added_by'
     ];
 
     public function funct() {

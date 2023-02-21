@@ -61,7 +61,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($approvals->sortByDesc('updated_at') as $approval)
-                                        @if ((Auth::user()->id == $approval->review_id || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
+                                        @if ((Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->review2_id || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
                                             ($duration && $approval->duration_id == $duration->id))
                                             <tr>
                                                 <td>{{ $approval->user->name }}</td>
@@ -86,14 +86,16 @@
                                                     Reviewed
                                                 </td>
                                                 <td>
-                                                    @if ($approval->review_status == 1)
+                                                    @if (($approval->review_status == 1 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 1 && Auth::user()->id == $approval->review2_id))
                                                         Approved
-                                                    @elseif ($approval->review_status == 2)
+                                                    @elseif (($approval->review_status == 2 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 2 && Auth::user()->id == $approval->review2_id))
                                                         Declined
+                                                    @elseif (($approval->review_status == 3 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 3 && Auth::user()->id == $approval->review2_id))
+                                                        Declined by the other Reviewer
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                @if (Auth::user()->id == $approval->review_id)
+                                                                @if (Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->review2_id)
                                                                     <button type="button" class="btn icon btn-info"
                                                                         wire:click="approved({{ $approval->id }}, 'Reviewed')">
                                                                         <i class="bi bi-check"></i>
@@ -171,7 +173,7 @@
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                @if ($approval->review_status == 1)
+                                                                @if ($approval->review_status == 1 && $approval->review2_status == 1)
                                                                     <button type="button" class="btn icon btn-info"
                                                                         wire:click="approved({{ $approval->id }}, 'Approved')">
                                                                         <i class="bi bi-check"></i>

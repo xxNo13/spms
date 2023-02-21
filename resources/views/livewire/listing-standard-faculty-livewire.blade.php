@@ -39,18 +39,18 @@
                 </h4>
             </div>
             @if ($duration)
-                @foreach ($funct->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach ($funct->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
                         </h5>
-                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                                         <p class="text-subtitle text-muted"></p>
                                     </div>
-                                    @forelse ($output->suboutputs()->where('duration_id', $duration->id)->get() as $suboutput)
+                                    @forelse ($output->suboutputs()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $suboutput)
                                         <div class="card-body">
                                             <h6>{{ $suboutput->suboutput }}</h6>
                                         </div>
@@ -58,7 +58,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                                 <div class="row">
-                                                    @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
+                                                    @foreach ($suboutput->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                         <div class="col-12 col-sm-4">
                                                             <div wire:ignore.self
                                                                 class="accordion-button collapsed gap-2"
@@ -81,7 +81,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
+                                                @foreach ($suboutput->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -114,7 +114,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -185,7 +185,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -203,7 +203,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -229,7 +229,7 @@
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
                                                 <div class="row">
-                                                    @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
+                                                    @foreach ($output->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                         <div class="col-12 col-sm-4">
                                                             <div wire:ignore.self
                                                                 class="accordion-button collapsed gap-2"
@@ -252,7 +252,7 @@
                                                     @endforeach
                                                 </div>
 
-                                                @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
+                                                @foreach ($output->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                     <div wire:ignore.self
                                                         id="{{ 'target' }}{{ $target->id }}"
                                                         class="accordion-collapse collapse"
@@ -285,7 +285,7 @@
                                                                                 <td>{{ $standard->time_5 }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -356,7 +356,7 @@
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -374,7 +374,7 @@
                                                                         <tr>
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -401,13 +401,13 @@
                     </div>
                     <hr>
                 @endforeach
-                @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">{{ $output->code }} {{ $output->output }}</h4>
                                 <p class="text-subtitle text-muted"></p>
                             </div>
-                            @forelse ($output->suboutputs()->where('duration_id', $duration->id)->get() as $suboutput)
+                            @forelse ($output->suboutputs()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $suboutput)
                                 <div class="card-body">
                                     <h6>{{ $suboutput->suboutput }}</h6>
                                 </div>
@@ -415,7 +415,7 @@
                                     <div class="accordion accordion-flush"
                                         id="{{ 'output' }}{{ $output->id }}">
                                         <div class="row">
-                                            @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
+                                            @foreach ($suboutput->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                 <div class="col-12 col-sm-4">
                                                     <div wire:ignore.self
                                                         class="accordion-button collapsed gap-2"
@@ -438,7 +438,7 @@
                                             @endforeach
                                         </div>
 
-                                        @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
+                                        @foreach ($suboutput->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                             <div wire:ignore.self
                                                 id="{{ 'target' }}{{ $target->id }}"
                                                 class="accordion-collapse collapse"
@@ -471,7 +471,7 @@
                                                                         <td>{{ $standard->time_5 }}
                                                                         </td>
                                                                         <td rowspan="5">
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                 <button type="button"
                                                                                     class="btn icon btn-success"
                                                                                     wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -542,7 +542,7 @@
                                                                     <tr>
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -560,7 +560,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -586,7 +586,7 @@
                                     <div class="accordion accordion-flush"
                                         id="{{ 'output' }}{{ $output->id }}">
                                         <div class="row">
-                                            @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
+                                            @foreach ($output->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                                 <div class="col-12 col-sm-4">
                                                     <div wire:ignore.self
                                                         class="accordion-button collapsed gap-2"
@@ -609,7 +609,7 @@
                                             @endforeach
                                         </div>
 
-                                        @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
+                                        @foreach ($output->targets()->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $target)
                                             <div wire:ignore.self
                                                 id="{{ 'target' }}{{ $target->id }}"
                                                 class="accordion-collapse collapse"
@@ -642,7 +642,7 @@
                                                                         <td>{{ $standard->time_5 }}
                                                                         </td>
                                                                         <td rowspan="5">
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                 <button type="button"
                                                                                     class="btn icon btn-success"
                                                                                     wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
@@ -713,7 +713,7 @@
                                                                     <tr>
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     wire:click="clicked('{{ 'add' }}', {{ $target->id }})"
@@ -731,7 +731,7 @@
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 wire:click="clicked('{{ 'add' }}', {{ $target->id }})"

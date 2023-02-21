@@ -31,65 +31,128 @@
                 @endphp
                 <div class="hstack text-center text-nowrap">
                     <span class="mx-3 w-50">
-                        @if ($approval->review_status == 1)
-                            <i class="bi bi-check-circle text-success fs-1"></i>
-                            @php
-                                $progress += 50;
-                            @endphp
+                        @if ($approval->review2_id == null) 
+                            @if ($approval->review_status == 1)
+                                <i class="bi bi-check-circle text-success fs-1"></i>
+                                @php
+                                    $progress += 50;
+                                @endphp
+                            @else
+                                <i class="bi bi-x-circle text-danger fs-1"></i>
+                            @endif
                         @else
-                            <i class="bi bi-x-circle text-danger fs-1"></i>
+                            @if ($approval->review_status == 1)
+                                @php
+                                    $progress += 33;
+                                @endphp
+                            @endif
+                            @if ($approval->review2_status == 1)
+                                @php
+                                    $progress += 33;
+                                @endphp
+                            @endif
+                            @if ($approval->review_status == 1 && $approval->review2_status == 1)
+                                <i class="bi bi-check-circle text-success fs-1"></i>
+                            @else
+                                <i class="bi bi-x-circle text-danger fs-1"></i>
+                            @endif
                         @endif
                         <p>Reviewed</p>
                     </span>
                     <span class="mx-3 w-50">
-                        @if ($approval->approve_status == 1)
-                            <i class="bi bi-check-circle text-success fs-1"></i>
-                            @php
-                                $progress += 50;
-                            @endphp
+                        @if ($approval->review2_id == null) 
+                            @if ($approval->approve_status == 1)
+                                <i class="bi bi-check-circle text-success fs-1"></i>
+                                @php
+                                    $progress += 50;
+                                @endphp
+                            @else
+                                <i class="bi bi-x-circle text-danger fs-1"></i>
+                            @endif
                         @else
-                            <i class="bi bi-x-circle  text-danger fs-1"></i>
+                            @if ($approval->approve_status == 1)
+                                <i class="bi bi-check-circle text-success fs-1"></i>
+                                @php
+                                    $progress += 34;
+                                @endphp
+                            @else
+                                <i class="bi bi-x-circle text-danger fs-1"></i>
+                            @endif
                         @endif
                         <p>Approved</p>
                     </span>
                 </div>
                 <div class="progress">
-                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated w-{{ $progress }}" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{ $progress }}%;" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
-            @if ($approval->review_id == auth()->user()->id && $approval->approve_id == auth()->user()->id)
-                @if ($approval->review_status == 1 && $approval->approve_status != 1)
-                    <div class="hstack mb-2">
-                        <div class="ms-auto hstack gap-3">
-                            <button type="button" class="btn icon btn-info"
-                                wire:click="approved({{ $approval->id }}, 'Approved')">
-                                <i class="bi bi-check"></i>
-                                Approved
-                            </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+            @if (($approval->review_id == auth()->user()->id || $approval->review2_id == auth()->user()->id) && $approval->approve_id == auth()->user()->id)
+                @if ($approval->review2_id == null)
+                    @if ($approval->review_status == 1 && $approval->approve_status != 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Approved')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                @elseif ($approval->review_status != 1)
-                    <div class="hstack mb-2">
-                        <div class="ms-auto hstack gap-3">
-                            <button type="button" class="btn icon btn-info"
-                                wire:click="approved({{ $approval->id }}, 'Reviewed')">
-                                <i class="bi bi-check"></i>
-                                Approved
-                            </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                    @elseif ($approval->review_status != 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
+                @else
+                    @if ($approval->review_status == 1 && $approval->review2_status == 1 && $approval->approve_status != 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Approved')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    @elseif ($approval->review_status != 1 || $approval->review2_status == 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 @endif
-            @elseif ($approval->review_id == auth()->user()->id && $approval->review_status != 1)
+            @elseif (($approval->review_id == auth()->user()->id && $approval->review_status != 1) || ($approval->review2_id == auth()->user()->id && $approval->review2_status != 1))
                 <div class="hstack mb-2">
                     <div class="ms-auto hstack gap-3">
                         <button type="button" class="btn icon btn-info"
@@ -105,20 +168,41 @@
                     </div>
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
-                <div class="hstack mb-2">
-                    <div class="ms-auto hstack gap-3">
-                        <button type="button" class="btn icon btn-info"
-                            wire:click="approved({{ $approval->id }}, 'Approved')">
-                            <i class="bi bi-check"></i>
-                            Approved
-                        </button>
-                        <button type="button" class="btn icon btn-danger"
-                            wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                            <i class="bi bi-x"></i>
-                            Decline
-                        </button>
-                    </div>
-                </div>
+                @if ($approval->review2_id == null) 
+                    @if ($approval->review_status == 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Approved')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    @if ($approval->review_status == 1 && $approval->review2_status == 1)
+                        <div class="hstack mb-2">
+                            <div class="ms-auto hstack gap-3">
+                                <button type="button" class="btn icon btn-info"
+                                    wire:click="approved({{ $approval->id }}, 'Approved')">
+                                    <i class="bi bi-check"></i>
+                                    Approved
+                                </button>
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                @endif
             @endif
         @endif
 
@@ -174,24 +258,26 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == $user->id)
-                                                                    <span class="my-auto">
-                                                                        <i class="bi bi-check2"></i>
-                                                                    </span>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
-                                                            {{ $target->target }}
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @foreach ($target->ratings as $rating)
+                                                                    @if ($rating->user_id == $user->id)
+                                                                        <span class="my-auto">
+                                                                            <i class="bi bi-check2"></i>
+                                                                        </span>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                                {{ $target->target }}
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -273,24 +359,26 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == $user->id)
-                                                                    <span class="my-auto">
-                                                                        <i class="bi bi-check2"></i>
-                                                                    </span>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
-                                                            {{ $target->target }}
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @foreach ($target->ratings as $rating)
+                                                                    @if ($rating->user_id == $user->id)
+                                                                        <span class="my-auto">
+                                                                            <i class="bi bi-check2"></i>
+                                                                        </span>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                                {{ $target->target }}
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -396,23 +484,25 @@
                             <div class="card-body">
                                 <div class="accordion accordion-flush"
                                     id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                    <div class="d-sm-flex">
+                                    <div class="row">
                                         @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->get() as $target)
-                                            <div wire:ignore.self class="accordion-button collapsed gap-2"
-                                                type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                aria-expanded="true"
-                                                aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                role="button">
-                                                @foreach ($target->ratings as $rating)
-                                                    @if ($rating->user_id == $user->id)
-                                                        <span class="my-auto">
-                                                            <i class="bi bi-check2"></i>
-                                                        </span>
-                                                        @break
-                                                    @endif
-                                                @endforeach
-                                                {{ $target->target }}
+                                            <div class="col-12 col-sm-4">
+                                                <div wire:ignore.self class="accordion-button collapsed gap-2"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                    aria-expanded="true"
+                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                    role="button">
+                                                    @foreach ($target->ratings as $rating)
+                                                        @if ($rating->user_id == $user->id)
+                                                            <span class="my-auto">
+                                                                <i class="bi bi-check2"></i>
+                                                            </span>
+                                                            @break
+                                                        @endif
+                                                    @endforeach
+                                                    {{ $target->target }}
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -493,23 +583,25 @@
                             <div class="card-body">
                                 <div class="accordion accordion-flush"
                                     id="{{ 'output' }}{{ $output->id }}">
-                                    <div class="d-sm-flex">
+                                    <div class="row">
                                         @foreach ($user->targets()->where('output_id', $output->id)->get() as $target)
-                                            <div wire:ignore.self class="accordion-button collapsed gap-2"
-                                                type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                aria-expanded="true"
-                                                aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                role="button">
-                                                @foreach ($target->ratings as $rating)
-                                                    @if ($rating->user_id == $user->id)
-                                                        <span class="my-auto">
-                                                            <i class="bi bi-check2"></i>
-                                                        </span>
-                                                        @break
-                                                    @endif
-                                                @endforeach
-                                                {{ $target->target }}
+                                            <div class="col-12 col-sm-4">
+                                                <div wire:ignore.self class="accordion-button collapsed gap-2"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                    aria-expanded="true"
+                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                    role="button">
+                                                    @foreach ($target->ratings as $rating)
+                                                        @if ($rating->user_id == $user->id)
+                                                            <span class="my-auto">
+                                                                <i class="bi bi-check2"></i>
+                                                            </span>
+                                                            @break
+                                                        @endif
+                                                    @endforeach
+                                                    {{ $target->target }}
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>

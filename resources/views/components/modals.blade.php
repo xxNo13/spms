@@ -60,12 +60,16 @@
                                             wire:model="sub_funct_id">
                                             <option value="" selected>Select a Sub Function</option>
                                             @if ($duration)
-                                                @if (isset($userType))
+                                                @if (isset($userType) && $userType == 'listing')
                                                     @if (isset($subFuncts))
                                                         @foreach ($subFuncts->where('funct_id', $currentPage) as $sub_funct)
                                                             <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
                                                         @endforeach
                                                     @endif
+                                                @elseif (isset($userType) && $userType == 'faculty')
+                                                    @foreach (auth()->user()->sub_functs()->where('added_by', null)->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('funct_id', $currentPage)->get() as $sub_funct)
+                                                        <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                    @endforeach
                                                 @else
                                                     @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
                                                         <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
@@ -103,7 +107,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType))
+                                                @if (isset($userType) && $userType == 'listing')
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->targets as $target)
@@ -114,6 +118,15 @@
                                                             @endforelse
                                                         @endforeach
                                                     @endif
+                                                @elseif (isset($userType) && $userType == 'faculty')
+                                                    @foreach (auth()->user()->outputs()->where('added_by', null)->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('code', $code)->get() as $output)
+                                                        @forelse ($output->targets as $target)
+                                                        @empty
+                                                            <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                                {{ $output->output }}
+                                                            </option>
+                                                        @endforelse
+                                                    @endforeach
                                                 @else
                                                     @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
                                                         @forelse ($output->targets as $target)
@@ -159,7 +172,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType))
+                                                @if (isset($userType) && $userType == 'listing')
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->suboutputs as $suboutput)
@@ -176,6 +189,21 @@
                                                             @endforelse
                                                         @endforeach
                                                     @endif
+                                                @elseif (isset($userType) && $userType == 'faculty')
+                                                    @foreach (auth()->user()->outputs()->where('added_by', null)->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('code', $code)->get() as $output)
+                                                        @forelse ($output->suboutputs as $suboutput)
+                                                            <option value="suboutput, {{ $suboutput->id }}">
+                                                                {{ $suboutput->output->code }} {{ $number++ }}
+                                                                {{ $suboutput->output->output }} -
+                                                                {{ $suboutput->suboutput }}
+                                                            </option>
+                                                        @empty
+                                                                <option value="output, {{ $output->id }}">
+                                                                    {{ $output->code }} {{ $number++ }}
+                                                                    {{ $output->output }}
+                                                                </option>
+                                                        @endforelse
+                                                    @endforeach
                                                 @else
                                                     @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
                                                         @forelse ($output->suboutputs as $suboutput)
@@ -206,7 +234,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'faculty')
+                                    @if (isset($userType) && $userType == 'listing')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -278,7 +306,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'faculty')
+                                    @if (isset($userType) && $userType == 'listing')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -1621,7 +1649,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1646,7 +1674,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1671,7 +1699,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1725,7 +1753,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1750,7 +1778,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1775,7 +1803,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 

@@ -76,7 +76,19 @@
                     <div class="ms-auto hstack gap-3">
 
                         @if ($duration && $duration->end_date >= date('Y-m-d'))
-                            @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))  
+                            @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                                @if (auth()->user()->outputs()->where('user_type', 'faculty')->first())
+                                    @foreach (auth()->user()->account_types as $account_type)
+                                        @if (str_contains(strtolower($account_type->account_type), 'no'))
+                                            @break;
+                                        @elseif ($loop->last)
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                                data-bs-target="#AddOSTModal" title="Add Output/Suboutput/Target">
+                                                Add Individual OST
+                                            </button>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">
                                     Add OST
                                 </button>
@@ -104,6 +116,13 @@
                     @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                         <div>
                             <h5>
+                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $sub_funct->added_by == null)
+                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('sub_funct', {{$sub_funct->id}}, 'edit')">Edit</a>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectIpcr('sub_funct', {{$sub_funct->id}})">Delete</a>
+                                    </div>
+                                @endif
                                 {{ $sub_funct->sub_funct }}
                                 @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                     {{ $sub_percentage->value }}%
@@ -115,6 +134,13 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $output->added_by == null)
+                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
+                                                </div>
+                                            @endif
                                             {{ $output->code }} {{ $number++ }} - {{ $output->output }}
                                         </h4>
                                         <p class="text-subtitle text-muted"></p>
@@ -124,6 +150,13 @@
                                         
                                         <div class="card-body">
                                             <h6>
+                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $suboutput->added_by == null)
+                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
+                                                    </div>
+                                                @endif
                                                 {{ $suboutput->suboutput }}
                                             </h6>
                                         </div>
@@ -132,7 +165,16 @@
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                                 <div class="row">
                                                     @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                        <div class="col-12 col-sm-4">
+                                                        <div class="col-12 col-sm-4 d-flex">
+                                                            <span class="my-auto">
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null)
+                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                    </div>
+                                                                @endif
+                                                            </span>
                                                             <div wire:ignore.self
                                                                 class="accordion-button collapsed gap-2"
                                                                 type="button" data-bs-toggle="collapse"
@@ -297,7 +339,16 @@
                                                 id="{{ 'output' }}{{ $output->id }}">
                                                 <div class="row">
                                                     @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                        <div class="col-12 col-sm-4">
+                                                        <div class="col-12 col-sm-4 d-flex">
+                                                            <span class="my-auto">
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null)
+                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                    </div>
+                                                                @endif
+                                                            </span>
                                                             <div wire:ignore.self
                                                                 class="accordion-button collapsed gap-2"
                                                                 type="button" data-bs-toggle="collapse"
@@ -468,6 +519,13 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title">
+                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $output->added_by == null)
+                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('output', {{$output->id}}, 'edit')">Edit</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('output', {{$output->id}})">Delete</a>
+                                            </div>
+                                        @endif
                                         {{ $output->code }} {{ $number++ }} - {{ $output->output }}
                                     </h4>
                                     <p class="text-subtitle text-muted"></p>
@@ -477,6 +535,13 @@
                                     
                                     <div class="card-body">
                                         <h6>
+                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $suboutput->added_by == null)
+                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}}, 'edit')">Edit</a>
+                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('suboutput', {{$suboutput->id}})">Delete</a>
+                                                </div>
+                                            @endif
                                             {{ $suboutput->suboutput }}
                                         </h6>
                                     </div>
@@ -485,7 +550,16 @@
                                             id="{{ 'suboutput' }}{{ $suboutput->id }}">
                                             <div class="row">
                                                 @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <div class="col-12 col-sm-4">
+                                                    <div class="col-12 col-sm-4 d-flex">
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null)
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -650,7 +724,16 @@
                                             id="{{ 'output' }}{{ $output->id }}">
                                             <div class="row">
                                                 @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <div class="col-12 col-sm-4">
+                                                    <div class="col-12 col-sm-4 d-flex">
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null)
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
                                                         <div wire:ignore.self
                                                             class="accordion-button collapsed gap-2"
                                                             type="button" data-bs-toggle="collapse"
@@ -819,5 +902,12 @@
     </section>
 
     {{ $functs->links('components.pagination') }}
-    <x-modals :selectedTarget="$selectedTarget" :targetOutput="$targetOutput" />
+
+    
+    @php
+        $currentPage = $functs->currentPage();
+        $userType = 'faculty';
+        $type = "IPCR";
+    @endphp
+    <x-modals :selectedTarget="$selectedTarget" :selected="$selected" :duration="$duration" :userType="$userType" :currentPage="$currentPage" :type="$type" :targetOutput="$targetOutput" />
 </div>

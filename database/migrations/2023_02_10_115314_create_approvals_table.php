@@ -21,6 +21,10 @@ return new class extends Migration
             $table->smallInteger('review_status')->nullable();
             $table->date('review_date')->nullable();
             $table->mediumText('review_message')->nullable();
+            $table->integer('review2_id')->nullable();
+            $table->smallInteger('review2_status')->nullable();
+            $table->date('review2_date')->nullable();
+            $table->mediumText('review2_message')->nullable();
             $table->integer('approve_id')->nullable();
             $table->smallInteger('approve_status')->nullable();
             $table->date('approve_date')->nullable();

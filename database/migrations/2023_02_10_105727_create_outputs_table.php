@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('sub_funct_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('funct_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');
+            $table->integet('added_by')->nullable();
             $table->timestamps();
         });
 

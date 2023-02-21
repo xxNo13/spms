@@ -14,7 +14,8 @@ class Target extends Model
         'required',
         'output_id',
         'suboutput_id',
-        'duration_id'
+        'duration_id',
+        'added_by'
     ];
 
     public function output() {

@@ -16,7 +16,8 @@ class Output extends Model
         'user_type',
         'sub_funct_id',
         'funct_id',
-        'duration_id'
+        'duration_id',
+        'added_by'
     ];
 
     public function sub_funct(){

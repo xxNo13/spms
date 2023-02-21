@@ -32,13 +32,13 @@
                         {{ $funct->funct }}
                     </h4>
                 </div>
-                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'faculty')->where('type', 'ipcr')->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'faculty')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
                         </h5>
 
-                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach ($sub_funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -92,7 +92,7 @@
                     <hr>
                 @endforeach
                 <div>
-                    @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
+                    @foreach ($funct->outputs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->where('added_by', '!=', null)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">
