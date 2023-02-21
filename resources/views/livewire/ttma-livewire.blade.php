@@ -165,7 +165,10 @@
                                             <span class="ms-auto hstack gap-2">
                                                 @if ($ttma->remarks == 'Done') 
                                                     <div class="rounded-pill bg-primary p-2 text-white">Done</div>
-                                                @elseif ($ttma->remarks == 'Undone')
+                                                    @if ($ttma->deadline < date('Y-m-d', strtotime($ttma->updated_at)))
+                                                        <div class="rounded-pill bg-danger p-2 text-white">Late</div>
+                                                    @endif
+                                                @elseif (!$ttma->remarks && $ttma->deadline < date('Y-m-d'))
                                                     <div class="rounded-pill bg-danger p-2 text-white">Undone</div>
                                                 @else
                                                     <div class="rounded-pill bg-warning p-2 text-dark">Working</div>
@@ -180,7 +183,7 @@
                                                     {{ $ttma->subject }} - {{ $ttma->output }}
                                                 </div>
                                                 <div class="col-6 text-end">
-                                                    Deadline: {{ date('M d, Y', strtotime($ttma->deadline)) }}
+                                                    Deadline: <span class="{{ (!$ttma->remarks && $ttma->deadline < date('Y-m-d')) ? 'text-danger' : '' }}">{{ date('M d, Y', strtotime($ttma->deadline)) }}</span>
                                                 </div>
                                             </div>
                                             <div class="row mt-3">
