@@ -56,6 +56,8 @@ class ProfileForm extends Component
             'message' => "Profile Information Saved",
             'color' => "#28ab55",
         ]);
+
+        return redirect(request()->header('Referer'));
     }
 
     public function resetInput() {
@@ -65,6 +67,5 @@ class ProfileForm extends Component
         $this->office = "";
         $this->account_types = "";
         $this->account_type = "";
-        $this->mount();
     }
 }

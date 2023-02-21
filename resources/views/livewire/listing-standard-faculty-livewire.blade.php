@@ -57,24 +57,26 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @foreach ($target->standards as $standard)
-                                                                @if ($standard->user_id == null)
-                                                                    <span class="my-auto">
-                                                                        <i class="bi bi-check2"></i>
-                                                                    </span>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
-                                                            {{ $target->target }}
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @foreach ($target->standards as $standard)
+                                                                    @if ($standard->user_id == null)
+                                                                        <span class="my-auto">
+                                                                            <i class="bi bi-check2"></i>
+                                                                        </span>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                                {{ $target->target }}
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -226,24 +228,26 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @foreach ($target->standards as $standard)
-                                                                @if ($standard->user_id == null)
-                                                                    <span class="my-auto">
-                                                                        <i class="bi bi-check2"></i>
-                                                                    </span>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
-                                                            {{ $target->target }}
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @foreach ($target->standards as $standard)
+                                                                    @if ($standard->user_id == null)
+                                                                        <span class="my-auto">
+                                                                            <i class="bi bi-check2"></i>
+                                                                        </span>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                                {{ $target->target }}
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -410,24 +414,26 @@
                                 <div class="card-body">
                                     <div class="accordion accordion-flush"
                                         id="{{ 'output' }}{{ $output->id }}">
-                                        <div class="d-sm-flex">
+                                        <div class="row">
                                             @foreach ($suboutput->targets()->where('duration_id', $duration->id)->get() as $target)
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    @foreach ($target->standards as $standard)
-                                                        @if ($standard->user_id == null)
-                                                            <span class="my-auto">
-                                                                <i class="bi bi-check2"></i>
-                                                            </span>
-                                                            @break
-                                                        @endif
-                                                    @endforeach
-                                                    {{ $target->target }}
+                                                <div class="col-12 col-sm-4">
+                                                    <div wire:ignore.self
+                                                        class="accordion-button collapsed gap-2"
+                                                        type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                        aria-expanded="true"
+                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                        role="button">
+                                                        @foreach ($target->standards as $standard)
+                                                            @if ($standard->user_id == null)
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                                @break
+                                                            @endif
+                                                        @endforeach
+                                                        {{ $target->target }}
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -579,24 +585,26 @@
                                 <div class="card-body">
                                     <div class="accordion accordion-flush"
                                         id="{{ 'output' }}{{ $output->id }}">
-                                        <div class="d-sm-flex">
+                                        <div class="row">
                                             @foreach ($output->targets()->where('duration_id', $duration->id)->get() as $target)
-                                                <div wire:ignore.self
-                                                    class="accordion-button collapsed gap-2"
-                                                    type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                    aria-expanded="true"
-                                                    aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                    role="button">
-                                                    @foreach ($target->standards as $standard)
-                                                        @if ($standard->user_id == null)
-                                                            <span class="my-auto">
-                                                                <i class="bi bi-check2"></i>
-                                                            </span>
-                                                            @break
-                                                        @endif
-                                                    @endforeach
-                                                    {{ $target->target }}
+                                                <div class="col-12 col-sm-4">
+                                                    <div wire:ignore.self
+                                                        class="accordion-button collapsed gap-2"
+                                                        type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                        aria-expanded="true"
+                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                        role="button">
+                                                        @foreach ($target->standards as $standard)
+                                                            @if ($standard->user_id == null)
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                                @break
+                                                            @endif
+                                                        @endforeach
+                                                        {{ $target->target }}
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>

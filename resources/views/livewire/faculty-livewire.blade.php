@@ -130,21 +130,23 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                                <span class="my-auto">
-                                                                    <i class="bi bi-check2"></i>
-                                                                </span>
-                                                            @endif
-                                                            {{ $target->target }}
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                    <span class="my-auto">
+                                                                        <i class="bi bi-check2"></i>
+                                                                    </span>
+                                                                @endif
+                                                                {{ $target->target }}
+                                                            </div>
                                                         </div>  
                                                     @endforeach
                                                 </div>
@@ -293,22 +295,24 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                                <span class="my-auto">
-                                                                    <i class="bi bi-check2"></i>
-                                                                </span>
-                                                            @endif
-                                                            {{ $target->target }}
-                                                        </div>  
+                                                        <div class="col-12 col-sm-4">
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                    <span class="my-auto">
+                                                                        <i class="bi bi-check2"></i>
+                                                                    </span>
+                                                                @endif
+                                                                {{ $target->target }}
+                                                            </div>  
+                                                        </div>
                                                     @endforeach
                                                 </div>
 
@@ -479,21 +483,23 @@
                                     <div class="card-body">
                                         <div class="accordion accordion-flush"
                                             id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                            <div class="d-sm-flex">
+                                            <div class="row">
                                                 @foreach (auth()->user()->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <div wire:ignore.self
-                                                        class="accordion-button collapsed gap-2"
-                                                        type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                        aria-expanded="true"
-                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                        role="button">
-                                                        @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                            <span class="my-auto">
-                                                                <i class="bi bi-check2"></i>
-                                                            </span>
-                                                        @endif
-                                                        {{ $target->target }}
+                                                    <div class="col-12 col-sm-4">
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                            @endif
+                                                            {{ $target->target }}
+                                                        </div>
                                                     </div>  
                                                 @endforeach
                                             </div>
@@ -642,21 +648,23 @@
                                     <div class="card-body">
                                         <div class="accordion accordion-flush"
                                             id="{{ 'output' }}{{ $output->id }}">
-                                            <div class="d-sm-flex">
+                                            <div class="row">
                                                 @foreach (auth()->user()->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                                    <div wire:ignore.self
-                                                        class="accordion-button collapsed gap-2"
-                                                        type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                        aria-expanded="true"
-                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                        role="button">
-                                                        @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
-                                                            <span class="my-auto">
-                                                                <i class="bi bi-check2"></i>
-                                                            </span>
-                                                        @endif
-                                                        {{ $target->target }}
+                                                    <div class="col-12 col-sm-4">
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            @if (auth()->user()->ratings()->where('target_id', $target->id)->first())
+                                                                <span class="my-auto">
+                                                                    <i class="bi bi-check2"></i>
+                                                                </span>
+                                                            @endif
+                                                            {{ $target->target }}
+                                                        </div>
                                                     </div>  
                                                 @endforeach
                                             </div>

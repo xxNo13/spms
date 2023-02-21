@@ -9,6 +9,7 @@ use App\Http\Middleware\Staff;
 use App\Http\Middleware\Faculty;
 use App\Http\Middleware\PmoOrHrmo;
 use App\Http\Middleware\PmoOrHrmoOrHead;
+use App\Http\Middleware\HeadNotPresident;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -71,6 +72,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'hrmo' => Hrmo::class,
+        'headnotpresident' => HeadNotPresident::class,
         'pmo' => Pmo::class,
         'pmoorhrmo' => PmoOrHrmo::class,
         'pmoorhrmoorhead' => PmoOrHrmoOrHead::class,

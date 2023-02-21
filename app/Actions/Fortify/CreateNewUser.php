@@ -25,7 +25,6 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
             'office' => ['required'],
-            'account_type' => ['required'],
         ])->validate();
 
         $user = User::create([
@@ -34,7 +33,9 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         $user->offices()->attach($input['office']);
-        $user->account_types()->attach($input['account_type']);
+        if (isset($input['account_type'])) {
+            $user->account_types()->attach($input['account_type']);
+        }
 
         session()->flash('message', 'User Successfully Registered!');
         return auth()->user();

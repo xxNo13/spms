@@ -225,7 +225,7 @@ class OfficeSeeder extends Seeder
     //    ____________________________________________________________________________________
 
         Office::factory()->create([
-            'office_name' => 'Office of the Director for Planing & Resource Management',
+            'office_name' => 'Office of the Director for Planning & Resource Management',
             'office_abbr' => 'ODPRM',	
             'parent_id' => 1
         ]); // 34

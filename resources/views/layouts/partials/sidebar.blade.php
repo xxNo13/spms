@@ -8,6 +8,7 @@
         $pmo = false;
         $hrmo = false;
         $bool = true;
+        $president = false;
     @endphp
     @foreach (Auth::user()->offices as $office)
         @if ($office->pivot->isHead)
@@ -15,6 +16,11 @@
                 $head = true;
             @endphp
         @endif  
+        @if ((str_contains(strtolower($office->office_name), 'college president'))) 
+            @php
+                $president = true;
+            @endphp
+        @endif
         @if (str_contains(strtolower($office->office_name), 'planning'))
             @php
                 $pmo = true;
@@ -74,9 +80,9 @@
         </x-maz-sidebar-item>
     @endif
     
-    @if ($head || $pmo || $hrmo)
+    @if (($head && !$president) || $pmo || $hrmo)
         <x-maz-sidebar-item alias="opcr" link="#" name="OPCR" icon="bi bi-clipboard-data-fill">
-            @if ($head)
+            @if ($head && !$president)
                 <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
                 <x-maz-sidebar-sub-item name="Standards for OPCR" :link="route('opcr.standard')"></x-maz-sidebar-sub-item>
             @endif

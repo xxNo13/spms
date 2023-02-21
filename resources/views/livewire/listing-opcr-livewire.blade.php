@@ -110,26 +110,28 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($suboutput->targets as $target)
-                                                        <span class="my-auto">
-                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                                </div>
-                                                            @endif
-                                                        </span>
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            {{ $target->target }}
-                                                        </div>  
+                                                        <div class="col-12 col-sm-4 d-flex">
+                                                            <span class="my-auto">
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                    </div>
+                                                                @endif
+                                                            </span>
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                {{ $target->target }}
+                                                            </div> 
+                                                        </div> 
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -138,26 +140,28 @@
                                         <div class="card-body">
                                             <div class="accordion accordion-flush"
                                                 id="{{ 'output' }}{{ $output->id }}">
-                                                <div class="d-sm-flex">
+                                                <div class="row">
                                                     @foreach ($output->targets as $target)
-                                                        <span class="my-auto">
-                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                                </div>
-                                                            @endif
-                                                        </span>
-                                                        <div wire:ignore.self
-                                                            class="accordion-button collapsed gap-2"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                            aria-expanded="true"
-                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                            role="button">
-                                                            {{ $target->target }}
-                                                        </div>  
+                                                        <div class="col-12 col-sm-4 d-flex">
+                                                            <span class="my-auto">
+                                                                @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                    <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                    </div>
+                                                                @endif
+                                                            </span>
+                                                            <div wire:ignore.self
+                                                                class="accordion-button collapsed gap-2"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                                aria-expanded="true"
+                                                                aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                                role="button">
+                                                                {{ $target->target }}
+                                                            </div> 
+                                                        </div> 
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -203,26 +207,28 @@
                                     <div class="card-body">
                                         <div class="accordion accordion-flush"
                                             id="{{ 'suboutput' }}{{ $suboutput->id }}">
-                                            <div class="d-sm-flex">
+                                            <div class="row">
                                                 @foreach ($suboutput->targets as $target)
-                                                    <span class="my-auto">
-                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                            </div>
-                                                        @endif
-                                                    </span>
-                                                    <div wire:ignore.self
-                                                        class="accordion-button collapsed gap-2"
-                                                        type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                        aria-expanded="true"
-                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                        role="button">
-                                                        {{ $target->target }}
-                                                    </div>  
+                                                    <div class="col-12 col-sm-4 d-flex">
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            {{ $target->target }}
+                                                        </div> 
+                                                    </div> 
                                                 @endforeach
                                             </div>
                                         </div>
@@ -231,26 +237,28 @@
                                     <div class="card-body">
                                         <div class="accordion accordion-flush"
                                             id="{{ 'output' }}{{ $output->id }}">
-                                            <div class="d-sm-flex">
+                                            <div class="row">
                                                 @foreach ($output->targets as $target)
-                                                    <span class="my-auto">
-                                                        @if (($duration && $duration->end_date >= date('Y-m-d')))
-                                                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
-                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
-                                                            </div>
-                                                        @endif
-                                                    </span>
-                                                    <div wire:ignore.self
-                                                        class="accordion-button collapsed gap-2"
-                                                        type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ 'target' }}{{ $target->id }}"
-                                                        aria-expanded="true"
-                                                        aria-controls="{{ 'target' }}{{ $target->id }}"
-                                                        role="button">
-                                                        {{ $target->target }}
-                                                    </div>  
+                                                    <div class="col-12 col-sm-4 d-flex">
+                                                        <span class="my-auto">
+                                                            @if (($duration && $duration->end_date >= date('Y-m-d')))
+                                                                <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditOSTModal" wire:click="selectIpcr('target', {{$target->id}}, 'edit')">Edit</a>
+                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" wire:click="selectIpcr('target', {{$target->id}})">Delete</a>
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                        <div wire:ignore.self
+                                                            class="accordion-button collapsed gap-2"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            data-bs-target="#{{ 'target' }}{{ $target->id }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="{{ 'target' }}{{ $target->id }}"
+                                                            role="button">
+                                                            {{ $target->target }}
+                                                        </div>  
+                                                    </div>
                                                 @endforeach
                                             </div>
                                         </div>

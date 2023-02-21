@@ -10,7 +10,7 @@ class OfficesLivewire extends Component
     public function render()
     {
         return view('livewire.offices-livewire',[
-            'offices' => Office::all()
+            'offices' => Office::orderBy('office_name', 'ASC')->get()
         ]);
     }
 }

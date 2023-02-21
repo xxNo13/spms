@@ -537,6 +537,7 @@ class FacultyLivewire extends Component
         $suboutput_ids = [];
         $output_ids = [];
         $sub_funct_ids = [];
+        $core_sub_funct = [];
 
         $selected_targets = 0;
 
@@ -547,6 +548,9 @@ class FacultyLivewire extends Component
                     array_push($output_ids, $target->output_id);
                     if ($target->output->sub_funct) {
                         array_push($sub_funct_ids, $target->output->sub_funct_id);
+                        if ($target->output->sub_funct->funct_id == 1) {
+                            array_push($core_sub_funct, $target->output->sub_funct_id);
+                        }
                     }
                 } else if ($target->suboutput) {
                     array_push($suboutput_ids, $target->suboutput_id);
@@ -554,6 +558,9 @@ class FacultyLivewire extends Component
                         array_push($output_ids, $target->suboutput->output_id);
                         if ($target->suboutput->output->sub_funct) {
                             array_push($sub_funct_ids, $target->suboutput->output->sub_funct_id);
+                            if ($target->output->sub_funct->funct_id == 1) {
+                                array_push($core_sub_funct, $target->output->sub_funct_id);
+                            }
                         }
                     }
                 }
@@ -607,32 +614,51 @@ class FacultyLivewire extends Component
             auth()->user()->sub_functs()->detach();
         }
 
-        $first = true;
-        foreach (array_unique($sub_funct_ids) as $id) {
-            if ($first) {
-                $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
-                    'value' => $sub_percent2,
-                ]);
-    
-                if (!$sub_percent) {
-                    SubPercentage::create([
+        if (count($core_sub_funct) > 1) {
+            $first = true;
+            foreach (array_unique($core_sub_funct) as $id) {
+                if ($first) {
+                    $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
                         'value' => $sub_percent2,
-                        'sub_funct_id' => $id, 
-                        'type' => 'ipcr',
-                        'user_type' => 'faculty',
-                        'user_id' => auth()->user()->id,
-                        'duration_id' => $this->duration->id,
                     ]);
+        
+                    if (!$sub_percent) {
+                        SubPercentage::create([
+                            'value' => $sub_percent2,
+                            'sub_funct_id' => $id, 
+                            'type' => 'ipcr',
+                            'user_type' => 'faculty',
+                            'user_id' => auth()->user()->id,
+                            'duration_id' => $this->duration->id,
+                        ]);
+                    }
+                    $first = false;
+                } else {
+                    $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
+                        'value' => $sub_percent1,
+                    ]);
+        
+                    if (!$sub_percent) {
+                        SubPercentage::create([
+                            'value' => $sub_percent1,
+                            'sub_funct_id' => $id, 
+                            'type' => 'ipcr',
+                            'user_type' => 'faculty',
+                            'user_id' => auth()->user()->id,
+                            'duration_id' => $this->duration->id,
+                        ]);
+                    }
                 }
-                $first = false;
-            } else {
+            }
+        } else {
+            foreach (array_unique($core_sub_funct) as $id) {
                 $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
                     'value' => $sub_percent1,
                 ]);
-    
+
                 if (!$sub_percent) {
                     SubPercentage::create([
-                        'value' => $sub_percent1,
+                        'value' => 100,
                         'sub_funct_id' => $id, 
                         'type' => 'ipcr',
                         'user_type' => 'faculty',

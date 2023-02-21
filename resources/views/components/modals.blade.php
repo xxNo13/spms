@@ -1424,86 +1424,6 @@
         </div>
     @endif
 
-    {{-- Add Institute Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddInstituteModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Add Institute</h4>
-                </div>
-                <form wire:submit.prevent="save">
-                    <div class="modal-body">
-                        <label>Institute Name: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Institute Name" class="form-control" wire:model="institute_name">
-                            @error('institute_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Institute Abbreviation: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Institute Abbreviation" class="form-control" wire:model="institute_abr">
-                            @error('institute_abr')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- Edit Institute Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditInstituteModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Edit Institute</h4>
-                </div>
-                <form wire:submit.prevent="save">
-                    <div class="modal-body">
-                        <label>Institute Name: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Institute Name" class="form-control" wire:model="institute_name">
-                            @error('institute_name')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Institute Abbreviation: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Institute Abbreviation" class="form-control" wire:model="institute_abr">
-                            @error('institute_abr')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Update</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     {{-- Add Account Type Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddAccountTypeModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
@@ -1683,60 +1603,6 @@
         </div>
     </div>
 
-    {{-- Reset IPCR Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="ResetIPCRModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Reset IPR</h4>
-                </div>
-                <form wire:submit.prevent="resetIPCR">
-                    <div class="modal-body">
-                        <p>You sure you want to reset IPCR?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-danger ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Reset</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    {{-- Reset OPCR Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="ResetOPCRModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Reset OPCR</h4>
-                </div>
-                <form wire:submit.prevent="resetOPCR">
-                    <div class="modal-body">
-                        <p>You sure you want to reset OPCR?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-danger ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Reset</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     {{-- Add Percentage Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddPercentageModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
@@ -1859,7 +1725,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1884,7 +1750,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1909,7 +1775,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if (isset($subFuncts))
+                        @if ((isset($subFuncts) && isset($userType) && $userType != 'faculty') || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -2238,135 +2104,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Add Target Output, Alloted Budget & Responsible Person/Office Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddBudgetModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Add Target Output, Alloted Budget & Responsible Person/Office</h4>
-                </div>
-                <form wire:submit.prevent="savebudget">
-                    <div class="modal-body">
-                        <label>Target Output: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Target Output" class="form-control"
-                            wire:model="target_output">
-                            @error('target_output')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Alloted Budget: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Alloted Budget" class="form-control"
-                            wire:model="alloted_budget">
-                            @error('alloted_budget')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Responsible Person/Office: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Responsible Person/Office" class="form-control"
-                            wire:model="responsible">
-                            @error('responsible')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- Edit Target Output, Alloted Budget & Responsible Person/Office Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditBudgetModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Edit Target Output, Alloted Budget & Responsible Person/Office</h4>
-                </div>
-                <form wire:submit.prevent="savebudget">
-                    <div class="modal-body">
-                        <label>Target Output: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Target Output" class="form-control"
-                            wire:model="target_output">
-                            @error('target_output')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Alloted Budget: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Alloted Budget" class="form-control"
-                            wire:model="alloted_budget">
-                            @error('alloted_budget')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <label>Responsible Person/Office: </label>
-                        <div class="form-group">
-                            <input type="text" placeholder="Responsible Person/Office" class="form-control"
-                            wire:model="responsible">
-                            @error('responsible')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Update</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- Delete Target Output, Alloted Budget & Responsible Person/Office Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="DeleteBudgetModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel33">Delete Modal</h4>
-                </div>
-                <form wire:submit.prevent="deletebudget">
-                    <div class="modal-body">
-                        <p>You sure you want to delete?</p>
-                        <p>Can't recover data once you delete it!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-danger ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Delete</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     
     {{-- Add Target Output Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddTargetOutputModal" tabindex="-1" role="dialog"
@@ -2471,6 +2208,4 @@
             </div>
         </div>
     </div>
-
-    
 </div>
