@@ -410,37 +410,124 @@ class FacultyLivewire extends Component
             }
         }
 
-        foreach ($this->highestOffice as $id => $value) {
-
-            $office = Office::find($id);
-
-            if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
-                
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
+        if (count($this->highestOffice) > 1) {
+            $numberOfTarget = [];
+            foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
+                $x = 0;
+                $targets = 0;
+                foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output) {
+                    foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target) {
+                        $targets++;
+                    }
                 }
-            } else {
-                $office = Office::where('id', $office->parent_id)->first();
+                $numberOfTarget[$x] = $targets;
+                $x++;
+            }
+
+            if ($numberOfTarget[0] > $numberOfTarget[1]) {
+                foreach ($this->highestOffice as $id => $value) {
+
+                    $office = Office::find($id);
+
+                    if (str_contains(strtolower($office->parent->office_name), 'dean')) {
+                        if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
+                            
+                            $parent_office = Office::where('id', $office->parent_id)->first();
+                            if ($parent_office) {
+                                $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                            }else {
+                                $this->approve_id = $this->review_id;
+                            }
+                        } else {
+                            $office = Office::where('id', $office->parent_id)->first();
+                        
+                            $parent_office = Office::where('id', $office->parent_id)->first();
+                            if ($parent_office) {
+                                $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                            }else {
+                                $this->approve_id = $this->review_id;
+                            }
+                        }
             
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
+                        if (empty($this->review_id) && empty($this->approve_id)) {
+                            $this->dispatchBrowserEvent('toastify', [
+                                'message' => "No Head found!",
+                                'color' => "#f3616d",
+                            ]);
+                            return;
+                        }
+                        break;
+                    }
+                }
+            } elseif ($numberOfTarget[0] <= $numberOfTarget[1]) {
+                foreach ($this->highestOffice as $id => $value) {
+
+                    $office = Office::find($id);
+
+                    if (!str_contains(strtolower($office->parent->office_name), 'chair')) {
+                        if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
+                            
+                            $parent_office = Office::where('id', $office->parent_id)->first();
+                            if ($parent_office) {
+                                $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                            }else {
+                                $this->approve_id = $this->review_id;
+                            }
+                        } else {
+                            $office = Office::where('id', $office->parent_id)->first();
+                        
+                            $parent_office = Office::where('id', $office->parent_id)->first();
+                            if ($parent_office) {
+                                $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                            }else {
+                                $this->approve_id = $this->review_id;
+                            }
+                        }
+            
+                        if (empty($this->review_id) && empty($this->approve_id)) {
+                            $this->dispatchBrowserEvent('toastify', [
+                                'message' => "No Head found!",
+                                'color' => "#f3616d",
+                            ]);
+                            return;
+                        }
+                        break;
+                    }
                 }
             }
+        } else {
+            foreach ($this->highestOffice as $id => $value) {
 
-            if (empty($this->review_id) && empty($this->approve_id)) {
-                $this->dispatchBrowserEvent('toastify', [
-                    'message' => "No Head found!",
-                    'color' => "#f3616d",
-                ]);
-                return;
+                $office = Office::find($id);
+    
+                if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
+                    
+                    $parent_office = Office::where('id', $office->parent_id)->first();
+                    if ($parent_office) {
+                        $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                    }else {
+                        $this->approve_id = $this->review_id;
+                    }
+                } else {
+                    $office = Office::where('id', $office->parent_id)->first();
+                
+                    $parent_office = Office::where('id', $office->parent_id)->first();
+                    if ($parent_office) {
+                        $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                    }else {
+                        $this->approve_id = $this->review_id;
+                    }
+                }
+    
+                if (empty($this->review_id) && empty($this->approve_id)) {
+                    $this->dispatchBrowserEvent('toastify', [
+                        'message' => "No Head found!",
+                        'color' => "#f3616d",
+                    ]);
+                    return;
+                }
+                break;
             }
-            break;
         }
 
         $approval = Approval::create([

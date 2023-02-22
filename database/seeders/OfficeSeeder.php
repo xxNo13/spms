@@ -264,282 +264,282 @@ class OfficeSeeder extends Seeder
 
     //    ______________________________________________________________________________________
         
-        Office::factory()->create([
-            'office_name' => 'Office of the Department Chairpersons of IAAS',
-            'office_abbr' => 'ODCIAAS',	
-            'parent_id' => 12
-        ]); // 40
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the Department Chairpersons of IAAS',
+        //     'office_abbr' => 'ODCIAAS',	
+        //     'parent_id' => 12
+        // ]); // 40
         
-        Office::factory()->create([
-            'office_name' => 'Office of the Department Chairpersons of IC',
-            'office_abbr' => 'ODCIC',	
-            'parent_id' => 13
-        ]); // 41
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the Department Chairpersons of IC',
+        //     'office_abbr' => 'ODCIC',	
+        //     'parent_id' => 13
+        // ]); // 41
         
-        Office::factory()->create([
-            'office_name' => 'Office of the Department Chairpersons of IHSS',
-            'office_abbr' => 'ODCIHSS',	
-            'parent_id' => 14
-        ]); // 42
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the Department Chairpersons of IHSS',
+        //     'office_abbr' => 'ODCIHSS',	
+        //     'parent_id' => 14
+        // ]); // 42
         
-        Office::factory()->create([
-            'office_name' => 'Office of the Department Chairpersons of ILEGG',
-            'office_abbr' => 'ODCILEGG',	
-            'parent_id' => 15
-        ]); // 43
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the Department Chairpersons of ILEGG',
+        //     'office_abbr' => 'ODCILEGG',	
+        //     'parent_id' => 15
+        // ]); // 43
         
-        Office::factory()->create([
-            'office_name' => 'Office of the Department Chairpersons of ITEd',
-            'office_abbr' => 'ODCITEd',	
-            'parent_id' => 16
-        ]); // 44
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the Department Chairpersons of ITEd',
+        //     'office_abbr' => 'ODCITEd',	
+        //     'parent_id' => 16
+        // ]); // 44
         
-        Office::factory()->create([
-            'office_name' => 'Office of the AdS Program Chairs',
-            'office_abbr' => 'ODCIAdS',	
-            'parent_id' => 17
-        ]); // 45
+        // Office::factory()->create([
+        //     'office_name' => 'Office of the AdS Program Chairs',
+        //     'office_abbr' => 'ODCIAdS',	
+        //     'parent_id' => 17
+        // ]); // 45
         
         Office::factory()->create([
             'office_name' => 'Office of the SDS Coordinators/Heads',
             'office_abbr' => 'ODCDSD',	
             'parent_id' => 18
-        ]); // 46
+        ]); // 40
         
     //    ______________________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Fisheries & Aquatic Sciences',
             'office_abbr' => 'FAS',	
-            'parent_id' => 40
-        ]); // 47
+            'parent_id' => 12
+        ]); // 41
         
         Office::factory()->create([
             'office_name' => 'Marine Biology',
             'office_abbr' => 'MB',	
-            'parent_id' => 40
-        ]); // 48
+            'parent_id' => 12
+        ]); // 42
         
         Office::factory()->create([
             'office_name' => 'Food Technology',
             'office_abbr' => 'FT',	
-            'parent_id' => 40
-        ]); // 49
+            'parent_id' => 12
+        ]); // 43
         
         Office::factory()->create([
             'office_name' => 'Agro-Forestry',
             'office_abbr' => 'AF',	
-            'parent_id' => 40
-        ]); // 50
+            'parent_id' => 12
+        ]); // 44
         
         Office::factory()->create([
             'office_name' => 'Institute REP Head of IAAS',
             'office_abbr' => 'IRHIAAS',	
-            'parent_id' => 40
-        ]); // 51
+            'parent_id' => 12
+        ]); // 45
         
     //    _____________________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Information Technology',
             'office_abbr' => 'IT',	
-            'parent_id' => 41
-        ]); // 52
+            'parent_id' => 13
+        ]); // 46
         
         Office::factory()->create([
             'office_name' => 'Information System',
             'office_abbr' => 'IS',	
-            'parent_id' => 41
-        ]); // 52
+            'parent_id' => 13
+        ]); // 47
         
         Office::factory()->create([
             'office_name' => 'Institute REP Head if IC',
             'office_abbr' => 'IRHIC',	
-            'parent_id' => 41
-        ]); // 53
+            'parent_id' => 13
+        ]); // 48
     //    __________________________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Communication',
             'office_abbr' => 'CM',	
-            'parent_id' => 42
-        ]); // 54
+            'parent_id' => 14
+        ]); // 49
         
         
         Office::factory()->create([
             'office_name' => 'General Education',
             'office_abbr' => 'GenEd',	
-            'parent_id' => 42
-        ]); // 55
+            'parent_id' => 14
+        ]); // 50
         
         Office::factory()->create([
             'office_name' => 'Institute REP Head of IHSS',
             'office_abbr' => 'IRHIHSS',	
-            'parent_id' => 42
-        ]); // 56
+            'parent_id' => 14
+        ]); // 51
     //    _______________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Public Administration',
             'office_abbr' => 'PubAd',	
-            'parent_id' => 43
-        ]); // 57
+            'parent_id' => 15
+        ]); // 52
         
         Office::factory()->create([
             'office_name' => 'Disaster Resillency & Mgt.',
             'office_abbr' => 'DRM',	
-            'parent_id' => 43
-        ]); // 58
+            'parent_id' => 15
+        ]); // 53
         
         Office::factory()->create([
             'office_name' => 'Entreprenuership',
             'office_abbr' => 'Entrep',	
-            'parent_id' => 43
-        ]); // 59
+            'parent_id' => 15
+        ]); // 54
         
         Office::factory()->create([
             'office_name' => 'Social Work',
             'office_abbr' => 'SW',	
-            'parent_id' => 43
-        ]); // 60
+            'parent_id' => 15
+        ]); // 55
         
         Office::factory()->create([
             'office_name' => 'Tourism Management',
             'office_abbr' => 'TM',	
-            'parent_id' => 43
-        ]); // 61
+            'parent_id' => 15
+        ]); // 56
         
         Office::factory()->create([
             'office_name' => 'Institute REP Head of ILEGG',
             'office_abbr' => 'IRHILEGG',	
-            'parent_id' => 43
-        ]); // 51
+            'parent_id' => 15
+        ]); // 57
     //    ___________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Secondary Education',
             'office_abbr' => 'SecEd',	
-            'parent_id' => 44
-        ]); // 52
+            'parent_id' => 16
+        ]); // 58
         
         Office::factory()->create([
             'office_name' => 'TLEd',
             'office_abbr' => 'TLEd',	
-            'parent_id' => 44
-        ]); // 53
+            'parent_id' => 16
+        ]); // 59
         
         Office::factory()->create([
             'office_name' => 'Professional Education',
             'office_abbr' => 'ProfEd',	
-            'parent_id' => 44
-        ]); // 54
+            'parent_id' => 16
+        ]); // 60
         
         Office::factory()->create([
             'office_name' => 'Elementary Education',
             'office_abbr' => 'ElemEd',	
-            'parent_id' => 44
-        ]); // 55
+            'parent_id' => 16
+        ]); // 61
         
         Office::factory()->create([
             'office_name' => 'Institute REP Head of ITEd',
             'office_abbr' => 'IRHITEd',	
-            'parent_id' => 44
-        ]); // 56
+            'parent_id' => 16
+        ]); // 62
     //    ___________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Educational Management',
             'office_abbr' => 'EdMan',	
-            'parent_id' => 45
-        ]); // 57
+            'parent_id' => 17
+        ]); // 63
         
         Office::factory()->create([
             'office_name' => 'MST & MABE',
             'office_abbr' => 'MM',	
-            'parent_id' => 45
-        ]); // 58
+            'parent_id' => 17
+        ]); // 64
         
         Office::factory()->create([
             'office_name' => 'Fisheries Mgt. & Marine Biodiversity',
             'office_abbr' => 'FMMB',	
-            'parent_id' => 45
-        ]); // 59
+            'parent_id' => 17
+        ]); // 65
         
         Office::factory()->create([
             'office_name' => 'Public Administration',
             'office_abbr' => 'PudAd',	
-            'parent_id' => 45
-        ]); // 60
+            'parent_id' => 17
+        ]); // 66
         
     //    _________________________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Scholarship Grants',
             'office_abbr' => 'SG',	
-            'parent_id' => 46
-        ]); // 61
+            'parent_id' => 40
+        ]); // 67
         
         Office::factory()->create([
             'office_name' => 'Sports',
             'office_abbr' => 'Spts',	
-            'parent_id' => 46
-        ]); // 62
+            'parent_id' => 40
+        ]); // 68
         
         Office::factory()->create([
             'office_name' => 'Socio-Cultural',
             'office_abbr' => 'SocCul',	
-            'parent_id' => 46
-        ]); // 63
+            'parent_id' => 40
+        ]); // 69
         
         Office::factory()->create([
             'office_name' => 'Student Organizations',
             'office_abbr' => 'StudOrg',	
-            'parent_id' => 46
-        ]); // 64
+            'parent_id' => 40
+        ]); // 70
         
         Office::factory()->create([
             'office_name' => 'Student Publication',
             'office_abbr' => 'StudPub',	
-            'parent_id' => 46
-        ]); // 65
+            'parent_id' => 40
+        ]); // 71
         
         Office::factory()->create([
             'office_name' => 'Student Discipline',
             'office_abbr' => 'StudDis',	
-            'parent_id' => 46
-        ]); // 66
+            'parent_id' => 40
+        ]); // 72
         
         Office::factory()->create([
             'office_name' => 'Guidance, Counselling & Testing',
             'office_abbr' => 'GCT',	
-            'parent_id' => 46
-        ]); // 67
+            'parent_id' => 40
+        ]); // 73
         
         Office::factory()->create([
             'office_name' => 'Medical & Dental Services',
             'office_abbr' => 'MDS',	
-            'parent_id' => 46
-        ]); // 68
+            'parent_id' => 40
+        ]); // 74
 
     //    _____________________________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'English',
             'office_abbr' => 'Eng',	
-            'parent_id' => 52
-        ]); // 69
+            'parent_id' => 58
+        ]); // 75
         
         Office::factory()->create([
             'office_name' => 'Mathematics',
             'office_abbr' => 'Math',	
-            'parent_id' => 52
-        ]); // 70
+            'parent_id' => 58
+        ]); // 76
         
         Office::factory()->create([
             'office_name' => 'Sciences',
             'office_abbr' => 'Sci',	
-            'parent_id' => 52
-        ]); // 71
+            'parent_id' => 58
+        ]); // 77
 
     //    _______________________________________________________________________________________
         
@@ -547,61 +547,61 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Procurement Services Unit',
             'office_abbr' => 'PSU',	
             'parent_id' => 27
-        ]); // 72
+        ]); // 78
         
         
         Office::factory()->create([
             'office_name' => 'Supply & Property Management Unit',
             'office_abbr' => 'SPMU',	
             'parent_id' => 27
-        ]); // 73
+        ]); // 79
         
         
         Office::factory()->create([
             'office_name' => 'Physical Facilities & Maintenance Unit',
             'office_abbr' => 'PFMU',	
             'parent_id' => 27
-        ]); // 74
+        ]); // 80
         
         
         Office::factory()->create([
             'office_name' => 'Security Services Unit',
             'office_abbr' => 'SSU',	
             'parent_id' => 27
-        ]); // 75
+        ]); // 81
         
         
         Office::factory()->create([
             'office_name' => 'Technology Support Services Unit',
             'office_abbr' => 'TSSU',	
             'parent_id' => 27
-        ]); // 76
+        ]); // 82
         
         
         Office::factory()->create([
             'office_name' => 'Corporate Enterprise Management Unit',
             'office_abbr' => 'CEMU',	
             'parent_id' => 27
-        ]); // 77
+        ]); // 83
     //    __________________________________________________________________
         
         Office::factory()->create([
             'office_name' => 'Accounting Services Unit',
             'office_abbr' => 'ASU',	
             'parent_id' => 28
-        ]); // 78
+        ]); // 84
         
         Office::factory()->create([
             'office_name' => 'Budgeting Services Unit',
             'office_abbr' => 'BSU',	
             'parent_id' => 28
-        ]); // 79
+        ]); // 85
         
         Office::factory()->create([
             'office_name' => 'Cashering Services Unit',
             'office_abbr' => 'CSU',	
             'parent_id' => 28
-        ]); // 80
+        ]); // 86
 
     //    ____________________________________________________________
         
@@ -609,21 +609,21 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Personnel & Benefits Unit',
             'office_abbr' => 'PBU',	
             'parent_id' => 29
-        ]); // 81
+        ]); // 87
         
         
         Office::factory()->create([
             'office_name' => 'Training & Development Unit',
             'office_abbr' => 'TDU',	
             'parent_id' => 29
-        ]); // 82
+        ]); // 88
         
         
         Office::factory()->create([
             'office_name' => 'Scholarship Unit',
             'office_abbr' => 'SU',	
             'parent_id' => 29
-        ]); // 83
+        ]); // 89
 
     //    ___________________________________________________________
         
@@ -631,13 +631,13 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Applied Communication and Publication Unit',
             'office_abbr' => 'ACPU',	
             'parent_id' => 31
-        ]); // 84
+        ]); // 90
         
         Office::factory()->create([
             'office_name' => 'Research Ethics Unit',
             'office_abbr' => 'REU',	
             'parent_id' => 31
-        ]); // 85
+        ]); // 91
 
     //    __________________________________________________________________________
 
@@ -645,13 +645,13 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Community Affairs Unit',
             'office_abbr' => 'CAU',	
             'parent_id' => 32
-        ]); // 86
+        ]); // 92
         
         Office::factory()->create([
             'office_name' => 'Intelectual Property & Knowledge and Technology Transfer Unit',
             'office_abbr' => 'IPKTTU',	
             'parent_id' => 32
-        ]); // 86
+        ]); // 93
 
     //    _______________________________________________________________________________
         
@@ -659,7 +659,7 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Production Unit',
             'office_abbr' => 'ProdUn',	
             'parent_id' => 33
-        ]); // 87
+        ]); // 94
 
     //    ___________________________________________________________________________
         
@@ -667,26 +667,26 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Project Monitoring & Evaluation Unit',
             'office_abbr' => 'PMEU',	
             'parent_id' => 35
-        ]); // 88
+        ]); // 95
         
         
         Office::factory()->create([
             'office_name' => 'Engineering & Infrastracture Unit',
             'office_abbr' => 'EIU',	
             'parent_id' => 35
-        ]); // 89
+        ]); // 96
         
         Office::factory()->create([
             'office_name' => 'PBB & SUC Levelling Unit',
             'office_abbr' => 'PSLU',	
             'parent_id' => 35
-        ]); // 90
+        ]); // 97
         
         Office::factory()->create([
             'office_name' => 'Management and Information System Unit',
             'office_abbr' => 'MISU',	
             'parent_id' => 35
-        ]); // 91
+        ]); // 98
 
     //    ____________________________________________________________________________
         
@@ -694,13 +694,13 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Professional, Technical & Policy Services Unit',
             'office_abbr' => 'PTPSU',	
             'parent_id' => 36
-        ]); // 92
+        ]); // 99
         
         Office::factory()->create([
             'office_name' => 'College Printing Press & Services Unit',
             'office_abbr' => 'CPPSU',	
             'parent_id' => 36
-        ]); // 93
+        ]); // 100
 
     //    _______________________________________________________________________
         
@@ -708,13 +708,13 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Accreditation Unit',
             'office_abbr' => 'AU',	
             'parent_id' => 38
-        ]); // 94
+        ]); // 101
         
         Office::factory()->create([
             'office_name' => 'Program Compliance & Institutional Sustainability Assessment Unit',
             'office_abbr' => 'PCISAU',	
             'parent_id' => 38
-        ]); // 95
+        ]); // 102
 
     //    ____________________________________________________________________________
 
@@ -722,18 +722,18 @@ class OfficeSeeder extends Seeder
             'office_name' => 'Document Control Unit',
             'office_abbr' => 'DCU',	
             'parent_id' => 39
-        ]); // 96
+        ]); // 103
         
         Office::factory()->create([
             'office_name' => 'Internal Quality Audit Unit',
             'office_abbr' => 'AU',	
             'parent_id' => 39
-        ]); // 97
+        ]); // 104
         
         Office::factory()->create([
             'office_name' => 'Risk & Oppurtunities Management Unit',
             'office_abbr' => 'ROMU',	
             'parent_id' => 39
-        ]); // 98        
+        ]); // 105        
     }
 }
