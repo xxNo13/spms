@@ -77,11 +77,11 @@ class Dashboard extends Component
                             })->where('duration_id', $this->duration->id)
                             ->get();
 
-            $this->assignments = Ttma::where('user_id', Auth::user()->id)
+            $this->assignments = auth()->user()->ttmas()
                             ->where('duration_id', $this->duration->id)
                             ->get();
 
-            $this->finished = Ttma::where('user_id', Auth::user()->id)
+            $this->finished = auth()->user()->ttmas()
                             ->where('duration_id', $this->duration->id)
                             ->where('remarks', 'Done')
                             ->get();
@@ -96,8 +96,7 @@ class Dashboard extends Component
                             ->take(7)
                             ->get();
                             
-            $this->recentAssignments = Ttma::orderBy('id', 'desc')
-                            ->where('user_id', Auth::user()->id)
+            $this->recentAssignments = auth()->user()->ttmas()->orderBy('id', 'desc')
                             ->where('duration_id', $this->duration->id)
                             ->take(7)
                             ->get();

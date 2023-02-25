@@ -24,7 +24,6 @@ class AssignmentNotification extends Notification
     {
         $this->assignment = $assignment;
         $this->status = $status;
-        $this->user = User::where('id', $assignment->user_id)->first();
         $this->head = User::where('id', $assignment->head_id)->first();
     }
 
@@ -62,7 +61,6 @@ class AssignmentNotification extends Notification
             'output' => $this->assignment->output,
             'remarks' => $this->assignment->remarks,
             'status' => $this->status,
-            'user' => $this->user->name,
             'head' => $this->head->name,
         ];
     }

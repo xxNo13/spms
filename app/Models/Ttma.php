@@ -11,7 +11,6 @@ class Ttma extends Model
 
     protected $fillable = [
         'subject',
-        'user_id',
         'output',
         'remarks',
         'head_id',
@@ -19,8 +18,8 @@ class Ttma extends Model
         'duration_id',
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
+    public function users() {
+        return $this->belongsToMany(User::class, 'ttma_user');
     }
 
     public function head() {

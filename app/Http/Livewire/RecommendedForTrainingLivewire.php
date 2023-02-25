@@ -7,6 +7,7 @@ use App\Models\Target;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
+use App\Models\Training;
 use App\Models\ScoreEquivalent;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,7 @@ class RecommendedForTrainingLivewire extends Component
 {
     public $lists;
     public $scoreEquivalent;
-    public $users = [];
+    public $arrays = [];
 
     public function render()
     {
@@ -99,17 +100,34 @@ class RecommendedForTrainingLivewire extends Component
             if ($assFaculty && $assStaff) {
                 $targ = '';
                 if($duration) {
+                    $user_targets = [];
+                    $trainings = Training::query();
                     foreach($user->targets as $target){
                         $rating = $target->ratings()->where('user_id', $user->id)->first();
                         if (isset($rating) && $rating->average < $this->scoreEquivalent->sat_to) {
-                            array_push($this->users, $user);
+
+                            array_push($user_targets, $target);
+
+                            $results = preg_split('/\s+/', $target->target);
+            
+                            foreach ($results as $result) {
+                                $trainings->orWhere('training_name', 'LIKE', '%' . $result . '%')
+                                ->orWhere('keywords', 'LIKE', '%' . $result . '%');
+                            }
                         }
                     }
+                    array_unique($user_targets);
+                    $user_trainings = $trainings->distinct();
+
+                    if (!empty($user_targets)) {
+                        array_push($this->arrays, ['user' => $user, 'targets' => $user_targets, 'trainings' => $user_trainings->get()]);
+                    }
+
                 }
             }
         }
         return view('livewire.recommended-for-training-livewire', [
-            'users' => $this->users
+            'arrays' => $this->arrays
         ]);
     }
 }

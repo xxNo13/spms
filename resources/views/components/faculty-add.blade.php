@@ -55,7 +55,7 @@
                                         </h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-sm-flex">
+                                        <div class="">
                                             @foreach ($suboutput->targets as $target)
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" type="checkbox"
@@ -71,7 +71,7 @@
                                     </div>
                                 @empty
                                     <div class="card-body">
-                                        <div class="d-sm-flex">
+                                        <div class="">
                                             @foreach ($output->targets as $target)
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" type="checkbox"
@@ -110,7 +110,7 @@
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="d-sm-flex">
+                                    <div class="">
                                         @foreach ($suboutput->targets as $target)
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox"
@@ -126,7 +126,7 @@
                                 </div>
                             @empty
                                 <div class="card-body">
-                                    <div class="d-sm-flex">
+                                    <div class="">
                                         @foreach ($output->targets as $target)
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox"

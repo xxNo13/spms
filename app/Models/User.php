@@ -84,7 +84,7 @@ class User extends Authenticatable
     }
 
     public function ttmas() {
-        return $this->hasMany(Ttma::class);
+        return $this->belongsToMany(Ttma::class, 'ttma_user');
     }
 
     public function offices(){

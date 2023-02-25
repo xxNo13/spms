@@ -404,7 +404,7 @@ class FacultyLivewire extends Component
 
             if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
                 array_push($review_ids, $office->users()->wherePivot('isHead', 1)->pluck('id')->first());
-            } else {
+            } elseif (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead) {
                 $parent_office = Office::where('id', $office->parent_id)->first();
                 array_push($review_ids, $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first());
             }
@@ -412,8 +412,8 @@ class FacultyLivewire extends Component
 
         if (count($this->highestOffice) > 1) {
             $numberOfTarget = [];
+            $x = 0;
             foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
-                $x = 0;
                 $targets = 0;
                 foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output) {
                     foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target) {
@@ -429,7 +429,7 @@ class FacultyLivewire extends Component
 
                     $office = Office::find($id);
 
-                    if (str_contains(strtolower($office->parent->office_name), 'dean')) {
+                    if (str_contains(strtolower($office->parent->office_name), 'academic')) {
                         if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
                             
                             $parent_office = Office::where('id', $office->parent_id)->first();
@@ -464,14 +464,14 @@ class FacultyLivewire extends Component
 
                     $office = Office::find($id);
 
-                    if (!str_contains(strtolower($office->parent->office_name), 'chair')) {
+                    if (!str_contains(strtolower($office->parent->office_name), 'academic')) {
                         if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
                             
                             $parent_office = Office::where('id', $office->parent_id)->first();
                             if ($parent_office) {
                                 $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                             }else {
-                                $this->approve_id = $this->review_id;
+                                $this->approve_id = $review_ids[0];
                             }
                         } else {
                             $office = Office::where('id', $office->parent_id)->first();
@@ -480,11 +480,11 @@ class FacultyLivewire extends Component
                             if ($parent_office) {
                                 $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                             }else {
-                                $this->approve_id = $this->review_id;
+                                $this->approve_id = $review_ids[0];
                             }
                         }
             
-                        if (empty($this->review_id) && empty($this->approve_id)) {
+                        if (empty($review_ids[0]) && empty($this->approve_id)) {
                             $this->dispatchBrowserEvent('toastify', [
                                 'message' => "No Head found!",
                                 'color' => "#f3616d",
@@ -506,7 +506,7 @@ class FacultyLivewire extends Component
                     if ($parent_office) {
                         $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                     }else {
-                        $this->approve_id = $this->review_id;
+                        $this->approve_id = $review_ids[0];
                     }
                 } else {
                     $office = Office::where('id', $office->parent_id)->first();
@@ -515,11 +515,11 @@ class FacultyLivewire extends Component
                     if ($parent_office) {
                         $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                     }else {
-                        $this->approve_id = $this->review_id;
+                        $this->approve_id = $review_ids[0];
                     }
                 }
     
-                if (empty($this->review_id) && empty($this->approve_id)) {
+                if (empty($review_ids[0]) && empty($this->approve_id)) {
                     $this->dispatchBrowserEvent('toastify', [
                         'message' => "No Head found!",
                         'color' => "#f3616d",

@@ -277,7 +277,7 @@
 
     @php
         $currentPage = $functs->currentPage();
-        $userType = 'office';
+        $userType = 'listing';
     @endphp
     @if ($duration)
         <x-modals :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />

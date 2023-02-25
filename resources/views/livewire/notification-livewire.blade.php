@@ -59,7 +59,7 @@
                             <div class="d-flex align-items-center">
                                 <div style="width: 90%;">
                                     <div class="text-truncate fw-bold">
-                                        <span>{{ $notification->data['user'] }} Sent a Message:</span>
+                                        <span>New Message:</span>
                                     </div>
                                     <div class="text-truncate text-capitalize">
                                         {{ $notification->data['subject'] }} - {{ $notification->data['output'] }}
@@ -85,7 +85,7 @@
                             <div class="d-flex align-items-center">
                                 <div style="width: 90%;">
                                     <div class="text-truncate fw-bold">
-                                        <span>{{ $notification->data['user'] }} Assignment Overdue:</span>
+                                        <span>{{ auth()->user()->name }} Assignment Overdue:</span>
                                     </div>
                                     <div class="text-truncate text-capitalize">
                                         {{ $notification->data['subject'] }} - {{ $notification->data['output'] }}

@@ -60,7 +60,7 @@
                                             wire:model="sub_funct_id">
                                             <option value="" selected>Select a Sub Function</option>
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'listing')
+                                                @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($subFuncts))
                                                         @foreach ($subFuncts->where('funct_id', $currentPage) as $sub_funct)
                                                             <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
@@ -107,7 +107,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'listing')
+                                                @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->targets as $target)
@@ -172,7 +172,7 @@
                                                 }
                                             @endphp
                                             @if ($duration)
-                                                @if (isset($userType) && $userType == 'listing')
+                                                @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($outputs))
                                                         @foreach ($outputs->where('code', $code) as $output)
                                                             @forelse ($output->suboutputs as $suboutput)
@@ -234,7 +234,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'listing')
+                                    @if (isset($userType) && $userType == 'listingFaculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -306,7 +306,7 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'listing')
+                                    @if (isset($userType) && $userType == 'listingFaculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
                                                 name="required" wire:model="required">
@@ -1142,7 +1142,7 @@
 
     @if (isset($users))
         {{-- Add TTMA Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddTTMAModal" role="dialog"
+        <div wire:ignore data-bs-backdrop="static"  class="modal fade text-left" id="AddTTMAModal" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1161,8 +1161,8 @@
                             </div>
                             <label>Action Officer: </label>
                             <div class="form-group" wire:ignore>
-                                <select style="width: 100%;" name="user_id" id="user_id" class="form-select" wire:model="user_id">
-                                    <option>Select an Action Officer</option>
+                                <select style="width: 100%;" name="users_id" id="users_id" class="form-select" wire:model="users_id" multiple="multiple">
+                                    <option></option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
@@ -1173,13 +1173,15 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#user_id").select2({
+                                    $("#users_id").select2({
+                                        multiple: true,
                                         placeholder: "Select an Action Officer.",
                                         dropdownParent: $("#AddTTMAModal")
                                     });
-                                    $('#user_id').on('change', function () {
-                                        var data = $('#user_id').select2("val");
-                                        @this.set('user_id', data);
+
+                                    $('#users_id').on('change', function () {
+                                        var data = $('#users_id').select2("val");
+                                        @this.set('users_id', data);
                                     });
                                 </script>
                             @endpush
@@ -1326,7 +1328,7 @@
 
     @if (isset($offices))
         {{-- Add Office Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddOfficeModal" role="dialog"
+        <div wire:ignore data-bs-backdrop="static"  class="modal fade text-left" id="AddOfficeModal" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1389,7 +1391,7 @@
         </div>
 
         {{-- Edit Office Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditOfficeModal" role="dialog"
+        <div wire:ignore data-bs-backdrop="static"  class="modal fade text-left" id="EditOfficeModal" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1649,7 +1651,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1674,7 +1676,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1699,7 +1701,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1753,7 +1755,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1778,7 +1780,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 
@@ -1803,7 +1805,7 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                         </div>
-                        @if ((isset($subFuncts) && isset($userType) && $userType != 'listing') || (isset($subFuncts) && !isset($userType)))
+                        @if ((isset($subFuncts) && isset($userType) && ($userType != 'listing' && $userType != 'listingFaculty')) || (isset($subFuncts) && !isset($userType)))
                             <div class="d-flex gap-3" style="height: 100%;">
                                 <div class="vr"></div>
                                 

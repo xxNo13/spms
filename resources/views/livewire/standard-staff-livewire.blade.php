@@ -85,7 +85,7 @@
                 </div>
             </div>
             @if ($duration)
-                @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach (auth()->user()->sub_functs()->where('user_type', 'staff')->where('funct_id', $funct->id)->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}

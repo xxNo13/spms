@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('ttmas', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('output');
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('head_id');
@@ -25,6 +24,11 @@ return new class extends Migration
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
+        });
+
+        Schema::create('ttma_user', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('ttma_id')->constrained()->onDelete('cascade');
         });
     }
 

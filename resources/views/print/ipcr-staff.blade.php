@@ -116,10 +116,28 @@
         </thead>
         <tbody class="text-center">
             <tr>
-                <td colspan="2" rowspan="5" class="bordered">{{ $approval_reviewer->name }}</td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->superior1_date)) }}</td>
-                <td colspan="2" rowspan="5" class="bordered">{{ $approval_approver->name }}</td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->superior2_date)) }}</td>
+                <td colspan="2" rowspan="5" class="bordered">
+                    {{ $approval_reviewer->name }} <br/> 
+                    @if ($office = $approval_reviewer->offices()->wherePivot('isHead', true)->first()) 
+                        @if (str_contains(strtolower($office->office_name), 'director') || str_contains(strtolower($office->office_name), 'president'))
+                            <small>(Head of Delivery Unit)</small>
+                        @else
+                            <small>(Head of Office)</small>
+                        @endif
+                    @endif 
+                </td>
+                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->review_date)) }}</td>
+                <td colspan="2" rowspan="5" class="bordered">
+                    {{ $approval_approver->name }} <br/> 
+                    @if ($office = $approval_approver->offices()->wherePivot('isHead', true)->first()) 
+                        @if (str_contains(strtolower($office->office_name), 'director') || str_contains(strtolower($office->office_name), 'president'))
+                            <small>(Head of Delivery Unit)</small>
+                        @else
+                            <small>(Head of Office)</small>
+                        @endif
+                    @endif 
+                </td>
+                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->approve_date)) }}</td>
                 <td class="bold">Q</td>
                 <td class="border-right">Quality</td>
                 <td class="bold">5</td>

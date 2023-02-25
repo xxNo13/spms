@@ -29,8 +29,7 @@ class Assignmentchart extends Component
                 return date('M', strtotime($this->month)) . " " . $number;
             }
         });
-        $ttmas = Ttma::orderBy('updated_at', 'DESC')
-                    ->where('user_id', Auth::user()->id)
+        $ttmas = auth()->user()->ttmas()->orderBy('updated_at', 'DESC')
                     ->where('duration_id', $this->duration->id)
                     ->where('remarks', 'Done')
                     ->get();

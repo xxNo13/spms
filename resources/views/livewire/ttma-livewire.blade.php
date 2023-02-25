@@ -73,7 +73,16 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading{{$ttma->id}}">
                                         <button wire:ignore.self class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $ttma->id }}" aria-expanded="false" aria-controls="collapse{{ $ttma->id }}">
-                                            Task No. {{ $ttma->id }} - {{ $ttma->user_id == auth()->user()->id ? $ttma->head->name : $ttma->user->name }}
+                                            Task No. {{ $ttma->id }} - 
+                                            @if ($ttma->head_id == auth()->user()->id)
+                                                @if (count($ttma->users) > 2)
+                                                    {{ $ttma->users()->first()->name }}, etc.
+                                                @else
+                                                    {{ $ttma->users()->first()->name }}
+                                                @endif
+                                            @else
+                                                {{ $ttma->head->name }}
+                                            @endif
                                             <span class="ms-auto hstack gap-2">
                                                 @if ($ttma->remarks == 'Done') 
                                                     <div class="rounded-pill bg-primary p-2 text-white">Done</div>
@@ -95,7 +104,7 @@
                                                     {{ $ttma->subject }} - {{ $ttma->output }}
                                                 </div>
                                                 <div class="col-6 text-end">
-                                                    Deadline: {{ date('M d, Y', strtotime($ttma->deadline)) }}
+                                                    Deadline: <span class="{{ (!$ttma->remarks && $ttma->deadline < date('Y-m-d')) ? 'text-danger' : '' }}">{{ date('M d, Y', strtotime($ttma->deadline)) }}</span>
                                                 </div>
                                             </div>
                                             <div class="row mt-3">
@@ -118,20 +127,35 @@
                                                         </button>
                                                     @endif
                                                 </div>  
-                                                <div class="col-10 ms-auto bg-light p-2 rounded">
+                                                <div wire:poll.3s class="col-10 ms-auto bg-light p-2 rounded">
                                                     <h6>Messages:</h6>
                                                     <hr>
-                                                    <div wire:poll class="overflow-auto" style="height: 225px;">
+                                                    <div class="overflow-auto" style="height: 225px;">
+                                                        @php
+                                                            $user_id = 0;
+                                                        @endphp
                                                         @foreach ($ttma->messages as $message) 
                                                             @if ($message->user_id == auth()->user()->id) 
-                                                                <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
-                                                                    {{ $message->message }}
+                                                                <div class="my-3 ms-auto" style="width: fit-content; max-width: 80%;">
+                                                                    <small class="rounded text-white bg-primary p-2">
+                                                                        {{ $message->message }}
+                                                                    </small>
                                                                 </div>
                                                             @else
-                                                                <div class="my-3 rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
-                                                                    {{ $message->message }}
+                                                                @if ($user_id != $message->user_id)
+                                                                    <div class="mb-1">
+                                                                        {{ $message->user->name }}:
+                                                                    </div>
+                                                                @endif
+                                                                <div class="mb-3">
+                                                                    <small class="rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
+                                                                        {{ $message->message }}
+                                                                    </small>
                                                                 </div>
                                                             @endif
+                                                            @php
+                                                                $user_id = $message->user_id;
+                                                            @endphp
                                                         @endforeach
                                                     </div>
                                                     <hr>
@@ -161,7 +185,16 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading{{$ttma->id}}">
                                         <button wire:ignore.self class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $ttma->id }}" aria-expanded="false" aria-controls="collapse{{ $ttma->id }}">
-                                            Task No. {{ $ttma->id }} - {{ $ttma->user_id == auth()->user()->id ? $ttma->head->name : $ttma->user->name }}
+                                            Task No. {{ $ttma->id }} - 
+                                            @if ($ttma->head_id == auth()->user()->id)
+                                                @if (count($ttma->users) > 2)
+                                                    {{ $ttma->users()->first()->name }}, etc.
+                                                @else
+                                                    {{ $ttma->users()->first()->name }}
+                                                @endif
+                                            @else
+                                                {{ $ttma->head->name }}
+                                            @endif
                                             <span class="ms-auto hstack gap-2">
                                                 @if ($ttma->remarks == 'Done') 
                                                     <div class="rounded-pill bg-primary p-2 text-white">Done</div>
@@ -194,20 +227,35 @@
                                                         </button>
                                                     @endif
                                                 </div>  
-                                                <div class="col-10 ms-auto bg-light p-2 rounded">
+                                                <div wire:poll.3s class="col-10 ms-auto bg-light p-2 rounded">
                                                     <h6>Messages:</h6>
                                                     <hr>
-                                                    <div wire:poll class="overflow-auto" style="height: 225px;">
+                                                    <div class="overflow-auto" style="height: 225px;">
+                                                        @php
+                                                            $user_id = 0;
+                                                        @endphp
                                                         @foreach ($ttma->messages as $message) 
                                                             @if ($message->user_id == auth()->user()->id) 
-                                                                <div class="my-3 ms-auto rounded text-white bg-primary p-2" style="width: fit-content; max-width: 80%;">
-                                                                    {{ $message->message }}
+                                                                <div class="my-3 ms-auto" style="width: fit-content; max-width: 80%;">
+                                                                    <small class="rounded text-white bg-primary p-2">
+                                                                        {{ $message->message }}
+                                                                    </small>
                                                                 </div>
                                                             @else
-                                                                <div class="my-3 rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
-                                                                    {{ $message->message }}
+                                                                @if ($user_id != $message->user_id)
+                                                                    <div class="mb-1">
+                                                                        {{ $message->user->name }}:
+                                                                    </div>
+                                                                @endif
+                                                                <div class="mb-3">
+                                                                    <small class="rounded text-white bg-secondary p-2" style="width: fit-content; max-width: 80%;">
+                                                                        {{ $message->message }}
+                                                                    </small>
                                                                 </div>
                                                             @endif
+                                                            @php
+                                                                $user_id = $message->user_id;
+                                                            @endphp
                                                         @endforeach
                                                     </div>
                                                     <hr>

@@ -37,7 +37,7 @@ class NotificationLivewire extends Component
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
 
         if ($duration) {
-            $assignments = Ttma::where('user_id', Auth::user()->id)
+            $assignments = auth()->user()->ttmas()
                         ->where('duration_id', $duration->id)
                         ->where('remarks', null)
                         ->where('deadline', '<', date('Y-m-d'))

@@ -173,7 +173,7 @@
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                @if ($approval->review_status == 1 && $approval->review2_status == 1)
+                                                                @if ($approval->review_status == 1)
                                                                     <button type="button" class="btn icon btn-info"
                                                                         wire:click="approved({{ $approval->id }}, 'Approved')">
                                                                         <i class="bi bi-check"></i>
