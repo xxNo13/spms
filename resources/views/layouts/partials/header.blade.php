@@ -57,5 +57,15 @@
                 </div>
             </div>
         </div>
+
+        @if (auth()->user()->created_at == auth()->user()->updated_at)
+            @push('script')
+                <script>
+                    $(window).on('load', function() {
+                        $('#PasswordModal').modal('show');
+                    });
+                </script>
+            @endpush
+        @endif
     </nav>
 </header>

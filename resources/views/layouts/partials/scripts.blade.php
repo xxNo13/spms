@@ -19,7 +19,6 @@
 @stack('assignment')
 @stack('rating')
 <script>
-
     function scrollToTop() {
         window.scrollTo({
             top: 0,
@@ -27,6 +26,12 @@
             behavior: "smooth"
         });
     }
+
+    $(window).on('load', function() {
+        window.addEventListener('password', event => {
+            $('#PasswordModal').modal('show');
+        });
+    });
 
     window.addEventListener('toastify', event => {
         Toastify({

@@ -34,4 +34,17 @@
         @include('layouts.partials.scripts')
 
     </body>
+    
+    {{-- Update Password Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="PasswordModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Update Password</h4>
+                </div>
+                @livewire('profile.update-password-form')
+            </div>
+        </div>
+    </div>
 </html>

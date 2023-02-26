@@ -11,9 +11,10 @@ use App\Notifications\AssignmentNotification;
 use App\Notifications\RecommendedNotification;
 
 class NotificationLivewire extends Component
-{
+{    
     public function render()
     {
+
         foreach (Auth::user()->unreadNotifications as $notification) {
             if(str_replace(url('/'), '', url()->current()) == '/ttma' && isset($notification->data['ttma_id'])){
                 $notification->markAsRead();
