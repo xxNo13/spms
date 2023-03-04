@@ -17,7 +17,7 @@ class Hrmo
     public function handle(Request $request, Closure $next)
     {
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'resource manage')) {
+            if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr')) {
                 return $next($request);
             }
         }

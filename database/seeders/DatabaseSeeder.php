@@ -94,21 +94,5 @@ after deadline'
             OfficeSeeder::class,
         ]);
 
-        $offices = Office::all();
-
-        User::all()->each(function ($user) use ($offices) { 
-            $user->offices()->attach(
-                $offices->random(rand(1, 2))->pluck('id')->toArray()
-            ); 
-        });
-
-        $account_types = AccountType::all();
-
-        User::all()->each(function ($user) use ($account_types) { 
-            $user->account_types()->attach(
-                $account_types->random(1)->pluck('id')->toArray()
-            ); 
-        });
-
     }
 }

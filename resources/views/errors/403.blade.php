@@ -4,3 +4,4 @@
 @section('code', '403')
 @section('message', __($exception->getMessage() ?: 'Forbidden'))
 @section('image', __('error-403.svg'))
+@section('url', 'dashboard')

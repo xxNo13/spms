@@ -4,3 +4,4 @@
 @section('code', '500')
 @section('message', __('Something went wrong.'))
 @section('image', __('error-500.svg'))
+@section('url', 'refresh')

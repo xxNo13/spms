@@ -31,11 +31,22 @@
                 @endphp
                 <div class="hstack text-center text-nowrap">
                     <span class="mx-3 w-50">
-                        @if ($approval->review_status == 1)
+                        @php
+                            $prog = 100 / (count($approval->reviewers) + 1);
+                            $rev = 0;
+                        @endphp
+
+                        @foreach ($approval->reviewers as $reviewer) 
+                            @if ($reviewer->pivot->review_status == 1) 
+                                @php
+                                    $rev++;
+                                    $progress += $prog;
+                                @endphp
+                            @endif
+                        @endforeach
+
+                        @if ($rev == count($approval->reviewers))
                             <i class="bi bi-check-circle text-success fs-1"></i>
-                            @php
-                                $progress += 50;
-                            @endphp
                         @else
                             <i class="bi bi-x-circle text-danger fs-1"></i>
                         @endif
@@ -45,20 +56,20 @@
                         @if ($approval->approve_status == 1)
                             <i class="bi bi-check-circle text-success fs-1"></i>
                             @php
-                                $progress += 50;
+                                $progress += $prog;
                             @endphp
                         @else
-                            <i class="bi bi-x-circle  text-danger fs-1"></i>
+                            <i class="bi bi-x-circle text-danger fs-1"></i>
                         @endif
                         <p>Approved</p>
                     </span>
                 </div>
                 <div class="progress">
-                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated w-{{ $progress }}" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{ $progress }}%;" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
-            @if ($approval->review_id == auth()->user()->id && $approval->approve_id == auth()->user()->id)
-                @if ($approval->review_status == 1 && $approval->approve_status != 1)
+            @if (in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) && $approval->approve_id == auth()->user()->id)
+                @if ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status == 1 && $approval->approve_status != 1)
                     <div class="hstack mb-2">
                         <div class="ms-auto hstack gap-3">
                             <button type="button" class="btn icon btn-info"
@@ -73,7 +84,7 @@
                             </button>
                         </div>
                     </div>
-                @elseif ($approval->review_status != 1)
+                @elseif ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
                     <div class="hstack mb-2">
                         <div class="ms-auto hstack gap-3">
                             <button type="button" class="btn icon btn-info"
@@ -89,7 +100,7 @@
                         </div>
                     </div>
                 @endif
-            @elseif ($approval->review_id == auth()->user()->id && $approval->review_status != 1)
+            @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first() && $approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
                 <div class="hstack mb-2">
                     <div class="ms-auto hstack gap-3">
                         <button type="button" class="btn icon btn-info"
@@ -105,20 +116,22 @@
                     </div>
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
-                <div class="hstack mb-2">
-                    <div class="ms-auto hstack gap-3">
-                        <button type="button" class="btn icon btn-info"
-                            wire:click="approved({{ $approval->id }}, 'Approved')">
-                            <i class="bi bi-check"></i>
-                            Approved
-                        </button>
-                        <button type="button" class="btn icon btn-danger"
-                            wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                            <i class="bi bi-x"></i>
-                            Decline
-                        </button>
+                @if ($rev == count($approval->reviewers))
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
         @endif
 

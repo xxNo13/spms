@@ -38,7 +38,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
+                        <strong class="me-auto">{{ $approve_user['message'] }}</strong>
                     </div>
                 </div>
             @endif
@@ -274,7 +274,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -297,13 +297,13 @@
                                                                             @elseif ($loop->last)
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
                                                                                             data-bs-target="#AddRatingModal"
                                                                                             wire:click="rating({{ $target->id }})"
-                                                                                            title="Add Rating">
+                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                             <i class="bi bi-plus"></i>
                                                                                         </button>
                                                                                     @endif
@@ -312,13 +312,13 @@
                                                                         @empty
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating">
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -396,7 +396,7 @@
                                                                     <tr>
                                                                         @if ($target->pivot->target_output)
                                                                             <td style="white-space: nowrap;">
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                     <div class="dropdown-menu">
                                                                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
@@ -406,7 +406,7 @@
                                                                                 {{ $target->pivot->target_output }}
                                                                             </td>
                                                                         @else
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <td class="text-center">
                                                                                     <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                         data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -448,7 +448,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -471,13 +471,13 @@
                                                                             @elseif ($loop->last)
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
                                                                                             data-bs-target="#AddRatingModal"
                                                                                             wire:click="rating({{ $target->id }})"
-                                                                                            title="Add Rating">
+                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                             <i class="bi bi-plus"></i>
                                                                                         </button>
                                                                                     @endif
@@ -486,13 +486,13 @@
                                                                         @empty
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating">
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -607,7 +607,7 @@
                                                                 <tr>
                                                                     @if ($target->pivot->target_output)
                                                                         <td style="white-space: nowrap;">
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                 <div class="dropdown-menu">
                                                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
@@ -617,7 +617,7 @@
                                                                             {{ $target->pivot->target_output }}
                                                                         </td>
                                                                     @else
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                             <td class="text-center">
                                                                                 <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                     data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -659,7 +659,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"
@@ -682,13 +682,13 @@
                                                                         @elseif ($loop->last)
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating">
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -697,13 +697,13 @@
                                                                     @empty
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating">
+                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -781,7 +781,7 @@
                                                                 <tr>
                                                                     @if ($target->pivot->target_output)
                                                                         <td style="white-space: nowrap;">
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                 <div class="dropdown-menu">
                                                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
@@ -791,7 +791,7 @@
                                                                             {{ $target->pivot->target_output }}
                                                                         </td>
                                                                     @else
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
+                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                             <td class="text-center">
                                                                                 <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                     data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -833,7 +833,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"
@@ -856,13 +856,13 @@
                                                                         @elseif ($loop->last)
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating">
+                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -871,13 +871,13 @@
                                                                     @empty
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating">
+                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif

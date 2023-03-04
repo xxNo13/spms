@@ -83,6 +83,13 @@ class User extends Authenticatable
         return $this->hasMany(Approval::class);
     }
 
+    public function user_approvals() {
+        return $this->belongsToMany(Approval::class, 'approval_review')
+        ->withPivot('review_status')
+        ->withPivot('review_date')
+        ->withPivot('review_message');
+    }
+
     public function ttmas() {
         return $this->belongsToMany(Ttma::class, 'ttma_user');
     }

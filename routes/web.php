@@ -100,10 +100,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::get('/ttma', [PdfController::class, 'ttma'])->name('ttma');
 
+        Route::get('/rankings/opcr', [PdfController::class, 'rankingOpcr'])->name('rankings.opcr');
         Route::get('/rankings/faculty', [PdfController::class, 'rankingFaculty'])->name('rankings.faculty');
         Route::get('/rankings/staff', [PdfController::class, 'rankingStaff'])->name('rankings.staff');
         Route::get('/rankings/{id}', [PdfController::class, 'rankingPerOffice'])->name('rankings.office');
-        Route::get('/rankings/opcr', [PdfController::class, 'rankingOpcr'])->name('rankings.opcr');
     });
 
     // Office HRMO Route

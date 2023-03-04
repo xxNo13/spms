@@ -19,7 +19,11 @@
             <h1 class="error-title">
                 @yield('message')
             </h1>
-            <a href="{{ route('dashboard') }}" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+            @if ($__env->yieldContent('url') == 'dashboard')
+              <a href="{{ route('dashboard') }}" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+            @else
+              <a href="javascript:window.location.href=window.location.href" class="btn btn-lg btn-outline-primary mt-3">Refresh</a>
+            @endif
           </div>
         </div>
       </div>

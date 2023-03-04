@@ -17,6 +17,41 @@
     </div>
 
     <section class="section pt-3">
+        {{-- Message for declining --}}
+        <div wire:ignore class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
+            @if ($review_user && $review_user['message'])
+                <div id="reviewToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <strong class="me-auto">{{ $review_user['name'] }} Declining Message:</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                    {{ $review_user['message'] }}
+                    </div>
+                </div>
+            @endif
+            @if ($approve_user && $approve_user['message']) 
+                <div id="approveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <strong class="me-auto">{{ $approve_user['name'] }} Declining Message:</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                    {{ $approve_user['message'] }}
+                    </div>
+                </div>
+            @endif
+        </div>
+        
+    
+        @push ('script')
+            <script>
+                new bootstrap.Toast(document.getElementById('reviewToast')).show()
+                new bootstrap.Toast(document.getElementById('approveToast')).show()
+            </script>
+        @endpush
+
+
         @foreach ($functs as $funct)
             <div class="hstack mb-3">
                 <h4>
@@ -38,7 +73,26 @@
                     @endif
                 </h4>
                 <div class="ms-auto hstack gap-3">
-                    @if ($duration)
+
+                    @php
+                        $designated = true;
+                    @endphp
+                    
+                    @foreach (auth()->user()->account_types as $account_type)
+                        @if (str_contains(strtolower($account_type->account_type), 'no'))
+                            @php
+                                $designated = false;
+                            @endphp
+                        @endif
+                    @endforeach
+                    
+                    @if ($designated && ($duration && $duration->end_date >= date('Y-m-d')) && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                        <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('approval')">
+                            Submit
+                        </button>
+                    @endif
+
+                    @if ($duration && $approval && $approval->approve_status == 1)
                         <a href="{{ route('print.standard.faculty', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Standard">
                             <i class="bi bi-printer"></i>
                         </a>

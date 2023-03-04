@@ -103,7 +103,7 @@
             <tr>
                 <td><b>Tasks ID No.</b> <br /> (Document No. or Task No. of Taken from WFP)</td>
                 <td><b>Subject</b> <br /> (Subject Area of the Task or the Signatory of the Document and Subject Area)</td>
-                <th>Action Officer</th>
+                <th>Action Officer/s</th>
                 <th>Output</th>
                 <td><b>Date Assigned</b> <br /> (Date the Task was assigned to the drafter)</td>
                 <td><b>Date Accomplished</b> <br /> (Date the output was approved by the approver)</td>
@@ -114,7 +114,19 @@
                 <tr>
                     <td>{{ sprintf('%03u', $ttma->id) }}</td>
                     <td>{{ $ttma->subject }}</td>
-                    <td>{{ $ttma->user->name }}</td>
+                    <td>
+                        @if (count($ttma->users) > 2)
+                            @foreach ($ttma->users as $user)
+                                @if ($loop->last)
+                                    {{ $user->name }}
+                                    @break
+                                @endif
+                                {{ $user->name }}, 
+                            @endforeach
+                        @else
+                            {{ $ttma->users()->first()->name }}
+                        @endif
+                    </td>
                     <td>{{ $ttma->output }}</td>
                     <td>{{ date('M d, Y', strtotime($ttma->created_at)) }}</td>
                     <td>

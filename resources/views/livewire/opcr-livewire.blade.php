@@ -2,7 +2,7 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Individual Performance Commitment and Review</h3>
+                <h3>Office Performance Commitment and Review</h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -38,7 +38,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
+                        <strong class="me-auto">{{ $approve_user['message'] }}</strong>
                     </div>
                 </div>
             @endif
@@ -242,7 +242,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -265,7 +265,7 @@
                                                                             @elseif ($loop->last)
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
@@ -280,7 +280,7 @@
                                                                         @empty
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
@@ -417,7 +417,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -440,7 +440,7 @@
                                                                             @elseif ($loop->last)
                                                                                 <td colspan="6"></td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
@@ -455,7 +455,7 @@
                                                                         @empty
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
@@ -614,7 +614,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"
@@ -637,7 +637,7 @@
                                                                         @elseif ($loop->last)
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
@@ -652,7 +652,7 @@
                                                                     @empty
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     data-bs-toggle="modal"
@@ -789,7 +789,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"
@@ -812,7 +812,7 @@
                                                                         @elseif ($loop->last)
                                                                             <td colspan="6"></td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-primary"
                                                                                         data-bs-toggle="modal"
@@ -827,7 +827,7 @@
                                                                     @empty
                                                                         <td colspan="6"></td>
                                                                         <td>
-                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))))
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                 <button type="button"
                                                                                     class="btn icon btn-primary"
                                                                                     data-bs-toggle="modal"

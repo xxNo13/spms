@@ -20,7 +20,7 @@ class PmoOrHrmoOrHead
             if (str_contains(strtolower($office->office_name), 'planning')) {
                 return $next($request);
             }
-            if (str_contains(strtolower($office->office_name), 'resource manage')) {
+            if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr')) {
                 return $next($request);
             }
         }

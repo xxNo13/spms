@@ -93,8 +93,12 @@ class StandardStaffLivewire extends Component
             
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
             if ($this->approval) {
-                $this->review_user['name'] = User::where('id', $this->approval->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->approval->review_message;
+                foreach ($this->approval->reviewers as $reviewer) {
+                    if ($reviewer->pivot->review_message) {
+                        $this->review_user['name'] = $reviewer->name;
+                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                    }
+                }
 
                 $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->approval->approve_message;
@@ -256,15 +260,26 @@ class StandardStaffLivewire extends Component
                 }
             }
 
+            if (!$this->review_id || !$this->approve_id) {
+                return $this->dispatchBrowserEvent('toastify', [
+                    'message' => "No Head Found!",
+                    'color' => "#f3616d",
+                ]);
+            }
+
             $approval = Approval::create([
                 'name' => $type,
                 'user_id' => auth()->user()->id,
-                'review_id' => $this->review_id,
                 'approve_id' => $this->approve_id,
                 'type' => 'standard',
                 'user_type' => 'staff',
                 'duration_id' => $this->duration->id
             ]);
+
+        
+            $approve = $approval;
+            
+            $approve->reviewers()->attach([$this->review_id]);
             
             $reviewer = User::where('id', $this->review_id)->first();
             $approver = User::where('id', $this->approve_id)->first();

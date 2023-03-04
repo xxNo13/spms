@@ -51,6 +51,7 @@ class FacultyLivewire extends Component
     public $efficiency;
     public $quality;
     public $timeliness;
+    public $accomplishment;
 
     public $targetOutput;
 
@@ -62,22 +63,39 @@ class FacultyLivewire extends Component
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
-        'output_finished' => ['required_if:selected,rating'],
+        'output_finished' => ['nullable', 'required_if:selected,rating', 'numeric'],
         'efficiency' => ['required_without_all:quality,timeliness,dummy'],
         'quality' => ['required_without_all:efficiency,timeliness,dummy'],
         'timeliness' => ['required_without_all:efficiency,quality,dummy'],
+        'accomplishment' => ['required_if:selected,rating'],
         
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
+
+        'sub_funct' => ['required_if:selected,sub_funct'],
+        'output' => ['required_if:selected,output'],
+        'output_id' => ['nullable', 'required_if:selected,output_id'],
+        'suboutput' => ['required_if:selected,suboutput'],
+        'subput' => ['nullable', 'required_if:selected,target_id'],
+        'target' => ['required_if:selected,target'],
     ];
 
     protected $messages = [
         'output_finished.required_if' => 'Output Finished cannot be null.',
+        'output_finished.numeric' => 'Output Finished should be a number.',
         'efficiency.required_without_all' => 'Efficiency cannot be null.',
         'quality.required_without_all' => 'Quality cannot be null.',
         'timeliness.required_without_all' => 'Timeliness cannot be null.',
+        'accomplishment' => 'Actual Accomplishment cannot be null.',
         
         'target_output.required_if' => 'Target Output cannot be null',
         'target_output.numeric' => 'Target Output should be a number.',
+
+        'sub_funct.required_if' => 'Sub Function cannot be null',
+        'output.required_if' => 'Output cannot be null',
+        'output_id.required_if' => 'Output cannot be null',
+        'suboutput.required_if' => 'Suboutput cannot be null',
+        'subput.required_if' => 'Suboutput/Output cannot be null',
+        'target.required_if' => 'Target cannot be null',
     ];
     
     public function updated($property)
@@ -87,22 +105,44 @@ class FacultyLivewire extends Component
 
 
     public function mount() {
+        $notDesignated = false;
+        foreach (auth()->user()->account_types as $account_type){
+            if (str_contains(strtolower($account_type->account_type), 'no')){
+                $notDesignated = true;
+                break;
+            }
+        }
+
         $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
 
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
-            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
+            
+            if ($notDesignated) {
+                $this->approvalStandard = true;
+            } else{
+                $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
+            }
+            
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             if ($this->assess) {
-                $this->review_user['name'] = User::where('id', $this->assess->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->assess->review_message;
+                foreach ($this->assess->reviewers as $reviewer) {
+                    if ($reviewer->pivot->review_message) {
+                        $this->review_user['name'] = $reviewer->name;
+                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                    }
+                }
 
                 $this->approve_user['name'] = User::where('id', $this->assess->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->assess->approve_message;
             } elseif ($this->approval) {
-                $this->review_user['name'] = User::where('id', $this->approval->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->approval->review_message;
+                foreach ($this->approval->reviewers as $reviewer) {
+                    if ($reviewer->pivot->review_message) {
+                        $this->review_user['name'] = $reviewer->name;
+                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                    }
+                }
 
                 $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->approval->approve_message;
@@ -167,19 +207,11 @@ class FacultyLivewire extends Component
         $this->selectedTarget = auth()->user()->targets()->where('id', $rating->target_id)->first();
         $this->targetOutput = $this->selectedTarget->pivot->target_output;
         
-        $this->output_finished = strtok($rating->accomplishment, "/");
+        $this->output_finished = $rating->output_finished;
+        $this->accomplishment = $rating->accomplishment;
         $this->efficiency = $rating->efficiency;
         $this->quality = $rating->quality;
         $this->timeliness = $rating->timeliness;
-    }
-
-    public function get_string_between($string, $start, $end){
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) return '';
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-        return substr($string, $ini, $len);
     }
 
     public function saveRating($category){
@@ -188,74 +220,6 @@ class FacultyLivewire extends Component
 
         if ($category == 'add') {
             $divisor = 0;
-            $qua = "";
-            $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->first();
-            
-            switch($this->quality) {
-                case "5":
-                        if (str_contains($standard->qua_5, "with")) {
-                            $qua = $standard->qua_5;
-                        } else {
-                            $qua = "with " .  $standard->qua_5;
-                        }
-                    break;
-                case "4":
-                        if (str_contains($standard->qua_4, "with")) {
-                            $qua = $standard->qua_4;
-                        } else {
-                            $qua = "with " .  $standard->qua_4;
-                        }
-                    break;
-                case "3":
-                        if (str_contains($standard->qua_3, "with")) {
-                            $qua = $standard->qua_3;
-                        } else {
-                            $qua = "with " .  $standard->qua_3;
-                        }
-                    break;
-                case "2":
-                        if (str_contains($standard->qua_2, "with")) {
-                            $qua = $standard->qua_2;
-                        } else {
-                            $qua = "with " .  $standard->qua_2;
-                        }
-                    break;
-                case "1":
-                        if (str_contains($standard->qua_1, "with")) {
-                            $qua = $standard->qua_1;
-                        } else {
-                            $qua = "with " .  $standard->qua_1;
-                        }
-                    break;
-            }
-
-            switch ($this->timeliness) {
-                case "5":
-                    $time = "submitted " . $standard->time_5;
-                    break;
-                case "4":
-                    $time = "submitted " . $standard->time_4;
-                    break;
-                case "3":
-                    $time = "submitted " . $standard->time_3;
-                    break;
-                case "2":
-                    $time = "submitted " . $standard->time_2;
-                    break;
-                case "1":
-                    $time = "submitted " . $standard->time_1;
-                    break;
-            }
-
-            $parsed = $this->get_string_between($this->selectedTarget->target, '%', 'with');
-
-            if ($parsed == "") {
-                $parsed = $this->selectedTarget->target;
-            }
-
-            $accomplishment = $accomplishment . " " . $parsed . " " . $qua . " " . $time;
 
             if(!$this->efficiency){
                 $divisor++;
@@ -268,9 +232,43 @@ class FacultyLivewire extends Component
             }
             $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
             $average = number_format((float)$number, 2, '.', '');
+            
+            $standard = $this->selectedTarget->standards()->first();
+
+            if ($this->efficiency == '') {
+                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'efficiency' => ['Efficiency cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->efficiency = null;
+                }
+            }
+            if ($this->quality == '') {
+                if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'quality' => ['Quality cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->quality = null;
+                }
+            }
+            if ($this->timeliness == '') {
+                if ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'timeliness' => ['Timeliness cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->timeliness = null;
+                }
+            }
 
             Rating::create([
-                'accomplishment' => $accomplishment,
+                'output_finished' => $this->output_finished,
+                'accomplishment' => $this->accomplishment,
                 'efficiency' => $this->efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
@@ -287,74 +285,6 @@ class FacultyLivewire extends Component
             ]);
         } elseif ($category == 'edit') {
             $divisor = 0;
-            $qua = "";
-            $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->first();
-            
-            switch($this->quality) {
-                case "5":
-                        if (str_contains($standard->qua_5, "with")) {
-                            $qua = $standard->qua_5;
-                        } else {
-                            $qua = "with " .  $standard->qua_5;
-                        }
-                    break;
-                case "4":
-                        if (str_contains($standard->qua_4, "with")) {
-                            $qua = $standard->qua_4;
-                        } else {
-                            $qua = "with " .  $standard->qua_4;
-                        }
-                    break;
-                case "3":
-                        if (str_contains($standard->qua_3, "with")) {
-                            $qua = $standard->qua_3;
-                        } else {
-                            $qua = "with " .  $standard->qua_3;
-                        }
-                    break;
-                case "2":
-                        if (str_contains($standard->qua_2, "with")) {
-                            $qua = $standard->qua_2;
-                        } else {
-                            $qua = "with " .  $standard->qua_2;
-                        }
-                    break;
-                case "1":
-                        if (str_contains($standard->qua_1, "with")) {
-                            $qua = $standard->qua_1;
-                        } else {
-                            $qua = "with " .  $standard->qua_1;
-                        }
-                    break;
-            }
-
-            switch ($this->timeliness) {
-                case "5":
-                    $time = "submitted " . $standard->time_5;
-                    break;
-                case "4":
-                    $time = "submitted " . $standard->time_4;
-                    break;
-                case "3":
-                    $time = "submitted " . $standard->time_3;
-                    break;
-                case "2":
-                    $time = "submitted " . $standard->time_2;
-                    break;
-                case "1":
-                    $time = "submitted " . $standard->time_1;
-                    break;
-            }
-
-            $parsed = $this->get_string_between($this->selectedTarget->target, '%', 'with');
-
-            if ($parsed == "") {
-                $parsed = $this->selectedTarget->target;
-            }
-
-            $accomplishment = $accomplishment . " " . $parsed . " " . $qua . " " . $time;
 
             if(!$this->efficiency){
                 $divisor++;
@@ -367,9 +297,43 @@ class FacultyLivewire extends Component
             }
             $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
             $average = number_format((float)$number, 2, '.', '');
+            
+            $standard = $this->selectedTarget->standards()->first();
+
+            if ($this->efficiency == '') {
+                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'efficiency' => ['Efficiency cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->efficiency = null;
+                }
+            }
+            if ($this->quality == '') {
+                if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'quality' => ['Quality cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->quality = null;
+                }
+            }
+            if ($this->timeliness == '') {
+                if ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'timeliness' => ['Timeliness cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->timeliness = null;
+                }
+            }
 
             Rating::where('id', $this->rating_id)->update([
-                'accomplishment' => $accomplishment,
+                'output_finished' => $this->output_finished,
+                'accomplishment' => $this->accomplishment,
                 'efficiency' => $this->efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
@@ -424,7 +388,7 @@ class FacultyLivewire extends Component
                 $x++;
             }
 
-            if ($numberOfTarget[0] > $numberOfTarget[1]) {
+            if ((isset($numberOfTarget[0]) && !isset($numberOfTarget[1])) || ($numberOfTarget[0] > $numberOfTarget[1])) {
                 foreach ($this->highestOffice as $id => $value) {
 
                     $office = Office::find($id);
@@ -436,7 +400,7 @@ class FacultyLivewire extends Component
                             if ($parent_office) {
                                 $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                             }else {
-                                $this->approve_id = $this->review_id;
+                                $this->approve_id = $review_ids[0];
                             }
                         } else {
                             $office = Office::where('id', $office->parent_id)->first();
@@ -445,18 +409,9 @@ class FacultyLivewire extends Component
                             if ($parent_office) {
                                 $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                             }else {
-                                $this->approve_id = $this->review_id;
+                                $this->approve_id = $review_ids[0];
                             }
                         }
-            
-                        if (empty($this->review_id) && empty($this->approve_id)) {
-                            $this->dispatchBrowserEvent('toastify', [
-                                'message' => "No Head found!",
-                                'color' => "#f3616d",
-                            ]);
-                            return;
-                        }
-                        break;
                     }
                 }
             } elseif ($numberOfTarget[0] <= $numberOfTarget[1]) {
@@ -483,15 +438,6 @@ class FacultyLivewire extends Component
                                 $this->approve_id = $review_ids[0];
                             }
                         }
-            
-                        if (empty($review_ids[0]) && empty($this->approve_id)) {
-                            $this->dispatchBrowserEvent('toastify', [
-                                'message' => "No Head found!",
-                                'color' => "#f3616d",
-                            ]);
-                            return;
-                        }
-                        break;
                     }
                 }
             }
@@ -518,41 +464,40 @@ class FacultyLivewire extends Component
                         $this->approve_id = $review_ids[0];
                     }
                 }
-    
-                if (empty($review_ids[0]) && empty($this->approve_id)) {
-                    $this->dispatchBrowserEvent('toastify', [
-                        'message' => "No Head found!",
-                        'color' => "#f3616d",
-                    ]);
-                    return;
-                }
-                break;
             }
+        }
+
+        if (!$review_ids || !$this->approve_id) {
+            return $this->dispatchBrowserEvent('toastify', [
+                'message' => "No Head Found!",
+                'color' => "#f3616d",
+            ]);
         }
 
         $approval = Approval::create([
             'name' => $type,
             'user_id' => auth()->user()->id,
-            'review_id' => $review_ids[0],
             'approve_id' => $this->approve_id,
             'type' => 'ipcr',
             'user_type' => 'faculty',
             'duration_id' => $this->duration->id
         ]);
+
+        $approve = $approval;
+        
+        $approve->reviewers()->attach($review_ids);
         
         if (count($review_ids) > 1) {
-            Approval::where('id', $approval->id)->update([
-                'review2_id' => $review_ids[1],
-            ]);
-
-            $reviewer2 = User::where('id', $review_ids[1])->first();
-            $reviewer2->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
+            foreach ($review_ids as $id) {
+                $reviewer = User::find($id);
+                $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
+            }
+        } else {
+            $reviewer = User::where('id', $review_ids[0])->first();
+            $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
         }
         
-        $reviewer = User::where('id', $review_ids[0])->first();
         $approver = User::where('id', $this->approve_id)->first();
-
-        $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
         $approver->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
 
         $this->dispatchBrowserEvent('toastify', [

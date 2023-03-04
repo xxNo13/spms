@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
+            $table->integer('output_finished');
             $table->string('accomplishment');
             $table->integer('efficiency')->nullable();
             $table->integer('quality')->nullable();

@@ -376,12 +376,20 @@
                                 <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished" max="{{$targetOutput}}">
+                                        wire:model="output_finished">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
                             @endif
+                            <label>Actual Accomplishment:</label>
+                            <div class="form-group">
+                                <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
+                                        wire:model="accomplishment" style="height: 100px;"></textarea>
+                                @error('accomplishment')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <label>Efficiency: </label>
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">
@@ -491,12 +499,20 @@
                                 <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished" max="{{$targetOutput}}">
+                                        wire:model="output_finished">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
                             @endif
+                            <label>Actual Accomplishment:</label>
+                            <div class="form-group">
+                                <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
+                                        wire:model="accomplishment" style="height: 100px;"></textarea>
+                                @error('accomplishment')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <label>Efficiency: </label>
                             <div class="form-group">
                                 <select class="form-control" wire:model="efficiency">

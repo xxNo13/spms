@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$cSqURtekr48ONKZGezKPNe/eNezGSHvwNlYh87VsKgVPQYYAP4bay', // password
+            'password' => '$2y$10$cSqURtekr48ONKZGezKPNe/eNezGSHvwNlYh87VsKgVPQYYAP4bay', // Dnsc1234
             'remember_token' => Str::random(10),
         ]);
 

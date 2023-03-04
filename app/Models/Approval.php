@@ -12,14 +12,6 @@ class Approval extends Model
     protected $fillable = [
         'name',
         'user_id',
-        'review_id',
-        'review_status',
-        'review_date',
-        'review_message',
-        'review2_id',
-        'review2_status',
-        'review2_date',
-        'review2_message',
         'approve_id',
         'approve_status',
         'approve_date',
@@ -32,5 +24,12 @@ class Approval extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function reviewers() {
+        return $this->belongsToMany(User::class, 'approval_review')
+        ->withPivot('review_status')
+        ->withPivot('review_date')
+        ->withPivot('review_message');
     }
 }

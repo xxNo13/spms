@@ -39,6 +39,7 @@ class OpcrLivewire extends Component
     public $rating_id;
     public $selectedTarget;
     public $output_finished;
+    public $accomplishment;
     public $efficiency;
     public $quality;
     public $timeliness;
@@ -53,10 +54,11 @@ class OpcrLivewire extends Component
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
-        'output_finished' => ['required_if:selected,rating'],
+        'output_finished' => ['nullable', 'required_if:selected,rating', 'numeric'],
         'efficiency' => ['required_without_all:quality,timeliness,dummy'],
         'quality' => ['required_without_all:efficiency,timeliness,dummy'],
         'timeliness' => ['required_without_all:efficiency,quality,dummy'],
+        'accomplishment' => ['required_if:selected,rating'],
         
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
         'alloted_budget' => ['nullable', 'required_if:selected,target_output', 'numeric'],
@@ -65,9 +67,11 @@ class OpcrLivewire extends Component
 
     protected $messages = [
         'output_finished.required_if' => 'Output Finished cannot be null.',
+        'output_finished.numeric' => 'Output Finished should be a number.',
         'efficiency.required_without_all' => 'Efficiency cannot be null.',
         'quality.required_without_all' => 'Quality cannot be null.',
         'timeliness.required_without_all' => 'Timeliness cannot be null.',
+        'accomplishment.required_if' => 'Actual Accomplishment cannot be null.',
         
         'target_output.required_if' => 'Target Output cannot be null',
         'target_output.numeric' => 'Target Output should be a number.',
@@ -92,14 +96,22 @@ class OpcrLivewire extends Component
             $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'opcr')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
             if ($this->assess) {
-                $this->review_user['name'] = User::where('id', $this->assess->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->assess->review_message;
+                foreach ($this->assess->reviewers as $reviewer) {
+                    if ($reviewer->pivot->review_message) {
+                        $this->review_user['name'] = $reviewer->name;
+                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                    }
+                }
 
                 $this->approve_user['name'] = User::where('id', $this->assess->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->assess->approve_message;
             } elseif ($this->approval) {
-                $this->review_user['name'] = User::where('id', $this->approval->review_id)->pluck('name')->first();
-                $this->review_user['message'] = $this->approval->review_message;
+                foreach ($this->approval->reviewers as $reviewer) {
+                    if ($reviewer->pivot->review_message) {
+                        $this->review_user['name'] = $reviewer->name;
+                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                    }
+                }
 
                 $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->approval->approve_message;
@@ -151,19 +163,11 @@ class OpcrLivewire extends Component
         $this->selectedTarget = auth()->user()->targets()->where('id', $rating->target_id)->first();
         $this->targetOutput = $this->selectedTarget->pivot->target_output;
         
-        $this->output_finished = strtok($rating->accomplishment, "/");
+        $this->output_finished = $rating->output_finished;
+        $this->accomplishment = $rating->accomplishment;
         $this->efficiency = $rating->efficiency;
         $this->quality = $rating->quality;
         $this->timeliness = $rating->timeliness;
-    }
-
-    public function get_string_between($string, $start, $end){
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) return '';
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-        return substr($string, $ini, $len);
     }
 
     public function saveRating($category){
@@ -172,74 +176,6 @@ class OpcrLivewire extends Component
 
         if ($category == 'add') {
             $divisor = 0;
-            $qua = "";
-            $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->first();
-            
-            switch($this->quality) {
-                case "5":
-                        if (str_contains($standard->qua_5, "with")) {
-                            $qua = $standard->qua_5;
-                        } else {
-                            $qua = "with " .  $standard->qua_5;
-                        }
-                    break;
-                case "4":
-                        if (str_contains($standard->qua_4, "with")) {
-                            $qua = $standard->qua_4;
-                        } else {
-                            $qua = "with " .  $standard->qua_4;
-                        }
-                    break;
-                case "3":
-                        if (str_contains($standard->qua_3, "with")) {
-                            $qua = $standard->qua_3;
-                        } else {
-                            $qua = "with " .  $standard->qua_3;
-                        }
-                    break;
-                case "2":
-                        if (str_contains($standard->qua_2, "with")) {
-                            $qua = $standard->qua_2;
-                        } else {
-                            $qua = "with " .  $standard->qua_2;
-                        }
-                    break;
-                case "1":
-                        if (str_contains($standard->qua_1, "with")) {
-                            $qua = $standard->qua_1;
-                        } else {
-                            $qua = "with " .  $standard->qua_1;
-                        }
-                    break;
-            }
-
-            switch ($this->timeliness) {
-                case "5":
-                    $time = "submitted " . $standard->time_5;
-                    break;
-                case "4":
-                    $time = "submitted " . $standard->time_4;
-                    break;
-                case "3":
-                    $time = "submitted " . $standard->time_3;
-                    break;
-                case "2":
-                    $time = "submitted " . $standard->time_2;
-                    break;
-                case "1":
-                    $time = "submitted " . $standard->time_1;
-                    break;
-            }
-
-            $parsed = $this->get_string_between($this->selectedTarget->target, '%', 'with');
-
-            if ($parsed == "") {
-                $parsed = $this->selectedTarget->target;
-            }
-
-            $accomplishment = $accomplishment . " " . $parsed . " " . $qua . " " . $time;
 
             if(!$this->efficiency){
                 $divisor++;
@@ -252,9 +188,43 @@ class OpcrLivewire extends Component
             }
             $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
             $average = number_format((float)$number, 2, '.', '');
+            
+            $standard = $this->selectedTarget->standards()->first();
+
+            if ($this->efficiency == '') {
+                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'efficiency' => ['Efficiency cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->efficiency = null;
+                }
+            }
+            if ($this->quality == '') {
+                if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'quality' => ['Quality cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->quality = null;
+                }
+            }
+            if ($this->timeliness == '') {
+                if ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'timeliness' => ['Timeliness cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->timeliness = null;
+                }
+            }
 
             Rating::create([
-                'accomplishment' => $accomplishment,
+                'output_finished' => $this->output_finished,
+                'accomplishment' => $this->accomplishment,
                 'efficiency' => $this->efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
@@ -271,74 +241,6 @@ class OpcrLivewire extends Component
             ]);
         } elseif ($category == 'edit') {
             $divisor = 0;
-            $qua = "";
-            $time = "";
-            $accomplishment = $this->output_finished . "/" . $this->targetOutput;
-            $standard = $this->selectedTarget->standards()->first();
-            
-            switch($this->quality) {
-                case "5":
-                        if (str_contains($standard->qua_5, "with")) {
-                            $qua = $standard->qua_5;
-                        } else {
-                            $qua = "with " .  $standard->qua_5;
-                        }
-                    break;
-                case "4":
-                        if (str_contains($standard->qua_4, "with")) {
-                            $qua = $standard->qua_4;
-                        } else {
-                            $qua = "with " .  $standard->qua_4;
-                        }
-                    break;
-                case "3":
-                        if (str_contains($standard->qua_3, "with")) {
-                            $qua = $standard->qua_3;
-                        } else {
-                            $qua = "with " .  $standard->qua_3;
-                        }
-                    break;
-                case "2":
-                        if (str_contains($standard->qua_2, "with")) {
-                            $qua = $standard->qua_2;
-                        } else {
-                            $qua = "with " .  $standard->qua_2;
-                        }
-                    break;
-                case "1":
-                        if (str_contains($standard->qua_1, "with")) {
-                            $qua = $standard->qua_1;
-                        } else {
-                            $qua = "with " .  $standard->qua_1;
-                        }
-                    break;
-            }
-
-            switch ($this->timeliness) {
-                case "5":
-                    $time = "submitted " . $standard->time_5;
-                    break;
-                case "4":
-                    $time = "submitted " . $standard->time_4;
-                    break;
-                case "3":
-                    $time = "submitted " . $standard->time_3;
-                    break;
-                case "2":
-                    $time = "submitted " . $standard->time_2;
-                    break;
-                case "1":
-                    $time = "submitted " . $standard->time_1;
-                    break;
-            }
-
-            $parsed = $this->get_string_between($this->selectedTarget->target, '%', 'with');
-
-            if ($parsed == "") {
-                $parsed = $this->selectedTarget->target;
-            }
-
-            $accomplishment = $accomplishment . " " . $parsed . " " . $qua . " " . $time;
 
             if(!$this->efficiency){
                 $divisor++;
@@ -351,9 +253,43 @@ class OpcrLivewire extends Component
             }
             $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
             $average = number_format((float)$number, 2, '.', '');
+            
+            $standard = $this->selectedTarget->standards()->first();
+
+            if ($this->efficiency == '') {
+                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'efficiency' => ['Efficiency cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->efficiency = null;
+                }
+            }
+            if ($this->quality == '') {
+                if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'quality' => ['Quality cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->quality = null;
+                }
+            }
+            if ($this->timeliness == '') {
+                if ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1){
+                    $error = \Illuminate\Validation\ValidationException::withMessages([
+                        'timeliness' => ['Timeliness cannot be null.'],
+                     ]);
+                     throw $error;
+                } else {
+                    $this->timeliness = null;
+                }
+            }
 
             Rating::where('id', $this->rating_id)->update([
-                'accomplishment' => $accomplishment,
+                'output_finished' => $this->output_finished,
+                'accomplishment' => $this->accomplishment,
                 'efficiency' => $this->efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
@@ -398,18 +334,35 @@ class OpcrLivewire extends Component
 
         $pmt = Pmt::where('isHead', 1)->first();
 
+        if (!$pmt) {
+            return $this->dispatchBrowserEvent('toastify', [
+                'message' => "No Head Found!",
+                'color' => "#f3616d",
+            ]);
+        }
+
         $this->review_id = $pmt->user->id;
 
+        if (!$this->review_id || !$this->approve_id) {
+            return $this->dispatchBrowserEvent('toastify', [
+                'message' => "No Head Found!",
+                'color' => "#f3616d",
+            ]);
+        }
 
         $approval = Approval::create([
             'name' => $type,
             'user_id' => auth()->user()->id,
-            'review_id' => $this->review_id,
             'approve_id' => $this->approve_id,
             'type' => 'opcr',
             'user_type' => 'office',
             'duration_id' => $this->duration->id
         ]);
+
+        
+        $approve = $approval;
+        
+        $approve->reviewers()->attach([$this->review_id]);
         
         $reviewer = User::where('id', $this->review_id)->first();
         $approver = User::where('id', $this->approve_id)->first();

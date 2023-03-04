@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('user_type');
             $table->foreignId('funct_id')->constrained()->onDelete('cascade');
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');
-            $table->integet('added_by')->nullable();
+            $table->integer('added_by')->nullable();
             $table->timestamps();
         });
 

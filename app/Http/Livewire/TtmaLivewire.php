@@ -237,7 +237,9 @@ class TtmaLivewire extends Component
     
         $users = $ttma->users()->where('id', '!=', auth()->user()->id)->get();
 
-        $users->notify(new AssignmentNotification($ttma));
+        foreach ($users as $user) {
+            $user->notify(new AssignmentNotification($ttma));
+        }
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Mark Assignment as completed",

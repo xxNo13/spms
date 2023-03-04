@@ -31,53 +31,35 @@
                 @endphp
                 <div class="hstack text-center text-nowrap">
                     <span class="mx-3 w-50">
-                        @if ($approval->review2_id == null) 
-                            @if ($approval->review_status == 1)
-                                <i class="bi bi-check-circle text-success fs-1"></i>
+                        @php
+                            $prog = 100 / (count($approval->reviewers) + 1);
+                            $rev = 0;
+                        @endphp
+
+                        @foreach ($approval->reviewers as $reviewer) 
+                            @if ($reviewer->pivot->review_status == 1) 
                                 @php
-                                    $progress += 50;
+                                    $rev++;
+                                    $progress += $prog;
                                 @endphp
-                            @else
-                                <i class="bi bi-x-circle text-danger fs-1"></i>
                             @endif
+                        @endforeach
+
+                        @if ($rev == count($approval->reviewers))
+                            <i class="bi bi-check-circle text-success fs-1"></i>
                         @else
-                            @if ($approval->review_status == 1)
-                                @php
-                                    $progress += 33;
-                                @endphp
-                            @endif
-                            @if ($approval->review2_status == 1)
-                                @php
-                                    $progress += 33;
-                                @endphp
-                            @endif
-                            @if ($approval->review_status == 1 && $approval->review2_status == 1)
-                                <i class="bi bi-check-circle text-success fs-1"></i>
-                            @else
-                                <i class="bi bi-x-circle text-danger fs-1"></i>
-                            @endif
+                            <i class="bi bi-x-circle text-danger fs-1"></i>
                         @endif
                         <p>Reviewed</p>
                     </span>
                     <span class="mx-3 w-50">
-                        @if ($approval->review2_id == null) 
-                            @if ($approval->approve_status == 1)
-                                <i class="bi bi-check-circle text-success fs-1"></i>
-                                @php
-                                    $progress += 50;
-                                @endphp
-                            @else
-                                <i class="bi bi-x-circle text-danger fs-1"></i>
-                            @endif
+                        @if ($approval->approve_status == 1)
+                            <i class="bi bi-check-circle text-success fs-1"></i>
+                            @php
+                                $progress += $prog;
+                            @endphp
                         @else
-                            @if ($approval->approve_status == 1)
-                                <i class="bi bi-check-circle text-success fs-1"></i>
-                                @php
-                                    $progress += 34;
-                                @endphp
-                            @else
-                                <i class="bi bi-x-circle text-danger fs-1"></i>
-                            @endif
+                            <i class="bi bi-x-circle text-danger fs-1"></i>
                         @endif
                         <p>Approved</p>
                     </span>
@@ -86,73 +68,39 @@
                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{ $progress }}%;" role="progressbar" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
-            @if (($approval->review_id == auth()->user()->id || $approval->review2_id == auth()->user()->id) && $approval->approve_id == auth()->user()->id)
-                @if ($approval->review2_id == null)
-                    @if ($approval->review_status == 1 && $approval->approve_status != 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Approved')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
+            @if (in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) && $approval->approve_id == auth()->user()->id)
+                @if ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status == 1 && $approval->approve_status != 1)
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
                         </div>
-                    @elseif ($approval->review_status != 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
+                    </div>
+                @elseif ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
                         </div>
-                    @endif
-                @else
-                    @if ($approval->review_status == 1 && $approval->review2_status == 1 && $approval->approve_status != 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Approved')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
-                        </div>
-                    @elseif ($approval->review_status != 1 || $approval->review2_status == 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 @endif
-            @elseif (($approval->review_id == auth()->user()->id && $approval->review_status != 1) || ($approval->review2_id == auth()->user()->id && $approval->review2_status != 1))
+            @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first() && $approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
                 <div class="hstack mb-2">
                     <div class="ms-auto hstack gap-3">
                         <button type="button" class="btn icon btn-info"
@@ -168,40 +116,21 @@
                     </div>
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
-                @if ($approval->review2_id == null) 
-                    @if ($approval->review_status == 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Approved')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
+                @if ($rev == count($approval->reviewers))
+                    <div class="hstack mb-2">
+                        <div class="ms-auto hstack gap-3">
+                            <button type="button" class="btn icon btn-info"
+                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                <i class="bi bi-check"></i>
+                                Approved
+                            </button>
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
                         </div>
-                    @endif
-                @else
-                    @if ($approval->review_status == 1 && $approval->review2_status == 1)
-                        <div class="hstack mb-2">
-                            <div class="ms-auto hstack gap-3">
-                                <button type="button" class="btn icon btn-info"
-                                    wire:click="approved({{ $approval->id }}, 'Approved')">
-                                    <i class="bi bi-check"></i>
-                                    Approved
-                                </button>
-                                <button type="button" class="btn icon btn-danger"
-                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                    <i class="bi bi-x"></i>
-                                    Decline
-                                </button>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 @endif
             @endif
         @endif
@@ -316,7 +245,7 @@
                                                                         @endif
                             
                                                                         @foreach ($target->ratings as $rating)
-                                                                            @if ($rating->user_id == auth()->user()->id) 
+                                                                            @if ($rating->user_id == $user->id) 
                                                                                 <td>{{ $rating->accomplishment }}
                                                                                 </td>
                                                                                 <td>
@@ -417,7 +346,7 @@
                                                                         @endif
                             
                                                                         @foreach ($target->ratings as $rating)
-                                                                            @if ($rating->user_id == auth()->user()->id) 
+                                                                            @if ($rating->user_id == $user->id) 
                                                                                 <td>{{ $rating->accomplishment }}
                                                                                 </td>
                                                                                 <td>
@@ -540,7 +469,7 @@
                                                             @endif
                 
                                                             @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == auth()->user()->id) 
+                                                                @if ($rating->user_id == $user->id) 
                                                                     <td>{{ $rating->accomplishment }}
                                                                     </td>
                                                                     <td>
@@ -638,7 +567,7 @@
                                                             @endif
                 
                                                             @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == auth()->user()->id) 
+                                                                @if ($rating->user_id == $user->id) 
                                                                     <td>{{ $rating->accomplishment }}
                                                                     </td>
                                                                     <td>

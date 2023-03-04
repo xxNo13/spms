@@ -61,7 +61,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($approvals->sortByDesc('updated_at') as $approval)
-                                        @if ((Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->review2_id || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
+                                        @if ((in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
                                             ($duration && $approval->duration_id == $duration->id))
                                             <tr>
                                                 <td>{{ $approval->user->name }}</td>
@@ -86,16 +86,16 @@
                                                     Reviewed
                                                 </td>
                                                 <td>
-                                                    @if (($approval->review_status == 1 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 1 && Auth::user()->id == $approval->review2_id))
+                                                    @if ((auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 1) || (in_array(auth()->user()->id, $pmts) && $approval->reviewers()->wherePivot('review_status', 2)->first()))
                                                         Approved
-                                                    @elseif (($approval->review_status == 2 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 2 && Auth::user()->id == $approval->review2_id))
+                                                    @elseif (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 2)
                                                         Declined
-                                                    @elseif (($approval->review_status == 3 && Auth::user()->id == $approval->review_id) || ($approval->review2_status == 3 && Auth::user()->id == $approval->review2_id))
+                                                    @elseif ((auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 3) || (in_array(auth()->user()->id, $pmts) && $approval->reviewers()->wherePivot('review_status', 2)->first()))
                                                         Declined by the other Reviewer
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                @if (Auth::user()->id == $approval->review_id || Auth::user()->id == $approval->review2_id)
+                                                                @if (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first())
                                                                     <button type="button" class="btn icon btn-info"
                                                                         wire:click="approved({{ $approval->id }}, 'Reviewed')">
                                                                         <i class="bi bi-check"></i>
@@ -172,8 +172,19 @@
                                                         Declined by Reviewer
                                                     @else
                                                         @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
+                                                            @php
+                                                                $reviewed = true;
+                                                            @endphp
+                                                            @foreach($approval->reviewers as $review) 
+                                                                @if ($review->pivot->review_status == null)
+                                                                    @php
+                                                                        $reviewed = false;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                        
                                                             <div class="hstack gap-2 justify-content-center">
-                                                                @if ($approval->review_status == 1)
+                                                                @if ($reviewed)
                                                                     <button type="button" class="btn icon btn-info"
                                                                         wire:click="approved({{ $approval->id }}, 'Approved')">
                                                                         <i class="bi bi-check"></i>

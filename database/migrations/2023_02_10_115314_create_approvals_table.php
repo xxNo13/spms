@@ -17,14 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('review_id')->nullable();
-            $table->smallInteger('review_status')->nullable();
-            $table->date('review_date')->nullable();
-            $table->mediumText('review_message')->nullable();
-            $table->integer('review2_id')->nullable();
-            $table->smallInteger('review2_status')->nullable();
-            $table->date('review2_date')->nullable();
-            $table->mediumText('review2_message')->nullable();
             $table->integer('approve_id')->nullable();
             $table->smallInteger('approve_status')->nullable();
             $table->date('approve_date')->nullable();
@@ -34,6 +26,15 @@ return new class extends Migration
             $table->smallInteger('added_id')->nullable();
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+        });
+
+        Schema::create('approval_review', function (Blueprint $table) {
+            $table->foreignId('approval_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+
+            $table->smallInteger('review_status')->nullable();
+            $table->date('review_date')->nullable();
+            $table->mediumText('review_message')->nullable();
         });
     }
 

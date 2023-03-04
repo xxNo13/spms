@@ -18,7 +18,8 @@ class Rating extends Model
         'remarks',
         'target_id',
         'user_id',
-        'duration_id'
+        'duration_id',
+        'output_finished'
     ];
 
     public function target(){

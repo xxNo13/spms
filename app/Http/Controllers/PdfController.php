@@ -19,6 +19,8 @@ class PdfController extends Controller
         $faculty = false;
         $head = false;
         $yours = false;
+        $approval_reviewer = [];
+        $assess_reviewer = [];
         foreach (auth()->user()->account_types as $account_type) {
             if (str_contains(strtolower($account_type), 'faculty')) {
                 $faculty = true;
@@ -57,12 +59,16 @@ class PdfController extends Controller
 
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'faculty')->first();
             
-            $approval_reviewer = User::find($approval->review_id);
+            foreach ($approval->reviewers as $reviewer) {
+                array_push($approval_reviewer, $reviewer);
+            }
             $approval_approver = User::find($approval->approve_id);
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'faculty')->first();
             
-            $assess_reviewer = User::find($assess->review_id);
+            foreach ($assess->reviewers as $reviewer) {
+                array_push($assess_reviewer, $reviewer);
+            }
             $assess_approver = User::find($assess->approve_id);
         }
 
@@ -76,7 +82,6 @@ class PdfController extends Controller
             'assess_approver' => $assess_approver,
             'duration' => $duration,
             'percentage' => $percentage,
-            'sub_percentages' => $sub_percentages,
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
@@ -143,6 +148,8 @@ class PdfController extends Controller
         $staff = false;
         $head = false;
         $yours = false;
+        $approval_reviewer = [];
+        $assess_reviewer = [];
         foreach (auth()->user()->account_types as $account_type) {
             if (str_contains(strtolower($account_type), 'staff')) {
                 $staff = true;
@@ -181,12 +188,16 @@ class PdfController extends Controller
 
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first();
             
-            $approval_reviewer = User::find($approval->review_id);
+            foreach ($approval->reviewers as $reviewer) {
+                array_push($approval_reviewer, $reviewer);
+            }
             $approval_approver = User::find($approval->approve_id);
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first();
             
-            $assess_reviewer = User::find($assess->review_id);
+            foreach ($assess->reviewers as $reviewer) {
+                array_push($assess_reviewer, $reviewer);
+            }
             $assess_approver = User::find($assess->approve_id);
         }
 
@@ -296,13 +307,17 @@ class PdfController extends Controller
             $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
 
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
-            
-            $approval_reviewer = User::find($approval->review_id);
+            foreach ($approval->reviewers as $reviewer) {
+                $approval_reviewer = $reviewer;
+                break;
+            }
             $approval_approver = User::find($approval->approve_id);
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
-            
-            $assess_reviewer = User::find($assess->review_id);
+            foreach ($assess->reviewers as $reviewer) {
+                $assess_reviewer = $reviewer;
+                break;
+            }
             $assess_approver = User::find($assess->approve_id);
         }
 
@@ -436,7 +451,7 @@ class PdfController extends Controller
             'functs' => $functs,    
             'duration' => $duration,
             'percentage' => $percentage,
-            'scoreEq$scoreEquivalent' => $scoreEquivalent,
+            'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];
 
@@ -448,7 +463,7 @@ class PdfController extends Controller
     public function rankingFaculty() {
         $pmo = false;
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'pm')) {
+            if (str_contains(strtolower($office->office_name), 'planning')) {
                 $pmo = true;
             }
         }
@@ -460,7 +475,7 @@ class PdfController extends Controller
 
 
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->get();
+        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
 
         $users = User::query();
 
@@ -476,8 +491,8 @@ class PdfController extends Controller
         $data = [
             'functs' => $functs,    
             'duration' => $duration,
-            'percentages' => $percentages,
-            'scoreEq$scoreEquivalent' => $scoreEquivalent,
+            'percentage' => $percentage,
+            'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];
 
@@ -489,7 +504,7 @@ class PdfController extends Controller
     public function rankingStaff() {
         $pmo = false;
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'pm')) {
+            if (str_contains(strtolower($office->office_name), 'planning')) {
                 $pmo = true;
             }
         }
@@ -518,7 +533,7 @@ class PdfController extends Controller
             'functs' => $functs,    
             'duration' => $duration,
             'percentages' => $percentages,
-            'scoreEq$scoreEquivalent' => $scoreEquivalent,
+            'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];
 
@@ -530,11 +545,10 @@ class PdfController extends Controller
     public function rankingOpcr() {
         $pmo = false;
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'pm')) {
+            if (str_contains(strtolower($office->office_name), 'planning')) {
                 $pmo = true;
             }
         }
-
         if ($pmo) {
         } else {
             abort(403);
@@ -542,7 +556,7 @@ class PdfController extends Controller
 
 
         $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+        $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
         $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
 
         $users = User::query();
@@ -559,9 +573,9 @@ class PdfController extends Controller
         $data = [
             'functs' => $functs,    
             'duration' => $duration,
-            'percentages' => $percentages,
+            'percentage' => $percentage,
             'sub_percentages' => $sub_percentages,
-            'scoreEq$scoreEquivalent' => $scoreEquivalent,
+            'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
         ];
 
