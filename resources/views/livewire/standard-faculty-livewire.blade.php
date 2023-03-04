@@ -17,6 +17,7 @@
     </div>
 
     <section class="section pt-3">
+            
         {{-- Message for declining --}}
         <div wire:ignore class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
             @if ($review_user && $review_user['message'])
@@ -26,9 +27,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                    {{ $review_user['message'] }}
+                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
                     </div>
                 </div>
+                @push ('script')
+                    <script>
+                        new bootstrap.Toast(document.getElementById('reviewToast')).show();
+                    </script>
+                @endpush
             @endif
             @if ($approve_user && $approve_user['message']) 
                 <div id="approveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
@@ -37,19 +43,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                    {{ $approve_user['message'] }}
+                        <strong class="me-auto">{{ $approve_user['message'] }}</strong>
                     </div>
                 </div>
+                @push ('script')
+                    <script>
+                        new bootstrap.Toast(document.getElementById('approveToast')).show();
+                    </script>
+                @endpush
             @endif
         </div>
-        
-    
-        @push ('script')
-            <script>
-                new bootstrap.Toast(document.getElementById('reviewToast')).show()
-                new bootstrap.Toast(document.getElementById('approveToast')).show()
-            </script>
-        @endpush
 
 
         @foreach ($functs as $funct)

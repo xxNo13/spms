@@ -43,49 +43,59 @@ class ForApprovalLivewire extends Component
         'comment.required_if' => "Comment on why it's declined cannot be null.",
     ];
 
-    public function viewed($user_id, $category, $url, $user_type){
-        $this->user_id = $user_id;
-        $this->category = $category;
+    public function viewed($approval, $url){
+        $this->user_id = $approval['user_id'];
+        $this->category = $approval['type'];
         $this->url = $url;
         $this->view = true;
-        $this->user_type = $user_type;
-        $this->approval = Approval::orderBy('id', 'DESC')
-                ->where('user_id', $user_id)
-                ->where('type', $category)
-                ->where('user_type', $user_type)
+        $this->user_type = $approval['user_type'];
+        $this->approval = Approval::find($approval['id']);
+        $this->prevApproval = Approval::orderBy('created_at', 'DESC')
+                ->where('user_id', $approval['user_id'])
+                ->where('type', $approval['type'])
+                ->where('user_type', $approval['user_type'])
                 ->where('duration_id', $this->duration->id)
-                ->first();
-        if ($category == 'standard') {
-            if ($user_type == 'office') {
-                $this->percentage = Percentage::where('user_id', $user_id)
+                ->where('name', $this->approval->name)
+                ->where('id', '<', $this->approval->id)
+                ->where(function ($query) {
+                    $query->whereHas('reviewers', function (\Illuminate\Database\Eloquent\Builder $query) {
+                        return $query->where('review_message', '!=', null);
+                    })->orWhere('approve_message', '!=', null);
+                })->first();
+        if ($this->prevApproval) {
+            $this->prevApprover = User::find($this->prevApproval->approve_id);
+        }
+        if ($approval['type'] == 'standard') {
+            if ($approval['user_type'] == 'office') {
+                $this->percentage = Percentage::where('user_id', $approval['user_id'])
                     ->where('type', 'opcr')
-                    ->where('user_type', $user_type)
+                    ->where('user_type', $approval['user_type'])
                     ->where('duration_id', $this->duration->id)
                     ->first();
             } else {
-                if ($user_type == 'faculty') {
+                if ($approval['user_type'] == 'faculty') {
                     $this->percentage = Percentage::where('type', 'ipcr')
-                        ->where('user_type', $user_type)
+                        ->where('user_type', $approval['user_type'])
                         ->where('duration_id', $this->duration->id)
                         ->first();
                 } else {
-                    $this->percentage = Percentage::where('user_id', $user_id)
+                    $this->percentage = Percentage::where('user_id', $approval['user_id'])
                         ->where('type', 'ipcr')
-                        ->where('user_type', $user_type)
+                        ->where('user_type', $approval['user_type'])
                         ->where('duration_id', $this->duration->id)
                         ->first();
                 }
             }
         } else {
-            if ($user_type != 'staff') {
-                $this->percentage = Percentage::where('type', $category)
-                    ->where('user_type', $user_type)
+            if ($approval['user_type'] != 'staff') {
+                $this->percentage = Percentage::where('type', $approval['type'])
+                    ->where('user_type', $approval['user_type'])
                     ->where('duration_id', $this->duration->id)
                     ->first();
             } else {
-                $this->percentage = Percentage::where('user_id', $user_id)
-                    ->where('type', $category)
-                    ->where('user_type', $user_type)
+                $this->percentage = Percentage::where('user_id', $approval['user_id'])
+                    ->where('type', $approval['type'])
+                    ->where('user_type', $approval['user_type'])
                     ->where('duration_id', $this->duration->id)
                     ->first();
             }
@@ -108,7 +118,9 @@ class ForApprovalLivewire extends Component
                 'duration' => $this->duration,
                 'user_type' => $this->user_type,
                 'percentage' => $this->percentage,
-                'number' => 1
+                'number' => 1,
+                'prevApproval' => $this->prevApproval,
+                'prevApprover' => $this->prevApprover
             ]);
         } elseif ($this->view && $this->category == 'opcr'){
             $functs = Funct::all();
@@ -121,7 +133,9 @@ class ForApprovalLivewire extends Component
                 'duration' => $this->duration,
                 'user_type' => $this->user_type,
                 'percentage' => $this->percentage,
-                'number' => 1
+                'number' => 1,
+                'prevApproval' => $this->prevApproval,
+                'prevApprover' => $this->prevApprover
             ]);
         } elseif ($this->view && $this->category == 'standard'){
             if ($this->user_type == 'office') {
@@ -136,7 +150,9 @@ class ForApprovalLivewire extends Component
                     'duration' => $this->duration,
                     'user_type' => $this->user_type,
                     'percentage' => $this->percentage,
-                    'number' => 1
+                    'number' => 1,
+                    'prevApproval' => $this->prevApproval,
+                    'prevApprover' => $this->prevApprover
                 ]);
             } else {
                 $functs = Funct::all();
@@ -150,7 +166,9 @@ class ForApprovalLivewire extends Component
                     'duration' => $this->duration,
                     'user_type' => $this->user_type,
                     'percentage' => $this->percentage,
-                    'number' => 1
+                    'number' => 1,
+                    'prevApproval' => $this->prevApproval,
+                    'prevApprover' => $this->prevApprover
                 ]);
             }
         } else {
@@ -223,7 +241,7 @@ class ForApprovalLivewire extends Component
         $this->validateOnly($property);
     }
         
-    public function approved($id, $type){
+    public function approved($id, $type, $bool = false){
         $approval = Approval::find($id);
 
         if ($approval->approve_id == Auth::user()->id && $type == 'Approved'){
@@ -253,12 +271,18 @@ class ForApprovalLivewire extends Component
             'color' => "#435ebe",
         ]);
         $this->resetInput();
+        $this->mount();
         $this->dispatchBrowserEvent('close-modal'); 
+
+        if ($bool) {
+            return redirect(request()->header('Referer'));
+        }
     }
 
-    public function clickdeclined($id) {
+    public function clickdeclined($id, $bool = false) {
         $this->selected = 'declined';
         $this->approving = Approval::find($id);
+        $this->bool  = $bool;
     }
 
     public function declined(){
@@ -307,7 +331,11 @@ class ForApprovalLivewire extends Component
         $this->resetInput();
         $this->dispatchBrowserEvent('close-modal');
         $this->mount();
-    }
+
+        if ($this->bool) {
+            return redirect(request()->header('Referer'));
+        }
+    } 
 
     public function resetInput(){
         $this->view = false;

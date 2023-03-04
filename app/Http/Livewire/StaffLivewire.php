@@ -117,7 +117,7 @@ class StaffLivewire extends Component
             $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', auth()->user()->id)->where('duration_id', $this->duration->id)->get();
 
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
-            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
+            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->where('approve_status', 1)->first();
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
             if ($this->assess) {
                 foreach ($this->assess->reviewers as $reviewer) {
@@ -778,6 +778,7 @@ class StaffLivewire extends Component
         $this->efficiency = '';
         $this->quality = '';
         $this->timeliness = '';
+        $this->accomplishment = '';
     }
 
     public function closeModal()

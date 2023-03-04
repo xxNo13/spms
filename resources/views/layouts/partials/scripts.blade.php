@@ -19,6 +19,7 @@
 @stack('assignment')
 @stack('rating')
 <script>
+    
     function scrollToTop() {
         window.scrollTo({
             top: 0,

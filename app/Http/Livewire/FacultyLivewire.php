@@ -122,7 +122,7 @@ class FacultyLivewire extends Component
             if ($notDesignated) {
                 $this->approvalStandard = true;
             } else{
-                $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
+                $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->where('approve_status', 1)->first();
             }
             
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
@@ -903,6 +903,7 @@ class FacultyLivewire extends Component
         $this->efficiency = '';
         $this->quality = '';
         $this->timeliness = '';
+        $this->accomplishment = '';
     }
 
     public function closeModal()

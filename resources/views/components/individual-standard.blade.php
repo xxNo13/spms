@@ -17,6 +17,37 @@
     </div>
 
     <section class="section pt-3">
+        {{-- Message for declining --}}
+        <div wire:ignore.self class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
+            @if (isset($prevApproval) && $approval->approve_status != 1)
+                @foreach ($prevApproval->reviewers as $reviewer)
+                    @if ($reviewer->pivot->review_message)
+                        <div id="reviewToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                            <div class="toast-header">
+                                <strong class="me-auto">{{ $reviewer->name }}'s <br/> Declining Message in Pervious Submission:</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                <strong class="me-auto">{{ $reviewer->pivot->review_message }}</strong>
+                            </div>
+                        </div>
+                        @break
+                    @endif
+                @endforeach
+                @if (isset($prevApproval->approve_message)) 
+                    <div id="approveToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                        <div class="toast-header">
+                            <strong class="me-auto">{{ $prevApprover->name }}'s <br/> Declining Message in Pervious Submission:</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            <strong class="me-auto">{{ $prevApproval->approve_message }}</strong>
+                        </div>
+                    </div>
+                @endif
+            @endif
+        </div>
+
         @if ($url == 'for-approval')
             <div class="my-5">
                 @php
@@ -66,12 +97,12 @@
                     <div class="hstack mb-2">
                         <div class="ms-auto hstack gap-3">
                             <button type="button" class="btn icon btn-info"
-                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                wire:click="approved({{ $approval->id }}, 'Approved', true)">
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>
@@ -81,12 +112,12 @@
                     <div class="hstack mb-2">
                         <div class="ms-auto hstack gap-3">
                             <button type="button" class="btn icon btn-info"
-                                wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                wire:click="approved({{ $approval->id }}, 'Reviewed', true)">
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>
@@ -97,12 +128,12 @@
                 <div class="hstack mb-2">
                     <div class="ms-auto hstack gap-3">
                         <button type="button" class="btn icon btn-info"
-                            wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                            wire:click="approved({{ $approval->id }}, 'Reviewed', true)">
                             <i class="bi bi-check"></i>
                             Approved
                         </button>
                         <button type="button" class="btn icon btn-danger"
-                            wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                            wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
                             <i class="bi bi-x"></i>
                             Decline
                         </button>
@@ -113,12 +144,12 @@
                     <div class="hstack mb-2">
                         <div class="ms-auto hstack gap-3">
                             <button type="button" class="btn icon btn-info"
-                                wire:click="approved({{ $approval->id }}, 'Approved')">
+                                wire:click="approved({{ $approval->id }}, 'Approved', true)">
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>

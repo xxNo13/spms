@@ -66,8 +66,8 @@ class OpcrLivewire extends Component
     ];
 
     protected $messages = [
-        'output_finished.required_if' => 'Output Finished cannot be null.',
         'output_finished.numeric' => 'Output Finished should be a number.',
+        'output_finished.required_if' => 'Output Finished cannot be null.',
         'efficiency.required_without_all' => 'Efficiency cannot be null.',
         'quality.required_without_all' => 'Quality cannot be null.',
         'timeliness.required_without_all' => 'Timeliness cannot be null.',
@@ -93,7 +93,7 @@ class OpcrLivewire extends Component
             $this->sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->get();
 
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
-            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
+            $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'office')->where('approve_status', 1)->first();
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'opcr')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
             if ($this->assess) {
                 foreach ($this->assess->reviewers as $reviewer) {
@@ -546,6 +546,7 @@ class OpcrLivewire extends Component
         $this->efficiency = '';
         $this->quality = '';
         $this->timeliness = '';
+        $this->accomplishment = '';
     }
 
     public function closeModal()
