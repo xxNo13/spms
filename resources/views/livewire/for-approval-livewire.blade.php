@@ -83,7 +83,11 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    Reviewed
+                                                    @if ($approval->name == 'assess')
+                                                        Assessing of Score
+                                                    @elseif ($approval->name == 'approval')
+                                                        Approval of IPCR
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <div class="hstack gap-2 justify-content-center">      
@@ -165,7 +169,11 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    Approval
+                                                    @if ($approval->name == 'assess')
+                                                        Assessing of Score
+                                                    @elseif ($approval->name == 'approval')
+                                                        Approval of IPCR
+                                                    @endif
                                                 </td>
                                                 <td> 
                                                     <div class="hstack gap-2 justify-content-center">

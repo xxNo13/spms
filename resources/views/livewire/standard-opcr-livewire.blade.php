@@ -27,7 +27,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        <strong class="me-auto">{{ $review_user['message'] }}</strong>
+                        <strong class="me-auto"><?php echo nl2br($review_user['message']) ?></strong>
                     </div>
                 </div>
                 @push ('script')
@@ -43,7 +43,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        <strong class="me-auto">{{ $approve_user['message'] }}</strong>
+                        <strong class="me-auto"><?php echo nl2br($approve_user['message']) ?></strong>
                     </div>
                 </div>
                 @push ('script')

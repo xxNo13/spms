@@ -635,12 +635,15 @@
                                 $quas = preg_split('/\r\n|\r|\n/', $standardValue->quality);
                                 $times = preg_split('/\r\n|\r|\n/', $standardValue->timeliness);
                             }
+                            arsort($effs, SORT_NUMERIC);
+                            asort($quas);
+                            asort($times);
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_5">
+                                    <select type="text" class="form-control" id="eff_5" wire:model="eff_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -651,11 +654,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#eff_5").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#eff_5').on('change', function () {
+                                        var data = $('#eff_5').select2("val");
+                                        @this.set('eff_5', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_5">
+                                    <select type="text" class="form-control" id="qua_5" wire:model="qua_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -666,11 +684,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#qua_5").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#qua_5').on('change', function () {
+                                        var data = $('#qua_5').select2("val");
+                                        @this.set('qua_5', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="time_5">
+                                    <select type="text" class="form-control" wire:model="time_5" id="time_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -681,12 +714,27 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#time_5").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#time_5').on('change', function () {
+                                        var data = $('#time_5').select2("val");
+                                        @this.set('time_5', data);
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_4">
+                                    <select type="text" class="form-control" wire:model="eff_4" id="eff_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -697,11 +745,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#eff_4").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#eff_4').on('change', function () {
+                                        var data = $('#eff_4').select2("val");
+                                        @this.set('eff_4', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_4">
+                                    <select type="text" class="form-control" wire:model="qua_4" id="qua_4" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -712,11 +775,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#qua_4").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#qua_4').on('change', function () {
+                                        var data = $('#qua_4').select2("val");
+                                        @this.set('qua_4', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="time_4">
+                                    <select type="text" class="form-control" wire:model="time_4" id="time_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -727,12 +805,27 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#time_4").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#time_4').on('change', function () {
+                                        var data = $('#time_4').select2("val");
+                                        @this.set('time_4', data);
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_3">
+                                    <select type="text" class="form-control" wire:model="eff_3" id="eff_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -743,11 +836,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#eff_3").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#eff_3').on('change', function () {
+                                        var data = $('#eff_3').select2("val");
+                                        @this.set('eff_3', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_3">
+                                    <select type="text" class="form-control" wire:model="qua_3" id="qua_3" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -758,11 +866,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#qua_3").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#qua_3').on('change', function () {
+                                        var data = $('#qua_3').select2("val");
+                                        @this.set('qua_3', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="time_3">
+                                    <select type="text" class="form-control" wire:model="time_3" id="time_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -773,12 +896,27 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#time_3").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#time_3').on('change', function () {
+                                        var data = $('#time_3').select2("val");
+                                        @this.set('time_3', data);
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_2">
+                                    <select type="text" class="form-control" wire:model="eff_2" id="eff_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -789,11 +927,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#eff_2").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#eff_2').on('change', function () {
+                                        var data = $('#eff_2').select2("val");
+                                        @this.set('eff_2', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_2">
+                                    <select type="text" class="form-control" wire:model="qua_2" id="qua_2" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -804,11 +957,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#qua_2").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#qua_2').on('change', function () {
+                                        var data = $('#qua_2').select2("val");
+                                        @this.set('qua_2', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="time_2">
+                                    <select type="text" class="form-control" wire:model="time_2" id="time_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -819,12 +987,27 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#time_2").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#time_2').on('change', function () {
+                                        var data = $('#time_2').select2("val");
+                                        @this.set('time_2', data);
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_1">
+                                    <select type="text" class="form-control" wire:model="eff_1" id="eff_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -835,11 +1018,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#eff_1").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#eff_1').on('change', function () {
+                                        var data = $('#eff_1').select2("val");
+                                        @this.set('eff_1', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_1">
+                                    <select type="text" class="form-control" wire:model="qua_1" id="qua_1" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -850,11 +1048,26 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#qua_1").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#qua_1').on('change', function () {
+                                        var data = $('#qua_1').select2("val");
+                                        @this.set('qua_1', data);
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="time_1">
+                                    <select type="text" class="form-control" wire:model="time_1" id="time_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -865,6 +1078,21 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $("#time_1").select2({
+                                        placeholder: "",
+                                        allowClear: true,
+                                        tags: true,
+                                        dropdownParent: $("#AddStandardModal")
+                                    });
+
+                                    $('#time_1').on('change', function () {
+                                        var data = $('#time_1').select2("val");
+                                        @this.set('time_1', data);
+                                    });
+                                </script>
+                            @endpush
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -881,7 +1109,7 @@
             </div>
         </div>
     </div>
-
+    
     {{-- Edit Standard Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditStandardModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
@@ -909,12 +1137,15 @@
                                 $quas = preg_split('/\r\n|\r|\n/', $standardValue->quality);
                                 $times = preg_split('/\r\n|\r|\n/', $standardValue->timeliness);
                             }
+                            arsort($effs, SORT_NUMERIC);
+                            asort($quas);
+                            asort($times);
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_5">
+                                    <select type="text" class="form-control" id="eeff_5" wire:model="eff_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -925,11 +1156,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initEff5=()=>{
+                                            $('#eeff_5').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initEff5();
+                                        $('#eeff_5').on('change', function (e) {
+                                            var data = $('#eeff_5').select2("val");
+                                            @this.set('eff_5', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initEff5();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_5">
+                                    <select type="text" class="form-control" id="equa_5" wire:model="qua_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -940,11 +1193,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initQua5=()=>{
+                                            $('#equa_5').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initQua5();
+                                        $('#equa_5').on('change', function (e) {
+                                            var data = $('#equa_5').select2("val");
+                                            @this.set('eff_5', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initQua5();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="time_5">
+                                    <select type="text" class="form-control" wire:model="time_5" id="etime_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -955,12 +1230,34 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initTime5=()=>{
+                                            $('#etime_5').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initTime5();
+                                        $('#etime_5').on('change', function (e) {
+                                            var data = $('#etime_5').select2("val");
+                                            @this.set('eff_5', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initTime5();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_4">
+                                    <select type="text" class="form-control" id="eeff_4" wire:model="eff_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -971,11 +1268,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initEff4=()=>{
+                                            $('#eeff_4').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initEff4();
+                                        $('#eeff_4').on('change', function (e) {
+                                            var data = $('#eeff_4').select2("val");
+                                            @this.set('eff_4', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initEff4();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_4">
+                                    <select type="text" class="form-control" id="equa_4" wire:model="qua_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -986,11 +1305,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initQua4=()=>{
+                                            $('#equa_4').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initQua4();
+                                        $('#equa_4').on('change', function (e) {
+                                            var data = $('#equa_4').select2("val");
+                                            @this.set('qua_4', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initQua4();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="time_4">
+                                    <select type="text" class="form-control" wire:model="time_4" id="etime_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1001,12 +1342,34 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initTime4=()=>{
+                                            $('#etime_4').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initTime4();
+                                        $('#etime_4').on('change', function (e) {
+                                            var data = $('#etime_4').select2("val");
+                                            @this.set('time_4', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initTime4();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_3">
+                                    <select type="text" class="form-control" id="eeff_3" wire:model="eff_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1017,11 +1380,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initEff3=()=>{
+                                            $('#eeff_3').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initEff3();
+                                        $('#eeff_3').on('change', function (e) {
+                                            var data = $('#eeff_3').select2("val");
+                                            @this.set('eff_3', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initEff3();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_3">
+                                    <select type="text" class="form-control" id="equa_3" wire:model="qua_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1032,11 +1417,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initQua3=()=>{
+                                            $('#equa_3').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initQua3();
+                                        $('#equa_3').on('change', function (e) {
+                                            var data = $('#equa_3').select2("val");
+                                            @this.set('qua_3', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initQua3();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="time_3">
+                                    <select type="text" class="form-control" wire:model="time_3" id="etime_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1047,12 +1454,34 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initTime3=()=>{
+                                            $('#etime_3').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initTime3();
+                                        $('#etime_3').on('change', function (e) {
+                                            var data = $('#etime_3').select2("val");
+                                            @this.set('time_3', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initTime3();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_2">
+                                    <select type="text" class="form-control" id="eeff_2" wire:model="eff_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1063,11 +1492,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initEff2=()=>{
+                                            $('#eeff_2').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initEff2();
+                                        $('#eeff_2').on('change', function (e) {
+                                            var data = $('#eeff_2').select2("val");
+                                            @this.set('eff_2', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initEff2();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_2">
+                                    <select type="text" class="form-control" id="equa_2" wire:model="qua_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1078,11 +1529,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initQua2=()=>{
+                                            $('#equa_2').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initQua2();
+                                        $('#equa_2').on('change', function (e) {
+                                            var data = $('#equa_2').select2("val");
+                                            @this.set('qua_2', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initQua2();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="time_2">
+                                    <select type="text" class="form-control" wire:model="time_2" id="etime_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1093,12 +1566,34 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initTime2=()=>{
+                                            $('#etime_2').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initTime2();
+                                        $('#etime_2').on('change', function (e) {
+                                            var data = $('#etime_2').select2("val");
+                                            @this.set('time_2', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initTime2();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_1">
+                                    <select type="text" class="form-control" id="eeff_1" wire:model="eff_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1109,11 +1604,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initEff1=()=>{
+                                            $('#eeff_1').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initEff1();
+                                        $('#eeff_1').on('change', function (e) {
+                                            var data = $('#eeff_1').select2("val");
+                                            @this.set('eff_1', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initEff1();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_1">
+                                    <select type="text" class="form-control" id="equa_1" wire:model="qua_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1124,11 +1641,33 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initQua1=()=>{
+                                            $('#equa_1').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initQua1();
+                                        $('#equa_1').on('change', function (e) {
+                                            var data = $('#equa_1').select2("val");
+                                            @this.set('qua_1', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initQua1();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <div class="vr"></div>
-                            <div class=" w-100">
+                            <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="time_1">
+                                    <select type="text" class="form-control" wire:model="time_1" id="etime_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1139,6 +1678,28 @@
                                     <p class="text-danger text-center">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @push ('script')
+                                <script>
+                                    $(document).ready(function() {
+                                        window.initTime1=()=>{
+                                            $('#etime_1').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        }
+                                        initTime1();
+                                        $('#etime_1').on('change', function (e) {
+                                            var data = $('#etime_1').select2("val");
+                                            @this.set('time_1', data);
+                                        });
+                                        window.livewire.on('select2',()=>{
+                                            initTime1();
+                                        });
+                                    });
+                                </script>
+                            @endpush
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1281,19 +1842,20 @@
     @endif
 
     {{-- Decline Modal --}}
-    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="DeclineModal" tabindex="-1" role="dialog"
+    <div wire:ignore.self  class="modal fade text-left" id="DeclineModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Declining Message</h4>
+                    <button type="button" class="btn btn-light rounded-circle" data-bs-dismiss="modal"><i class="bi bi-fullscreen-exit"></i></button>
                 </div>
                 <form wire:submit.prevent="declined">
                     <div class="modal-body">
                         <label>Comment: </label>
                         <div class="form-group">
                             <textarea placeholder="Comment" class="form-control"
-                                wire:model="comment">
+                                wire:model="comment" style="height: 100px;">
                             </textarea>
                             @error('comment')
                                 <p class="text-danger">{{ $message }}</p>

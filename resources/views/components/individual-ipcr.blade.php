@@ -26,7 +26,7 @@
     <section class="section pt-3">
         {{-- Message for declining --}}
         <div wire:ignore.self class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
-            @if (isset($prevApproval) && $approval->approve_status != 1)
+            @if (isset($prevApproval) && !isset($approval->approve_status))
                 @foreach ($prevApproval->reviewers as $reviewer)
                     @if ($reviewer->pivot->review_message)
                         <div id="reviewToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
@@ -35,7 +35,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                             <div class="toast-body">
-                                <strong class="me-auto">{{ $reviewer->pivot->review_message }}</strong>
+                                <strong class="me-auto"><?php echo nl2br($reviewer->pivot->review_message) ?></strong>
                             </div>
                         </div>
                         @break
@@ -48,7 +48,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
                         <div class="toast-body">
-                            <strong class="me-auto">{{ $prevApproval->approve_message }}</strong>
+                            <strong class="me-auto"><?php echo nl2br($prevApproval->approve_message) ?></strong>
                         </div>
                     </div>
                 @endif
@@ -101,8 +101,8 @@
             </div>
             @if (in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) && $approval->approve_id == auth()->user()->id)
                 @if ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status == 1 && $approval->approve_status != 1)
-                    <div class="hstack mb-2">
-                        <div class="ms-auto hstack gap-3">
+                    <div class="hstack mb-2 fixed-bottom mx-5 px-4">
+                        <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                             <button type="button" class="btn icon btn-info"
                                 wire:click="approved({{ $approval->id }}, 'Approved', true)">
                                 <i class="bi bi-check"></i>
@@ -116,8 +116,8 @@
                         </div>
                     </div>
                 @elseif ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
-                    <div class="hstack mb-2">
-                        <div class="ms-auto hstack gap-3">
+                    <div class="hstack mb-2 fixed-bottom mx-5 px-4">
+                        <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                             <button type="button" class="btn icon btn-info"
                                 wire:click="approved({{ $approval->id }}, 'Reviewed', true)">
                                 <i class="bi bi-check"></i>
@@ -132,8 +132,8 @@
                     </div>
                 @endif
             @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first() && $approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
-                <div class="hstack mb-2">
-                    <div class="ms-auto hstack gap-3">
+                <div class="hstack mb-2 fixed-bottom mx-5 px-4">
+                    <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                         <button type="button" class="btn icon btn-info"
                             wire:click="approved({{ $approval->id }}, 'Reviewed', true)">
                             <i class="bi bi-check"></i>
@@ -148,8 +148,8 @@
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
                 @if ($rev == count($approval->reviewers))
-                    <div class="hstack mb-2">
-                        <div class="ms-auto hstack gap-3">
+                    <div class="hstack mb-2 fixed-bottom mx-5 px-4">
+                        <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                             <button type="button" class="btn icon btn-info"
                                 wire:click="approved({{ $approval->id }}, 'Approved', true)">
                                 <i class="bi bi-check"></i>
