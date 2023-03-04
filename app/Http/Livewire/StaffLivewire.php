@@ -59,6 +59,7 @@ class StaffLivewire extends Component
 
     public $dummy;
 
+    public $filter = '';
 
     protected $listeners = ['percentage', 'resetIntput'];
 
@@ -111,7 +112,7 @@ class StaffLivewire extends Component
 
 
     public function mount() {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', auth()->user()->id)->where('duration_id', $this->duration->id)->first();
             $this->sub_percentages = SubPercentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', auth()->user()->id)->where('duration_id', $this->duration->id)->get();
@@ -483,7 +484,8 @@ class StaffLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'staff',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'filter' => $this->filter
                 ]));
                 break;
             case 'output':
@@ -494,7 +496,8 @@ class StaffLivewire extends Component
                         'type' => 'ipcr',
                         'user_type' => 'staff',
                         'sub_funct_id' => $this->sub_funct_id,
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'filter' => $this->filter
                     ]));
                     break;
                 }
@@ -504,7 +507,8 @@ class StaffLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'staff',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'filter' => $this->filter
                 ]));
                 break;
             case 'suboutput':

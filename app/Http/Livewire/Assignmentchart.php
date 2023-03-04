@@ -17,7 +17,7 @@ class Assignmentchart extends Component
     
     public function render()
     {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         $this->dateToday = date('d');
         $this->month = date('Y-m-d');
         $this->days = collect(range($this->dateToday - 6, $this->dateToday))->map(function ($number) {

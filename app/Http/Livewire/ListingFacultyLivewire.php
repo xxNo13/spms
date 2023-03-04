@@ -33,6 +33,8 @@ class ListingFacultyLivewire extends Component
     public $target;
     public $target_id;
 
+    public $filter = '';
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -68,7 +70,7 @@ class ListingFacultyLivewire extends Component
 
 
     public function mount() {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
         }
@@ -156,7 +158,8 @@ class ListingFacultyLivewire extends Component
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
                     'duration_id' => $this->duration->id,
-                    'added_by' => auth()->user()->id
+                    'added_by' => auth()->user()->id,
+                    'filter' => $this->filter
                 ]);
                 break;
             case 'output':
@@ -168,7 +171,8 @@ class ListingFacultyLivewire extends Component
                         'user_type' => 'faculty',
                         'sub_funct_id' => $this->sub_funct_id,
                         'duration_id' => $this->duration->id,
-                        'added_by' => auth()->user()->id
+                        'added_by' => auth()->user()->id,
+                        'filter' => $this->filter
                     ]);
                     break;
                 }
@@ -179,7 +183,8 @@ class ListingFacultyLivewire extends Component
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
                     'duration_id' => $this->duration->id,
-                    'added_by' => auth()->user()->id
+                    'added_by' => auth()->user()->id,
+                    'filter' => $this->filter
                 ]);
                 break;
             case 'suboutput':

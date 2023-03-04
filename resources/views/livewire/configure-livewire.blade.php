@@ -77,7 +77,7 @@
                                             <th>SEMESTER NAME</th>
                                             <th>START DATE</th>
                                             <th>END DATE</th>
-                                            <th>ACTION</th>
+                                            <th>TYPE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -87,24 +87,7 @@
                                                 <td>{{ $duration->duration_name }}</td>
                                                 <td>{{ date('M d, Y', strtotime($duration->start_date)) }}</td>
                                                 <td>{{ date('M d, Y', strtotime($duration->end_date)) }}</td>
-                                                <td>
-                                                    @if (!($duration->start_date <= date('Y-m-d')))
-                                                        <div class="hstack gap-2 justify-content-center">
-                                                            <button type="button" class="btn icon btn-success"
-                                                                wire:click="select('{{ 'duration' }}', {{ $duration->id }}, '{{ 'edit' }}')"
-                                                                data-bs-toggle="modal" data-bs-target="#EditDurationModal">
-                                                                <i class="bi bi-pencil-square"></i>
-                                                            </button>
-                                                            <button type="button" class="btn icon btn-danger"
-                                                                wire:click="select('{{ 'duration' }}', {{ $duration->id }})"
-                                                                data-bs-toggle="modal" data-bs-target="#DeleteModal">
-                                                                <i class="bi bi-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    @else
-                                                        You can't Add, Edit or Delete the Semester's Duration since it already started/finished.
-                                                    @endif
-                                                </td>
+                                                <td>{{ ucfirst($duration->type) }}</td>
                                             </tr>
                                         @empty
                                             <tr>

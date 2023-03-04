@@ -60,6 +60,8 @@ class FacultyLivewire extends Component
     public $add = false;
     public $targetsSelected = [];
 
+    public $filter = "";
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -113,7 +115,7 @@ class FacultyLivewire extends Component
             }
         }
 
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
 
@@ -590,7 +592,8 @@ class FacultyLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'filter' => $this->filter
                 ]));
                 break;
             case 'output':
@@ -601,7 +604,8 @@ class FacultyLivewire extends Component
                         'type' => 'ipcr',
                         'user_type' => 'faculty',
                         'sub_funct_id' => $this->sub_funct_id,
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'filter' => $this->filter
                     ]));
                     break;
                 }
@@ -611,7 +615,8 @@ class FacultyLivewire extends Component
                     'type' => 'ipcr',
                     'user_type' => 'faculty',
                     'funct_id' => $this->funct_id,
-                    'duration_id' => $this->duration->id
+                    'duration_id' => $this->duration->id,
+                    'filter' => $this->filter
                 ]));
                 break;
             case 'suboutput':
@@ -625,18 +630,21 @@ class FacultyLivewire extends Component
                 $subput = explode(',', $this->subput);
 
                 if ($subput[0] == 'output') {
-                    auth()->user()->targets()->attach(Target::create([
+                    $target = Target::create([
                         'target' => $this->target,
                         'output_id' => $subput[1],
                         'duration_id' => $this->duration->id
-                    ]));
+                    ]);
+                    auth()->user()->targets()->attach($target->id);
                 } elseif ($subput[0] == 'suboutput') {
-                    auth()->user()->targets()->attach(Target::create([
+                    $target = Target::create([
                         'target' => $this->target,
                         'suboutput_id' => $subput[1],
                         'duration_id' => $this->duration->id
-                    ]));
+                    ]);
+                    auth()->user()->targets()->attach($target->id);
                 }
+                $this->targetsSelected[$target->id] = $target->id;
                 break;
             case 'target_output':
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output]]);

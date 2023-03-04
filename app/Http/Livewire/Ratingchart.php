@@ -13,19 +13,22 @@ class Ratingchart extends Component
     public $number = 0;
     public $targets = [];
     public $ratings = [];
-    public $duration;
+    public $durationS;
+    public $durationF;
     public $targs;
     
     public function render()
     {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         $this->targs = Auth::user()->targets()->orderBy('id', 'ASC')->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
                 return $query->where('type', 'ipcr');
             })->orwhereHas('suboutput', function (\Illuminate\Database\Eloquent\Builder $query) {
                 return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
                     return $query->where('type', 'ipcr');
                 });
-            })->where('duration_id', $this->duration->id)
+            })->where('duration_id', $this->durationS->id)
+            ->orwhere('duration_id', $this->durationF->id)
             ->get();
         foreach($this->targs as $targ){
             $this->targets[$this->number] = $targ->target;

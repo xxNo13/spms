@@ -156,7 +156,7 @@
                         $numberSubF = 0;
                     @endphp
                     @if ($funct->sub_functs)
-                        @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $sub_funct)
                             @php
                                 $total = 0;
                                 $numberSubF = 0;
@@ -164,9 +164,9 @@
                             @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                 @php $percent = $sub_percentage->value @endphp
                             @endif
-                            @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
-                                @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
-                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                            @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $output)
+                                @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $durationF->id)->get() as $suboutput)
+                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $durationF->id)->get() as $target)
                                         @foreach ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id) 
                                                 @switch($funct->funct)
@@ -197,7 +197,7 @@
                                         @endforeach
                                     @endforeach
                                 @empty
-                                    @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                    @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $durationF->id)->get() as $target)
                                         @foreach ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id) 
                                                 @switch($funct->funct)
@@ -260,8 +260,8 @@
                             @endswitch
                         @endforeach
                     @endif
-                    @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $output)
-                        @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                    @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $output)
+                        @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $durationF->id)->get() as $suboutput)
                             @foreach ($target->ratings as $rating)
                                 @if ($rating->user_id == $user->id) 
                                     @switch($funct->funct)
@@ -291,7 +291,7 @@
                                 @endif
                             @endforeach
                         @empty
-                            @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                            @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $durationF->id)->get() as $target)
                                 @foreach ($target->ratings as $rating)
                                     @if ($rating->user_id == $user->id) 
                                         @switch($funct->funct)
@@ -326,7 +326,7 @@
                 @endforeach
                 @foreach ($functs as $funct)
                     @if ($funct->funct == 'Core Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $sub_funct)
                             @php
                                 $total1 = $totalCF
                             @endphp
@@ -339,7 +339,7 @@
                             @endif
                         @endforelse
                     @elseif ($funct->funct == 'Strategic Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $sub_funct)
                             @php
                                 $total2 = $totalSTF
                             @endphp
@@ -352,7 +352,7 @@
                             @endif
                         @endforelse
                     @elseif ($funct->funct == 'Support Function')
-                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
+                        @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $durationF->id)->get() as $sub_funct)
                             @php
                                 $total3 = $totalSF
                             @endphp
@@ -372,7 +372,7 @@
             @endif
             
             @if ($staff)
-                @if ($percent = $user->percentages()->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first())
+                @if ($percent = $user->percentages()->where('type', 'ipcr')->where('duration_id', $durationS->id)->where('user_type', 'staff')->first())
                     @php
                         $totalCF = 0;
                         $totalSTF = 0;
@@ -391,7 +391,7 @@
                             $numberSubF = 0;
                         @endphp
                         @if ($funct->sub_functs)
-                            @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                            @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $sub_funct)
                                 @php
                                     $total = 0;
                                     $numberSubF = 0;
@@ -399,9 +399,9 @@
                                 @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                     @php $percent = $sub_percentage->value @endphp
                                 @endif
-                                @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
-                                    @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
-                                        @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $output)
+                                    @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $durationS->id)->get() as $suboutput)
+                                        @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $durationS->id)->get() as $target)
                                             @foreach ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id) 
                                                     @switch($funct->funct)
@@ -432,7 +432,7 @@
                                             @endforeach
                                         @endforeach
                                     @empty
-                                        @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                        @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $durationS->id)->get() as $target)
                                             @foreach ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id) 
                                                     @switch($funct->funct)
@@ -495,8 +495,8 @@
                                 @endswitch
                             @endforeach
                         @endif
-                        @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $output)
-                            @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $suboutput)
+                        @foreach ($user->outputs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $output)
+                            @forelse ($user->suboutputs()->where('output_id', $output->id)->where('duration_id', $durationS->id)->get() as $suboutput)
                                 @foreach ($target->ratings as $rating)
                                     @if ($rating->user_id == $user->id) 
                                         @switch($funct->funct)
@@ -526,7 +526,7 @@
                                     @endif
                                 @endforeach
                             @empty
-                                @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $durationS->id)->get() as $target)
                                     @foreach ($target->ratings as $rating)
                                         @if ($rating->user_id == $user->id) 
                                             @switch($funct->funct)
@@ -561,7 +561,7 @@
                     @endforeach
                     @foreach ($functs as $funct)
                         @if ($funct->funct == 'Core Function')
-                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $sub_funct)
                                 @php
                                     $total1 = $totalCF
                                 @endphp
@@ -574,7 +574,7 @@
                                 @endif
                             @endforelse
                         @elseif ($funct->funct == 'Strategic Function')
-                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $sub_funct)
                                 @php
                                     $total2 = $totalSTF
                                 @endphp
@@ -587,7 +587,7 @@
                                 @endif
                             @endforelse
                         @elseif ($funct->funct == 'Support Function')
-                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
+                            @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get() as $sub_funct)
                                 @php
                                     $total3 = $totalSF
                                 @endphp

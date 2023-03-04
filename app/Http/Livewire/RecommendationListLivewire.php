@@ -24,7 +24,8 @@ class RecommendationListLivewire extends Component
         $staff = false;
         $assFaculty = false;
         $assStaff = false;
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         $this->scoreEquivalent = ScoreEquivalent::first();
 
         foreach (Auth::user()->account_types as $account_type) {
@@ -37,38 +38,34 @@ class RecommendationListLivewire extends Component
         }
 
         if ($faculty) {
-            if ($duration) {
-                $assessF = Approval::orderBy('id', 'DESC')
-                    ->where('name', 'assess')
-                    ->where('approve_status', 1)
-                    ->where('user_id', Auth::user()->id)
-                    ->where('type', 'ipcr')
-                    ->where('duration_id', $duration->id)
-                    ->where('user_type', 'faculty')
-                    ->first();
+            $assessF = Approval::orderBy('id', 'DESC')
+                ->where('name', 'assess')
+                ->where('approve_status', 1)
+                ->where('user_id', Auth::user()->id)
+                ->where('type', 'ipcr')
+                ->where('duration_id', $durationF->id)
+                ->where('user_type', 'faculty')
+                ->first();
 
-                if (isset($assessF)) {
-                    $assFaculty = true;
-                }
+            if (isset($assessF)) {
+                $assFaculty = true;
             }
         } else {
             $assFaculty = true;
         }
 
         if ($staff) {
-            if ($duration) {
-                $assessS = Approval::orderBy('id', 'DESC')
-                    ->where('name', 'assess')
-                    ->where('approve_status', 1)
-                    ->where('user_id', Auth::user()->id)
-                    ->where('type', 'ipcr')
-                    ->where('duration_id', $duration->id)
-                    ->where('user_type', 'staff')
-                    ->first();
+            $assessS = Approval::orderBy('id', 'DESC')
+                ->where('name', 'assess')
+                ->where('approve_status', 1)
+                ->where('user_id', Auth::user()->id)
+                ->where('type', 'ipcr')
+                ->where('duration_id', $durationS->id)
+                ->where('user_type', 'staff')
+                ->first();
 
-                if (isset($assessS)) {
-                    $assStaff = true;
-                }
+            if (isset($assessS)) {
+                $assStaff = true;
             }
         } else {
             $assStaff = true;
@@ -76,12 +73,10 @@ class RecommendationListLivewire extends Component
         
         if ($assFaculty && $assStaff) {
             $targets = [];
-            if($duration) {
-                foreach(auth()->user()->targets as $target){
-                    $rating = $target->ratings()->where('user_id', auth()->user()->id)->first();
-                    if (isset($rating) && $rating->average < $this->scoreEquivalent->sat_to) {
-                        array_push($targets, $target);
-                    }
+            foreach(auth()->user()->targets as $target){
+                $rating = $target->ratings()->where('user_id', auth()->user()->id)->first();
+                if (isset($rating) && $rating->average < $this->scoreEquivalent->sat_to) {
+                    array_push($targets, $target);
                 }
             }
 

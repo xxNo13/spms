@@ -58,11 +58,7 @@
                                         class="col-md-9 col-lg-12 col-xl-12 col-xxl-8 text-md-start text-lg-center text-xxl-start">
                                         <h6 class="text-muted font-semibold">Assignments</h6>
                                         <h6 class="font-extrabold mb-0">
-                                            @if ($duration)
-                                                {{ count($finished) }} / {{ count($assignments) }}
-                                            @else
-                                                Semester's not started yet.
-                                            @endif
+                                            {{ count($finished) }} / {{ count($assignments) }}
                                         </h6>
                                     </div>
                                 </div>
@@ -77,9 +73,7 @@
                                 <h4>Target Finish/Day Chart</h4>
                             </div>
                             <div class="card-body">
-                                @if ($duration)
-                                    <livewire:targetchart />
-                                @endif
+                                <livewire:targetchart />
                             </div>
                         </div>
                     </div>
@@ -91,9 +85,7 @@
                                 <h4>Assignment Finish/Day Chart</h4>
                             </div>
                             <div class="card-body">
-                                @if ($duration)
-                                    <livewire:assignmentchart />
-                                @endif
+                                <livewire:assignmentchart />
                             </div>
                         </div>
                     </div>
@@ -225,9 +217,7 @@
                             <h4>Score/Targets Chart</h4>
                         </div>
                         <div class="card-body">
-                            @if ($duration)
-                                <livewire:ratingchart />
-                            @endif
+                            <livewire:ratingchart />
                         </div>
                     </div>
                 </div>

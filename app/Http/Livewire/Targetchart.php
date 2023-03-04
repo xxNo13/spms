@@ -11,13 +11,15 @@ class Targetchart extends Component
 {
     public $month;
     public $dateToday;
-    public $duration;
+    public $durationS;
+    public $durationF;
     public $days;
     public $targets;
 
     public function render()
     {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         $this->dateToday = date('d');
         $this->month = date('Y-m-d');
         $this->days = collect(range($this->dateToday - 6, $this->dateToday))->map(function ($number) {
@@ -37,7 +39,8 @@ class Targetchart extends Component
                                 return $query->where('type', 'ipcr');
                             });
                         });
-                    })->where('duration_id', $this->duration->id)
+                    })->where('duration_id', $this->durationS->id)
+                    ->orwhere('duration_id', $this->durationF->id)
                     ->get();
         $this->targets = [0,0,0,0,0,0,0];
         foreach($ratings as $rating) {

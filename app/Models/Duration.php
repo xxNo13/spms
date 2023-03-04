@@ -12,6 +12,7 @@ class Duration extends Model
     protected $fillable = [
         'duration_name',
         'start_date',
-        'end_date'
+        'end_date',
+        'type'
     ];
 }

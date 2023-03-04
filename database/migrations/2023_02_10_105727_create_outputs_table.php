@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('output');
             $table->string('type');
             $table->string('user_type');
+            $table->string('filter')->nullable();
             $table->foreignId('sub_funct_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('funct_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');

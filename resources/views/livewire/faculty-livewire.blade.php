@@ -912,5 +912,5 @@
         $userType = 'faculty';
         $type = "IPCR";
     @endphp
-    <x-modals :selectedTarget="$selectedTarget" :selected="$selected" :duration="$duration" :userType="$userType" :currentPage="$currentPage" :type="$type" :targetOutput="$targetOutput" />
+    <x-modals :filter="$filter" :selectedTarget="$selectedTarget" :selected="$selected" :duration="$duration" :userType="$userType" :currentPage="$currentPage" :type="$type" :targetOutput="$targetOutput" />
 </div>

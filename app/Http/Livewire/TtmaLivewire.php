@@ -72,7 +72,7 @@ class TtmaLivewire extends Component
         }
         
         $this->users = $users->distinct()->orderBy('name', 'ASC')->get();
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
     }
 
     public function render()

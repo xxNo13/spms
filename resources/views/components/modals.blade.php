@@ -10,6 +10,20 @@
                     </div>
                     <form wire:submit.prevent="saveIpcr">
                         <div class="modal-body">
+                            
+                            @if (isset($userType) && ($userType == 'listing'))
+                                <div class="mt-3 form-group">
+                                    <select wire:model="filter" class="form-select">
+                                        <option value="">None</option>
+                                        <option value="academic">Academic</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="research">Research</option>
+                                    </select>
+                                </div>
+
+                                <hr>
+                            @endif
+
                             <div class="mt-3 form-group d-flex justify-content-between">
                                 <div class="form-check form-switch">
                                     <input wire:change="$emit('resetInput')" type="radio" class="form-check-input" id="output"
@@ -62,7 +76,7 @@
                                             @if ($duration)
                                                 @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($subFuncts))
-                                                        @foreach ($subFuncts->where('funct_id', $currentPage) as $sub_funct)
+                                                        @foreach ($subFuncts->where('filter', 'LIKE', $filter)->where('funct_id', $currentPage) as $sub_funct)
                                                             <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
                                                         @endforeach
                                                     @endif
@@ -109,10 +123,10 @@
                                             @if ($duration)
                                                 @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($outputs))
-                                                        @foreach ($outputs->where('code', $code) as $output)
+                                                        @foreach ($outputs->where('filter', 'LIKE', $filter)->where('code', $code) as $output)
                                                             @forelse ($output->targets as $target)
                                                             @empty
-                                                                <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                                <option value="{{ $output->id }}"> 
                                                                     {{ $output->output }}
                                                                 </option>
                                                             @endforelse
@@ -122,7 +136,7 @@
                                                     @foreach (auth()->user()->outputs()->where('added_by', null)->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('code', $code)->get() as $output)
                                                         @forelse ($output->targets as $target)
                                                         @empty
-                                                            <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                            <option value="{{ $output->id }}"> 
                                                                 {{ $output->output }}
                                                             </option>
                                                         @endforelse
@@ -131,7 +145,7 @@
                                                     @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
                                                         @forelse ($output->targets as $target)
                                                         @empty
-                                                            <option value="{{ $output->id }}">{{ $output->code }} {{ $number++ }} - 
+                                                            <option value="{{ $output->id }}"> 
                                                                 {{ $output->output }}
                                                             </option>
                                                         @endforelse
@@ -174,16 +188,14 @@
                                             @if ($duration)
                                                 @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
                                                     @if (isset($outputs))
-                                                        @foreach ($outputs->where('code', $code) as $output)
+                                                        @foreach ($outputs->where('filter', 'LIKE', $filter)->where('code', $code) as $output)
                                                             @forelse ($output->suboutputs as $suboutput)
                                                                 <option value="suboutput, {{ $suboutput->id }}">
-                                                                    {{ $suboutput->output->code }} {{ $number++ }}
                                                                     {{ $suboutput->output->output }} -
                                                                     {{ $suboutput->suboutput }}
                                                                 </option>
                                                             @empty
                                                                     <option value="output, {{ $output->id }}">
-                                                                        {{ $output->code }} {{ $number++ }}
                                                                         {{ $output->output }}
                                                                     </option>
                                                             @endforelse
@@ -193,13 +205,11 @@
                                                     @foreach (auth()->user()->outputs()->where('added_by', null)->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('code', $code)->get() as $output)
                                                         @forelse ($output->suboutputs as $suboutput)
                                                             <option value="suboutput, {{ $suboutput->id }}">
-                                                                {{ $suboutput->output->code }} {{ $number++ }}
                                                                 {{ $suboutput->output->output }} -
                                                                 {{ $suboutput->suboutput }}
                                                             </option>
                                                         @empty
                                                                 <option value="output, {{ $output->id }}">
-                                                                    {{ $output->code }} {{ $number++ }}
                                                                     {{ $output->output }}
                                                                 </option>
                                                         @endforelse
@@ -208,13 +218,11 @@
                                                     @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
                                                         @forelse ($output->suboutputs as $suboutput)
                                                             <option value="suboutput, {{ $suboutput->id }}">
-                                                                {{ $suboutput->output->code }} {{ $number++ }}
                                                                 {{ $suboutput->output->output }} -
                                                                 {{ $suboutput->suboutput }}
                                                             </option>
                                                         @empty
                                                                 <option value="output, {{ $output->id }}">
-                                                                    {{ $output->code }} {{ $number++ }}
                                                                     {{ $output->output }}
                                                                 </option>
                                                         @endforelse

@@ -79,7 +79,7 @@
                     <div class="ms-auto hstack gap-3">
 
                         @if ($duration && $duration->end_date >= date('Y-m-d'))
-                            @if ($assess && $assess->approve_status != 1)
+                            @if (!$assess || $assess->approve_status != 1)
                                 @if (!$percentage)
                                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                         data-bs-target="#AddPercentageModal" title="Add Percentage" wire:click="percentage">
@@ -916,5 +916,5 @@
         $currentPage = $functs->currentPage();
         $type = "IPCR";
     @endphp
-    <x-modals :selected="$selected" :targetOutput="$targetOutput" :type="$type" :selectedTarget="$selectedTarget" :currentPage="$currentPage" :duration="$duration" :subFuncts="$subFuncts" />
+    <x-modals :filter="$filter" :selected="$selected" :targetOutput="$targetOutput" :type="$type" :selectedTarget="$selectedTarget" :currentPage="$currentPage" :duration="$duration" :subFuncts="$subFuncts" />
 </div>

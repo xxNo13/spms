@@ -17,7 +17,8 @@ class Output extends Model
         'sub_funct_id',
         'funct_id',
         'duration_id',
-        'added_by'
+        'added_by',
+        'filter'
     ];
 
     public function sub_funct(){

@@ -51,6 +51,8 @@ class OpcrLivewire extends Component
     public $add = false;
     public $targetsSelected = [];
 
+    public $filter;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -87,7 +89,7 @@ class OpcrLivewire extends Component
 
 
     public function mount() {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
             $this->sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->get();
@@ -132,7 +134,8 @@ class OpcrLivewire extends Component
     {
         if ($this->add) {
             return view('components.opcr-add', [
-                'functs' => Funct::all()
+                'functs' => Funct::all(),
+                'filter' => $this->filter,
             ]);
         } else {
             return view('livewire.opcr-livewire', [

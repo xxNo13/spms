@@ -45,9 +45,9 @@ class PdfController extends Controller
 
 
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         }
 
         $scoreEquivalent = ScoreEquivalent::first();
@@ -119,9 +119,9 @@ class PdfController extends Controller
 
 
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         }
         $scoreEquivalent = ScoreEquivalent::first();
 
@@ -174,9 +174,9 @@ class PdfController extends Controller
 
 
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
         }
 
         $scoreEquivalent = ScoreEquivalent::first();
@@ -248,9 +248,9 @@ class PdfController extends Controller
 
 
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
         }
         $scoreEquivalent = ScoreEquivalent::first();
 
@@ -293,9 +293,9 @@ class PdfController extends Controller
 
         
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         }
 
         $scoreEquivalent = ScoreEquivalent::first();
@@ -361,9 +361,9 @@ class PdfController extends Controller
 
 
         if (isset($request->duration_id)) {
-            $duration = Duration::fund($request->duration_id);
+            $duration = Duration::find($request->duration_id);
         } else {
-            $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+            $duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         }
         $scoreEquivalent = ScoreEquivalent::first();
 
@@ -403,7 +403,7 @@ class PdfController extends Controller
         }
 
 
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         $ttmas = Ttma::where('duration_id', $duration->id)->where('head_id', auth()->user()->id)->get();
 
         $data = [
@@ -433,8 +433,9 @@ class PdfController extends Controller
         }
 
 
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
+        $durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
+        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $durationF->id)->first();
 
         $users = User::query();
 
@@ -449,7 +450,8 @@ class PdfController extends Controller
 
         $data = [
             'functs' => $functs,    
-            'duration' => $duration,
+            'durationS' => $durationS,
+            'durationF' => $durationF,
             'percentage' => $percentage,
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
@@ -474,8 +476,8 @@ class PdfController extends Controller
         }
 
 
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
+        $durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
+        $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $durationF->id)->first();
 
         $users = User::query();
 
@@ -490,7 +492,7 @@ class PdfController extends Controller
 
         $data = [
             'functs' => $functs,    
-            'duration' => $duration,
+            'durationF' => $durationF,
             'percentage' => $percentage,
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
@@ -515,8 +517,8 @@ class PdfController extends Controller
         }
 
 
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
-        $percentages = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get();
+        $durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $percentages = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $durationS->id)->get();
 
         $users = User::query();
 
@@ -531,7 +533,7 @@ class PdfController extends Controller
 
         $data = [
             'functs' => $functs,    
-            'duration' => $duration,
+            'durationS' => $durationS,
             'percentages' => $percentages,
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users
@@ -555,7 +557,7 @@ class PdfController extends Controller
         }
 
 
-        $duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
         $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
 

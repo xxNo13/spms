@@ -97,7 +97,7 @@
             <tr>
                 <th>Rank</th>
                 <th>Name</th>
-                <th>Account Type</th>
+                <th>Office</th>
                 <th>Total Score</th>
                 <th>Score Equivalent</th>
             </tr>
@@ -348,11 +348,11 @@
                         $index = explode( ',', $id );
                     @endphp
                     @foreach ($users as $user)
-                        @if ($index[0] == $user->id)
+                        @if ($index[0] == $user->id && $user->offices()->wherePivot('isHead', 1)->first()->getDepthAttribute() != 0)
                             <tr>
                                 <td>{{ ++$number }}</td>
                                 <td>{{ $user->name }}</td>
-                                <td>{{ ucfirst($index[1]) }}</td>
+                                <td>{{ $user->offices()->wherePivot('isHead', 1)->first()->office_abbr }}</td>
                                 <td>{{ $totals[$user->id . ','. $index[1]] }}</td>
                                 <td>
                                     @if ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->out_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->out_to)

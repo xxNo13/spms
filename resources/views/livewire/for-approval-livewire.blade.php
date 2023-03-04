@@ -62,7 +62,7 @@
                                 <tbody>
                                     @forelse ($approvals->sortByDesc('updated_at') as $approval)
                                         @if ((in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) || (in_array(auth()->user()->id, $pmts) && $approval->type == 'opcr' && $approval->user_type == 'office')) &&
-                                            ($duration && $approval->duration_id == $duration->id))
+                                            (($approval->user_type == 'staff' && $approval->duration_id == $durationS->id) || ($approval->user_type == 'faculty' && $approval->duration_id == $durationF->id) || ($approval->user_type == 'office' && $approval->duration_id == $durationO->id)))
                                             <tr>
                                                 <td>{{ $approval->user->name }}</td>
                                                 <td>{{ $approval->user->email }}</td>
@@ -102,22 +102,20 @@
                                                         @elseif ((auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 3) || (in_array(auth()->user()->id, $pmts) && $approval->reviewers()->wherePivot('review_status', 2)->first()))
                                                             Declined by the other Reviewer
                                                         @else
-                                                            @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
-                                                                @if (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first())
-                                                                    <button type="button" class="btn icon btn-info"
-                                                                        wire:click="approved({{ $approval->id }}, 'Reviewed')">
-                                                                        <i class="bi bi-check"></i>
-                                                                    </button>
-                                                                    <button type="button" class="btn icon btn-danger"
-                                                                        wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                        <i class="bi bi-x"></i>
-                                                                    </button>
-                                                                @endif
-                                                                <button type="button" class="btn icon btn-secondary"
-                                                                    wire:click="viewed({{ $approval }}, '{{ 'for-approval' }}')">
-                                                                    <i class="bi bi-eye"></i>
+                                                            @if (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first())
+                                                                <button type="button" class="btn icon btn-info"
+                                                                    wire:click="approved({{ $approval->id }}, 'Reviewed')">
+                                                                    <i class="bi bi-check"></i>
+                                                                </button>
+                                                                <button type="button" class="btn icon btn-danger"
+                                                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                    <i class="bi bi-x"></i>
                                                                 </button>
                                                             @endif
+                                                            <button type="button" class="btn icon btn-secondary"
+                                                                wire:click="viewed({{ $approval }}, '{{ 'for-approval' }}')">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -148,7 +146,7 @@
                                 <tbody>
                                     @forelse ($approvals->sortByDesc('updated_at') as $approval)
                                         @if ((Auth::user()->id == $approval->approve_id) &&
-                                            ($duration && $approval->duration_id == $duration->id))
+                                            (($approval->user_type == 'staff' && $approval->duration_id == $durationS->id) || ($approval->user_type == 'faculty' && $approval->duration_id == $durationF->id) || ($approval->user_type == 'office' && $approval->duration_id == $durationO->id)))
                                             <tr>
                                                 <td>{{ $approval->user->name }}</td>
                                                 <td>{{ $approval->user->email }}</td>
@@ -188,32 +186,30 @@
                                                         @elseif ($approval->approve_status == 3)
                                                             Declined by Reviewer
                                                         @else
-                                                            @if ($duration && $duration->start_date <= date('Y-m-d') && $duration->end_date >= date('Y-m-d'))
-                                                                @php
-                                                                    $reviewed = true;
-                                                                @endphp
-                                                                @foreach($approval->reviewers as $review) 
-                                                                    @if ($review->pivot->review_status == null)
-                                                                        @php
-                                                                            $reviewed = false;
-                                                                        @endphp
-                                                                    @endif
-                                                                @endforeach
-                                                                @if ($reviewed)
-                                                                    <button type="button" class="btn icon btn-info"
-                                                                        wire:click="approved({{ $approval->id }}, 'Approved')">
-                                                                        <i class="bi bi-check"></i>
-                                                                    </button>
-                                                                    <button type="button" class="btn icon btn-danger"
-                                                                        wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                        <i class="bi bi-x"></i>
-                                                                    </button>
+                                                            @php
+                                                                $reviewed = true;
+                                                            @endphp
+                                                            @foreach($approval->reviewers as $review) 
+                                                                @if ($review->pivot->review_status == null)
+                                                                    @php
+                                                                        $reviewed = false;
+                                                                    @endphp
                                                                 @endif
-                                                                <button type="button" class="btn icon btn-secondary"
-                                                                    wire:click="viewed({{ $approval }}, '{{ 'for-approval' }}')">
-                                                                    <i class="bi bi-eye"></i>
+                                                            @endforeach
+                                                            @if ($reviewed)
+                                                                <button type="button" class="btn icon btn-info"
+                                                                    wire:click="approved({{ $approval->id }}, 'Approved')">
+                                                                    <i class="bi bi-check"></i>
+                                                                </button>
+                                                                <button type="button" class="btn icon btn-danger"
+                                                                    wire:click="clickdeclined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                    <i class="bi bi-x"></i>
                                                                 </button>
                                                             @endif
+                                                            <button type="button" class="btn icon btn-secondary"
+                                                                wire:click="viewed({{ $approval }}, '{{ 'for-approval' }}')">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
                                                         @endif
                                                     </div>
                                                 </td>

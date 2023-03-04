@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('duration_name');
             $table->date('start_date');
             $table->date('end_date');
+            $table->string('type');
             $table->timestamps();
         });
     }

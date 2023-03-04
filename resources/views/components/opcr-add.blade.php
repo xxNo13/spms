@@ -17,7 +17,16 @@
     </div>
 
     <div class="pt-3">
-        <div class="col-12 hstack">
+        <div class="col-12 mb-2 hstack">
+            <div class="">
+                <label>Filter: </label>
+                <select wire:model="filter" class="form-control">
+                    <option value="">None</option>
+                    <option value="academic">Academic</option>
+                    <option value="admin">Admin</option>
+                    <option value="research">Research</option>
+                </select>
+            </div>
             <button wire:click="getOpcr" wire:loading.attr="disabled" wire:target="targetsSelected" class="ms-auto btn btn-outline-primary">
                 Save
             </button>
@@ -32,13 +41,13 @@
                         {{ $funct->funct }}
                     </h4>
                 </div>
-                @foreach ($funct->sub_functs()->where('funct_id', $funct->id)->where('user_type', 'office')->where('type', 'opcr')->where('duration_id', $duration->id)->get() as $sub_funct)
+                @foreach ($funct->sub_functs()->where('filter', 'LIKE', $filter)->where('funct_id', $funct->id)->where('user_type', 'office')->where('type', 'opcr')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
                         </h5>
 
-                        @foreach ($sub_funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                        @foreach ($sub_funct->outputs()->where('filter', 'LIKE', $filter)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                             
                             <div class="card">
                                 <div class="card-header">
@@ -92,7 +101,7 @@
                     <hr>
                 @endforeach
                 <div>
-                    @foreach ($funct->outputs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
+                    @foreach ($funct->outputs()->where('filter', 'LIKE', $filter)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $output)
                         
                         <div class="card">
                             <div class="card-header">

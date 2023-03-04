@@ -18,25 +18,18 @@ class SubordinateLivewire extends Component
     public $user_id;
     public $url;
     public $search;
-    public $duration;
-    public $userType;
+    public $durationS;
+    public $durationF;
+    public $user_type;
     public $percentage;
 
     protected  $queryString = ['search'];
 
-    public function viewed($user_id, $url, $userType){
+    public function viewed($user_id, $url, $user_type){
         $this->user_id = $user_id;
         $this->url = $url;
         $this->view = true;
-        $this->userType = $userType;
-
-        if ($this->duration) {
-            $this->percentage = Percentage::where('user_id', $user_id)
-                ->where('type', 'ipcr')
-                ->where('userType', $userType)
-                ->where('duration_id', $this->duration->id)
-                ->first();
-        }
+        $this->user_type = $user_type;
     }
 
     public function updated($property)
@@ -48,20 +41,51 @@ class SubordinateLivewire extends Component
 
     public function render()
     {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
 
         if ($this->view) {
             $functs = Funct::all();
             $user = User::find($this->user_id);
-            return view('components.individual-ipcr',[
-                'functs' => $functs,
-                'user' => $user,
-                'url' => $this->url,
-                'duration' => $this->duration,
-                'userType' => $this->userType,
-                'percentage' => $this->percentage,
-                'number' => 1
-            ]);
+            
+            foreach ($user->account_types as $account_type) {
+                if (str_contains(strtolower($account_type->account_type), 'faculty')){
+
+                    $this->percentage = Percentage::where('user_id', $this->user_id)
+                        ->where('type', 'ipcr')
+                        ->where('user_type', $this->user_type)
+                        ->where('duration_id', $this->durationF->id)
+                        ->first();
+
+                    return view('components.individual-ipcr',[
+                        'functs' => $functs,
+                        'user' => $user,
+                        'url' => $this->url,
+                        'duration' => $this->durationF,
+                        'user_type' => $this->user_type,
+                        'percentage' => $this->percentage,
+                        'number' => 1
+                    ]);
+                }
+                if (str_contains(strtolower($account_type->account_type), 'staff')){
+
+                    $this->percentage = Percentage::where('user_id', $this->user_id)
+                        ->where('type', 'ipcr')
+                        ->where('user_type', $this->user_type)
+                        ->where('duration_id', $this->durationS->id)
+                        ->first();
+
+                    return view('components.individual-ipcr',[
+                        'functs' => $functs,
+                        'user' => $user,
+                        'url' => $this->url,
+                        'duration' => $this->durationS,
+                        'user_type' => $this->user_type,
+                        'percentage' => $this->percentage,
+                        'number' => 1
+                    ]);
+                }
+            }
         } else {
             $searches = preg_split('/\s+/', $this->search);
             $query = User::query();
@@ -123,7 +147,7 @@ class SubordinateLivewire extends Component
             // $users = User::where('name', 'like', '%'.$this->search.'%')->orderBy('name', 'ASC')->paginate(10);
             return view('livewire.subordinate-livewire',[
                 'users' => $results->sortBy('name'),
-                'duration' => $this->duration
+                'duration' => $this->durationF
             ]);
         }
     }

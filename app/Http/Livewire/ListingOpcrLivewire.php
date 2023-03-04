@@ -32,6 +32,8 @@ class ListingOpcrLivewire extends Component
     public $subput;
     public $target;
     public $target_id;
+    
+    public $filter = '';
 
     public $sub_percentages;
 
@@ -70,7 +72,7 @@ class ListingOpcrLivewire extends Component
 
 
     public function mount() {
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
             $this->sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->get();
@@ -159,7 +161,8 @@ class ListingOpcrLivewire extends Component
                     'user_type' => 'office',
                     'funct_id' => $this->funct_id,
                     'duration_id' => $this->duration->id,
-                    'added_by' => auth()->user()->id
+                    'added_by' => auth()->user()->id,
+                    'filter' => $this->filter
                 ]);
                 break;
             case 'output':
@@ -171,7 +174,8 @@ class ListingOpcrLivewire extends Component
                         'user_type' => 'office',
                         'sub_funct_id' => $this->sub_funct_id,
                         'duration_id' => $this->duration->id,
-                        'added_by' => auth()->user()->id
+                        'added_by' => auth()->user()->id,
+                        'filter' => $this->filter
                     ]);
                     break;
                 }
@@ -182,7 +186,8 @@ class ListingOpcrLivewire extends Component
                     'user_type' => 'office',
                     'funct_id' => $this->funct_id,
                     'duration_id' => $this->duration->id,
-                    'added_by' => auth()->user()->id
+                    'added_by' => auth()->user()->id,
+                    'filter' => $this->filter
                 ]);
                 break;
             case 'suboutput':

@@ -50,6 +50,15 @@ class ForApprovalLivewire extends Component
         $this->view = true;
         $this->user_type = $approval['user_type'];
         $this->approval = Approval::find($approval['id']);
+
+        if ($approval['user_type'] == 'staff') {
+            $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        } elseif ($approval['user_type'] == 'faculty') {
+            $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
+        }if ($approval['user_type'] == 'office') {
+            $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
+        }
+
         $this->prevApproval = Approval::orderBy('created_at', 'DESC')
                 ->where('user_id', $approval['user_id'])
                 ->where('type', $approval['type'])
@@ -105,7 +114,10 @@ class ForApprovalLivewire extends Component
     public function render()
     {
         $this->pmts = Pmt::all()->pluck('user_id')->toArray();
-        $this->duration = Duration::orderBy('id', 'DESC')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationO = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
+
         
         if ($this->view && $this->category == 'ipcr'){
             $functs = Funct::all();
@@ -176,39 +188,28 @@ class ForApprovalLivewire extends Component
 
             if ($this->search) {
                 $search = $this->search;
-                if ($this->duration) {
-                    $approvals->where(function ($query) use ($search) {
-                        $query->whereHas('user', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                            return $query->where('name', 'LIKE','%'.$search.'%')
-                                ->orWhere('email','LIKE','%'.$search.'%')
-                                ->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                                    return $query->where('office_abbr', 'LIKE','%'.$search.'%');
-                                })->orWhereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                                    return $query->where('account_type', 'LIKE','%'.$search.'%');
-                                });
-                        })->orWhere('type','LIKE','%'.$search.'%')
-                        ->orWhere('user_type','LIKE','%'.$search.'%')
-                        ->orWhere('name','LIKE','%'.$search.'%');
-                    })
-                    ->where('duration_id', $this->duration->id)->get();
-                } else {
-                    $approvals->whereHas('user', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
+                $approvals->where(function ($query) use ($search) {
+                    return $query->whereHas('user', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
                         return $query->where('name', 'LIKE','%'.$search.'%')
                             ->orWhere('email','LIKE','%'.$search.'%')
-                            ->orwhereHas('office', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
+                            ->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
                                 return $query->where('office_abbr', 'LIKE','%'.$search.'%');
+                            })->orWhereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
+                                return $query->where('account_type', 'LIKE','%'.$search.'%');
                             });
-                    })
-                    ->orWhere('type','LIKE','%'.$search.'%')
+                    })->orWhere('type','LIKE','%'.$search.'%')
                     ->orWhere('user_type','LIKE','%'.$search.'%')
-                    ->orWhere('name','LIKE','%'.$search.'%')
-                    ->get();
-                }
+                    ->orWhere('name','LIKE','%'.$search.'%');
+                })->where(function ($query) {
+                    return $query->where('duration_id', $this->durationS->id)
+                            ->where('duration_id', $this->durationF->id)
+                            ->where('duration_id', $this->durationO->id)->get();
+                });
             }
             
             if (isset($this->filterA) && $this->filterA == 'noremark') {
                 $approvals->where(function ($query){
-                    $query->whereHas('reviewers', function(\Illuminate\Database\Eloquent\Builder $result) {
+                    return $query->whereHas('reviewers', function(\Illuminate\Database\Eloquent\Builder $result) {
                         return $result->where('user_id', auth()->user()->id)->where('review_status', null);
                     });
                 })->orwhere(function ($query){
@@ -216,7 +217,7 @@ class ForApprovalLivewire extends Component
                 });
             } elseif (isset($this->filterA) && $this->filterA == 'remark') {
                 $approvals->where(function ($query){
-                    $query->whereHas('reviewers', function(\Illuminate\Database\Eloquent\Builder $result) {
+                    return $query->whereHas('reviewers', function(\Illuminate\Database\Eloquent\Builder $result) {
                         return $result->where('user_id', auth()->user()->id)->where('review_status', '!=', null);
                     });
                 })->orwhere(function ($query){
@@ -224,11 +225,6 @@ class ForApprovalLivewire extends Component
                 });
             }
 
-            if ($this->duration) {
-                return view('livewire.for-approval-livewire', [
-                    'approvals' => $approvals->where('duration_id', $this->duration->id)->paginate(25),
-                ]);
-            }
             return view('livewire.for-approval-livewire', [
                 'approvals' => $approvals->paginate(25),
             ]);
