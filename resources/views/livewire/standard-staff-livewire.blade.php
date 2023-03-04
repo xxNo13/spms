@@ -72,7 +72,7 @@
                 </h4>
                 <div class="ms-auto hstack gap-3">
                     @if (($duration && $duration->end_date >= date('Y-m-d')) && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                        <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('approval')">
+                        <button type="button" class="btn btn-outline-info" title="Submit Standard" wire:click="submit('approval')">
                             Submit
                         </button>
                     @endif

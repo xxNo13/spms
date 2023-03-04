@@ -17,7 +17,7 @@ class HeadNotPresident
     public function handle(Request $request, Closure $next)
     {
         foreach (auth()->user()->offices as $office) {
-            if ($office->pivot->isHead && !(str_contains(strtolower($office->office_name), 'college president'))) {
+            if ($office->pivot->isHead && $office->getDepthAttribute() != 0) {
                 return $next($request);
             }
         }

@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <ul wire:ignore class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="true">To Review</a>
                     </li>
@@ -46,7 +46,7 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show" id="review" role="tabpanel" aria-labelledby="review-tab">
+                    <div wire:ignore.self class="tab-pane fade show" id="review" role="tabpanel" aria-labelledby="review-tab">
                         <div class="table-responsive">
                             <table class="table table-lg text-center">
                                 <thead>
@@ -86,7 +86,7 @@
                                                     Reviewed
                                                 </td>
                                                 <td>
-                                                    @if ((auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 1) || (in_array(auth()->user()->id, $pmts) && $approval->reviewers()->wherePivot('review_status', 2)->first()))
+                                                    @if ((auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 1) || (in_array(auth()->user()->id, $pmts) && $approval->reviewers()->wherePivot('review_status', 1)->first()))
                                                         Approved
                                                     @elseif (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && auth()->user()->user_approvals()->where('approval_id', $approval->id)->first()->pivot->review_status == 2)
                                                         Declined
@@ -124,7 +124,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="approval" role="tabpanel" aria-labelledby="approval-tab">
+                    <div wire:ignore.self class="tab-pane fade" id="approval" role="tabpanel" aria-labelledby="approval-tab">
                         <div class="table-responsive">
                             <table class="table table-lg text-center">
                                 <thead>

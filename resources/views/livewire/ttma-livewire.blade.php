@@ -44,7 +44,7 @@
         <div class="my-3">
             <div class="hstack gap-3">
                 @if ($head) 
-                    <div class="my-auto">
+                    <div wire:ignore class="my-auto">
                         <input type="radio" class="btn-check" name="options" id="receive" wire:model="filter" value="receive">
                         <label class="btn btn-outline-primary" for="receive">Received Assignment</label>
 
@@ -62,7 +62,7 @@
         </div>
 
         @if ($filter == 'give')
-            <div class="card collapse-icon accordion-icon-rotate">
+            <div wire:ignore.self class="card collapse-icon accordion-icon-rotate">
                 <div class="card-header">
                 <h4 class="card-title pl-1">Given Assignments</h4>
                 </div>
@@ -174,7 +174,7 @@
                 </div>
             </div>
         @elseif ($filter == 'receive')
-            <div class="card collapse-icon accordion-icon-rotate">
+            <div wire:ignore.self class="card collapse-icon accordion-icon-rotate">
                 <div class="card-header">
                 <h4 class="card-title pl-1">Revieved Assignments</h4>
                 </div>
