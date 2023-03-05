@@ -15,7 +15,7 @@ class Dashboard extends Component
 {
     public function render()
     {
-        if (!$durationStaff = Duration::where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first()) {
+        if (!$durationStaff = Duration::where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first()) {
             if (date('m') < '07') {
                 $start_date = date('Y') . '-01-01';
                 $end_date = date('Y') . '-06-30';
@@ -28,7 +28,7 @@ class Dashboard extends Component
                     'type' => 'staff',
                 ]);
             } else {
-                $start_date = date('Y') . '-06-01';
+                $start_date = date('Y') . '-07-01';
                 $end_date = date('Y') . '-12-31';
                 $duration_name = 'CY ' . date('Y') . ' - Second Semester';
 
@@ -41,7 +41,7 @@ class Dashboard extends Component
             }
         }
         
-        if (!$durationFaculty = Duration::where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first()) {
+        if (!$durationFaculty = Duration::where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first()) {
             $start_date = date('Y') . '-01-01';
             $end_date = date('Y') . '-12-31';
             $duration_name = 'CY ' . date('Y');
@@ -54,7 +54,7 @@ class Dashboard extends Component
             ]);
         }
         
-        if (!$durationOffice = Duration::where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first()) {
+        if (!$durationOffice = Duration::where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first()) {
             $start_date = date('Y') . '-01-01';
             $end_date = date('Y') . '-12-31';
             $duration_name = 'CY ' . date('Y');
@@ -67,9 +67,9 @@ class Dashboard extends Component
             ]);
         }
 
-        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->durationO = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first();
+        $this->durationO = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->first();
         
         $this->approvalIPCRS = Approval::orderBy('id', 'DESC')
                 ->where('name', 'approval')

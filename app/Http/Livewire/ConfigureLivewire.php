@@ -30,10 +30,6 @@ class ConfigureLivewire extends Component
     public $parent_id;
     public $account_type_id;
     public $account_type;
-    public $duration_id;
-    public $start_date;
-    public $end_date;
-    public $duration;
     public $scoreEq_id;
     public $out_from;
     public $out_to;
@@ -45,16 +41,12 @@ class ConfigureLivewire extends Component
     public $unsat_to;
     public $poor_from;
     public $poor_to;
-    public $duration_name;
     public $standardValue_id;
     public $efficiency;
     public $quality;
     public $timeliness;
 
     protected $rules = [
-        'duration_name' => ['required_if:type,duration'],
-        'start_date' => ['required_if:type,duration'],
-        'end_date' => ['required_if:type,duration'],
         'office_name' => ['required_if:type,office'],
         'office_abbr' => ['required_if:type,office'],
         'account_type' => ['required_if:type,account_type'],
@@ -74,9 +66,6 @@ class ConfigureLivewire extends Component
     ];
 
     protected $messages = [
-        'duration_name.required_if' => "Semester's Name cannot be null.",
-        'start_date.required_if' => "Start of Semeter cannot be null.",
-        'end_date.required_if' => "End of Semeter cannot be null.",
         'office_name.required_if' => 'Office Name cannot be null.',
         'office_abbr.required_if' => 'Office Abbreviation cannot be null.',
         'account_type.required_if' => 'Account Type cannot be null.',
@@ -143,7 +132,6 @@ class ConfigureLivewire extends Component
 
     public function render()
     {
-        $this->duration = Duration::orderBy('id', 'DESC')->first();
         $offices = Office::query();
         if ($this->searchoffice) {
             $search = $this->searchoffice;
@@ -163,17 +151,10 @@ class ConfigureLivewire extends Component
             'offices' => $offices->orderBy($this->sortOffice, $this->ascOffice)->paginate($this->pageOffice),
             'account_types' => $account_types->orderBy($this->sortAccType, $this->ascAccType)->paginate($this->pageAccType),
             'durations' => Duration::orderBy('id', 'desc')->paginate(10),
-            'startDate' => $this->start_date,
             'scoreEq' => ScoreEquivalent::first(),
             'standardValue' => StandardValue::first(),
             'allOffices' => Office::all(),
         ]);
-    }
-
-    public function startChanged(){
-        if($this->end_date <= $this->start_date){
-            $this->end_date = $this->start_date;
-        }
     }
 
     public function save(){
@@ -230,30 +211,6 @@ class ConfigureLivewire extends Component
                 'message' => "Updated Successfully",
                 'color' => "#28ab55",
             ]);
-        } elseif ($this->category == 'edit' && $this->type == 'duration') {
-            Duration::where('id', $this->duration_id)->update([
-                'duration_name' => $this->duration_name,
-                'start_date' => $this->start_date,
-                'end_date' => $this->end_date,
-            ]);
-
-            $this->dispatchBrowserEvent('toastify', [
-                'message' => "Updated Successfully",
-                'color' => "#28ab55",
-            ]);
-        } elseif ($this->type == 'duration') {
-            Duration::create([
-                'duration_name' => $this->duration_name,
-                'start_date' => $this->start_date,
-                'end_date' => $this->end_date,
-            ]);
-
-            $this->dispatchBrowserEvent('toastify', [
-                'message' => "Added Successfully",
-                'color' => "#435ebe",
-            ]);
-            
-            $this->mount();
         } elseif ($this->type == 'scoreEq' && $this->category == 'edit') {
             ScoreEquivalent::where('id', $this->scoreEq_id)->update([
                 'out_from' => $this->out_from,
@@ -312,17 +269,6 @@ class ConfigureLivewire extends Component
                 $this->quality = $data->quality;
                 $this->timeliness = $data->timeliness;
             }
-        } elseif ($type == 'duration') {
-            $this->duration_id = $id;
-            if ($category == 'edit') {
-                $this->category = $category;
-
-                $data = Duration::find($this->duration_id);
-
-                $this->duration_name = $data->duration_name;
-                $this->start_date = $data->start_date;
-                $this->end_date = $data->end_date;
-            }
         } elseif ($type == 'scoreEq') {
             $this->scoreEq_id = $id;
             $this->category = $category;
@@ -347,8 +293,6 @@ class ConfigureLivewire extends Component
             Office::where('id', $this->office_id)->delete();
         } elseif ($this->type == 'account_type') {
             AccountType::where('id', $this->account_type_id)->delete();
-        } elseif ($this->type == 'duration') {
-            Duration::where('id', $this->duration_id)->delete();
         }
 
         $this->dispatchBrowserEvent('toastify', [
@@ -374,9 +318,6 @@ class ConfigureLivewire extends Component
         $this->sortAccType = 'id';
         $this->ascAccType = 'asc';
         $this->pageAccType = 10;
-        $this->duration_id = '';
-        $this->start_date = '';
-        $this->end_date = '';
         $this->out_from = '';
         $this->out_to = '';
         $this->verysat_from = '';

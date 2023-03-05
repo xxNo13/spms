@@ -15,24 +15,23 @@
             </div>
         </div>
         
-        @if ($duration)
-            <div class="row">
-                <div class="hstack gap-3 justify-content-center">
-                    <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Faculty">
-                        <i class="bi bi-printer"></i>
-                        Ranking of Faculty
-                    </a>
-                    <a href="{{ route('print.rankings.staff') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Staff">
-                        <i class="bi bi-printer"></i>
-                        Ranking of Staff
-                    </a>
-                    <a href="{{ route('print.rankings.opcr') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of OPCR">
-                        <i class="bi bi-printer"></i>
-                        Ranking of OPCR
-                    </a>
-                </div>
+
+        <div class="row">
+            <div class="hstack gap-3 justify-content-center">
+                <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Faculty">
+                    <i class="bi bi-printer"></i>
+                    Ranking of Faculty
+                </a>
+                <a href="{{ route('print.rankings.staff') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Staff">
+                    <i class="bi bi-printer"></i>
+                    Ranking of Staff
+                </a>
+                <a href="{{ route('print.rankings.opcr') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of OPCR">
+                    <i class="bi bi-printer"></i>
+                    Ranking of OPCR
+                </a>
             </div>
-        @endif
+        </div>
         <div class="row my-3">
             <div class="col-12 hstack gap-5 justify-content-center">
                 <a href="#durations" class="btn btn-outline-primary">Semester Duration</a>
@@ -56,17 +55,7 @@
                     </div>
                     <div id="duration" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne"
                         wire:ignore.self data-bs-parent="#durationAccordion">
-                        <div class="acordion-header mt-2 row">    
-                            <div class="hstack justify-content-center gap-2 mt-2 col-12">
-                                @if ($duration && $duration->end_date >= date('Y-m-d'))
-                                @else
-                                    <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                        wire:click="select('{{ 'duration' }}')" data-bs-target="#AddDurationModal"
-                                        title="Add Duration">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
-                                @endif
-                            </div>
+                        <div class="acordion-header mt-2 row">
                         </div>
                         <div class="accordion-body">
                             <div class="table-responsive">
@@ -430,5 +419,5 @@
     @php
         $parentId = $parent_id;
     @endphp
-    <x-modals :startDate="$startDate" :offices="$allOffices" :parentId="$parentId" />
+    <x-modals :offices="$allOffices" :parentId="$parentId" />
 </div>

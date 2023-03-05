@@ -1,6 +1,6 @@
 @props(['href','logo', 'title' => 'Menu'])
 
-<div id="sidebar" class="active">
+<div id="sidebar" class="active position-fixed" style="z-index: 2;">
     <div class="sidebar-wrapper">
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
@@ -28,7 +28,7 @@
                     </svg>
                 </div>
                 <div class="sidebar-toggler  x">
-                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                    <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                 </div>
             </div>
         </div>

@@ -369,10 +369,14 @@ class FacultyLivewire extends Component
             $office = Office::find($id);
 
             if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
-                array_push($review_ids, $office->users()->wherePivot('isHead', 1)->pluck('id')->first());
+                if ($office->users()->wherePivot('isHead', 1)->pluck('id')->first()) {
+                    array_push($review_ids, $office->users()->wherePivot('isHead', 1)->pluck('id')->first());
+                }
             } elseif (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead) {
                 $parent_office = Office::where('id', $office->parent_id)->first();
-                array_push($review_ids, $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first());
+                if ($parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first()) {
+                    array_push($review_ids, $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first());
+                }
             }
         }
 
@@ -469,7 +473,7 @@ class FacultyLivewire extends Component
             }
         }
 
-        if (!$review_ids || !$this->approve_id) {
+        if (empty($review_ids) || !$this->approve_id) {
             return $this->dispatchBrowserEvent('toastify', [
                 'message' => "No Head Found!",
                 'color' => "#f3616d",

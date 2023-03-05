@@ -1215,7 +1215,7 @@
                                         initQua5();
                                         $('#equa_5').on('change', function (e) {
                                             var data = $('#equa_5').select2("val");
-                                            @this.set('eff_5', data);
+                                            @this.set('qua_5', data);
                                         });
                                         window.livewire.on('select2',()=>{
                                             initQua5();
@@ -1252,7 +1252,7 @@
                                         initTime5();
                                         $('#etime_5').on('change', function (e) {
                                             var data = $('#etime_5').select2("val");
-                                            @this.set('eff_5', data);
+                                            @this.set('time_5', data);
                                         });
                                         window.livewire.on('select2',()=>{
                                             initTime5();

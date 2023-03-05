@@ -237,7 +237,7 @@
                                                                                 </td>
                                                                             </tr>
                                                                             @break
-                                                                        @elseif ($Loop->last)
+                                                                        @elseif ($loop->last)
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
@@ -408,7 +408,7 @@
                                                                                 </td>
                                                                             </tr>
                                                                             @break
-                                                                        @elseif ($Loop->last)
+                                                                        @elseif ($loop->last)
                                                                             <tr>
                                                                                 <td colspan="6"></td>
                                                                                 <td>
@@ -595,7 +595,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 @break
-                                                            @elseif ($Loop->last)
+                                                            @elseif ($loop->last)
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
@@ -766,7 +766,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 @break
-                                                            @elseif ($Loop->last)
+                                                            @elseif ($loop->last)
                                                                 <tr>
                                                                     <td colspan="6"></td>
                                                                     <td>
