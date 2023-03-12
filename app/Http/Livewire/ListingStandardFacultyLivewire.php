@@ -116,113 +116,63 @@ class ListingStandardFacultyLivewire extends Component
         $quas = preg_split('/\r\n|\r|\n/', $standardValue->quality);
         $times = preg_split('/\r\n|\r|\n/', $standardValue->timeliness);
 
-        if (!in_array($this->eff_5, $effs) && $this->eff_5 != '') {
-            $efficiency = $standardValue->efficiency . "\r\n" . $this->eff_5;
+        $efficiency = $standardValue->efficiency;
+        $quality = $standardValue->quality;
+        $timeliness = $standardValue->timeliness;
 
-            StandardValue::where('id', 1)->update([
-                'efficiency' => $efficiency,
-            ]);
+        if (!in_array($this->eff_5, $effs) && $this->eff_5 != '') {
+            $efficiency .= "\r\n" . $this->eff_5;
         }
         if (!in_array($this->eff_4, $effs) && $this->eff_4 != '') {
-            $efficiency = $standardValue->efficiency . "\r\n" . $this->eff_4;
-
-            StandardValue::where('id', 1)->update([
-                'efficiency' => $efficiency,
-            ]);
+            $efficiency .= "\r\n" . $this->eff_4;
         }
         if (!in_array($this->eff_3, $effs) && $this->eff_3 != '') {
-            $efficiency = $standardValue->efficiency . "\r\n" . $this->eff_3;
-
-            StandardValue::where('id', 1)->update([
-                'efficiency' => $efficiency,
-            ]);
+            $efficiency .= "\r\n" . $this->eff_3;
         }
         if (!in_array($this->eff_2, $effs) && $this->eff_2 != '') {
-            $efficiency = $standardValue->efficiency . "\r\n" . $this->eff_2;
-
-            StandardValue::where('id', 1)->update([
-                'efficiency' => $efficiency,
-            ]);
+            $efficiency .= "\r\n" . $this->eff_2;
         }
         if (!in_array($this->eff_1, $effs) && $this->eff_1 != '') {
-            $efficiency = $standardValue->efficiency . "\r\n" . $this->eff_1;
-
-            StandardValue::where('id', 1)->update([
-                'efficiency' => $efficiency,
-            ]);
+            $efficiency .= "\r\n" . $this->eff_1;
         }
         
         if (!in_array($this->qua_5, $quas) && $this->qua_5 != '') {
-            $quality = $standardValue->quality . "\r\n" . $this->qua_5;
-
-            StandardValue::where('id', 1)->update([
-                'quality' => $quality,
-            ]);
+            $quality .= "\r\n" . $this->qua_5;
         }
         if (!in_array($this->qua_4, $quas) && $this->qua_4 != '') {
-            $quality = $standardValue->quality . "\r\n" . $this->qua_4;
-
-            StandardValue::where('id', 1)->update([
-                'quality' => $quality,
-            ]);
+            $quality .= "\r\n" . $this->qua_4;
         }
         if (!in_array($this->qua_3, $quas) && $this->qua_3 != '') {
-            $quality = $standardValue->quality . "\r\n" . $this->qua_3;
-
-            StandardValue::where('id', 1)->update([
-                'quality' => $quality,
-            ]);
+            $quality .= "\r\n" . $this->qua_3;
         }
         if (!in_array($this->qua_2, $quas) && $this->qua_2 != '') {
-            $quality = $standardValue->quality . "\r\n" . $this->qua_2;
-
-            StandardValue::where('id', 1)->update([
-                'quality' => $quality,
-            ]);
+            $quality .= "\r\n" . $this->qua_2;
         }
         if (!in_array($this->qua_1, $quas) && $this->qua_1 != '') {
-            $quality = $standardValue->quality . "\r\n" . $this->qua_1;
-
-            StandardValue::where('id', 1)->update([
-                'quality' => $quality,
-            ]);
+            $quality .= "\r\n" . $this->qua_1;
         }
         
         if (!in_array($this->time_5, $times) && $this->time_5 != '') {
-            $timeliness = $standardValue->timeliness . "\r\n" . $this->time_5;
-
-            StandardValue::where('id', 1)->update([
-                'timeliness' => $timeliness,
-            ]);
+            $timeliness .= "\r\n" . $this->time_5;
         }
         if (!in_array($this->time_4, $times) && $this->time_4 != '') {
-            $timeliness = $standardValue->timeliness . "\r\n" . $this->time_4;
-
-            StandardValue::where('id', 1)->update([
-                'timeliness' => $timeliness,
-            ]);
+            $timeliness .= "\r\n" . $this->time_4;
         }
         if (!in_array($this->time_3, $times) && $this->time_3 != '') {
-            $timeliness = $standardValue->timeliness . "\r\n" . $this->time_3;
-
-            StandardValue::where('id', 1)->update([
-                'timeliness' => $timeliness,
-            ]);
+            $timeliness .= "\r\n" . $this->time_3;
         }
         if (!in_array($this->time_2, $times) && $this->time_2 != '') {
-            $timeliness = $standardValue->timeliness . "\r\n" . $this->time_2;
-
-            StandardValue::where('id', 1)->update([
-                'timeliness' => $timeliness,
-            ]);
+            $timeliness .= "\r\n" . $this->time_2;
         }
         if (!in_array($this->time_1, $times) && $this->time_1 != '') {
-            $timeliness = $standardValue->timeliness . "\r\n" . $this->time_1;
-
-            StandardValue::where('id', 1)->update([
-                'timeliness' => $timeliness,
-            ]);
+            $timeliness .= "\r\n" . $this->time_1;
         }
+
+        StandardValue::where('id', 1)->update([
+            'efficiency' => $efficiency,
+            'quality' => $quality,
+            'timeliness' => $timeliness,
+        ]);
 
         if ($category == 'add'){
             Standard::create([
@@ -274,12 +224,7 @@ class ListingStandardFacultyLivewire extends Component
             ]);
         }
 
-        if (isset($timeliness) || isset($efficiency) || isset($quality)) {
-            return redirect(request()->header('Referer'));
-        }
-        
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal'); 
+        return redirect(request()->header('Referer'));
     }
 
     public function delete(){

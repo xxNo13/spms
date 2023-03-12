@@ -111,6 +111,70 @@ class ListingStandardOpcrLivewire extends Component
     public function save($category){
         $this->validate();
 
+        $standardValue = StandardValue::first();
+
+        $effs = preg_split('/\r\n|\r|\n/', $standardValue->efficiency);
+        $quas = preg_split('/\r\n|\r|\n/', $standardValue->quality);
+        $times = preg_split('/\r\n|\r|\n/', $standardValue->timeliness);
+
+        $efficiency = $standardValue->efficiency;
+        $quality = $standardValue->quality;
+        $timeliness = $standardValue->timeliness;
+
+        if (!in_array($this->eff_5, $effs) && $this->eff_5 != '') {
+            $efficiency .= "\r\n" . $this->eff_5;
+        }
+        if (!in_array($this->eff_4, $effs) && $this->eff_4 != '') {
+            $efficiency .= "\r\n" . $this->eff_4;
+        }
+        if (!in_array($this->eff_3, $effs) && $this->eff_3 != '') {
+            $efficiency .= "\r\n" . $this->eff_3;
+        }
+        if (!in_array($this->eff_2, $effs) && $this->eff_2 != '') {
+            $efficiency .= "\r\n" . $this->eff_2;
+        }
+        if (!in_array($this->eff_1, $effs) && $this->eff_1 != '') {
+            $efficiency .= "\r\n" . $this->eff_1;
+        }
+        
+        if (!in_array($this->qua_5, $quas) && $this->qua_5 != '') {
+            $quality .= "\r\n" . $this->qua_5;
+        }
+        if (!in_array($this->qua_4, $quas) && $this->qua_4 != '') {
+            $quality .= "\r\n" . $this->qua_4;
+        }
+        if (!in_array($this->qua_3, $quas) && $this->qua_3 != '') {
+            $quality .= "\r\n" . $this->qua_3;
+        }
+        if (!in_array($this->qua_2, $quas) && $this->qua_2 != '') {
+            $quality .= "\r\n" . $this->qua_2;
+        }
+        if (!in_array($this->qua_1, $quas) && $this->qua_1 != '') {
+            $quality .= "\r\n" . $this->qua_1;
+        }
+        
+        if (!in_array($this->time_5, $times) && $this->time_5 != '') {
+            $timeliness .= "\r\n" . $this->time_5;
+        }
+        if (!in_array($this->time_4, $times) && $this->time_4 != '') {
+            $timeliness .= "\r\n" . $this->time_4;
+        }
+        if (!in_array($this->time_3, $times) && $this->time_3 != '') {
+            $timeliness .= "\r\n" . $this->time_3;
+        }
+        if (!in_array($this->time_2, $times) && $this->time_2 != '') {
+            $timeliness .= "\r\n" . $this->time_2;
+        }
+        if (!in_array($this->time_1, $times) && $this->time_1 != '') {
+            $timeliness .= "\r\n" . $this->time_1;
+        }
+
+        StandardValue::where('id', 1)->update([
+            'efficiency' => $efficiency,
+            'quality' => $quality,
+            'timeliness' => $timeliness,
+        ]);
+
         if ($category == 'add'){
             Standard::create([
                 'eff_5' => $this->eff_5,
@@ -160,9 +224,8 @@ class ListingStandardOpcrLivewire extends Component
                 'color' => "#28ab55",
             ]);
         }
-        
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal'); 
+
+        return redirect(request()->header('Referer'));
     }
 
     public function delete(){

@@ -46,20 +46,22 @@ class OpcrLivewire extends Component
 
     public $targetOutput;
 
-    public $dummy;
-
     public $add = false;
     public $targetsSelected = [];
 
-    public $filter;
+    public $filter = '';
+
+    public $hasTargetOutput = false;
+    public $hasRating = false;
+
+    public $selectedOutput;
+    public $allocatedTargetSelected = [];
+    public $targetAllocated;
 
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
         'output_finished' => ['nullable', 'required_if:selected,rating', 'numeric'],
-        'efficiency' => ['required_without_all:quality,timeliness,dummy'],
-        'quality' => ['required_without_all:efficiency,timeliness,dummy'],
-        'timeliness' => ['required_without_all:efficiency,quality,dummy'],
         'accomplishment' => ['required_if:selected,rating'],
         
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
@@ -70,9 +72,6 @@ class OpcrLivewire extends Component
     protected $messages = [
         'output_finished.numeric' => 'Output Finished should be a number.',
         'output_finished.required_if' => 'Output Finished cannot be null.',
-        'efficiency.required_without_all' => 'Efficiency cannot be null.',
-        'quality.required_without_all' => 'Quality cannot be null.',
-        'timeliness.required_without_all' => 'Timeliness cannot be null.',
         'accomplishment.required_if' => 'Actual Accomplishment cannot be null.',
         
         'target_output.required_if' => 'Target Output cannot be null',
@@ -126,8 +125,6 @@ class OpcrLivewire extends Component
 
 
         }
-
-        $this->dummy = 'has data';
     }
 
     public function render()
@@ -138,6 +135,38 @@ class OpcrLivewire extends Component
                 'filter' => $this->filter,
             ]);
         } else {
+            foreach (auth()->user()->targets as $target) {
+                if (($target->suboutput_id && $target->suboutput->output->user_type == 'office') || ($target->output_id && $target->output->user_type == 'office')) {
+                    if (!isset($target->pivot->target_output)) {
+                        $this->hasTargetOutput = false;
+                        break;
+                    } else {
+                        $this->hasTargetOutput = true;
+                    }
+                }
+            }
+
+            foreach (auth()->user()->targets as $target) {
+                if (($target->suboutput_id && $target->suboutput->output->user_type == 'office') || ($target->output_id && $target->output->user_type == 'office')) {
+                    if (count($target->ratings) > 0) {
+                        foreach ($target->ratings as $rating) {
+                            if ($rating->user_id == auth()->user()->id) {
+                                $this->hasRating = true;
+                                break;
+                            } else {
+                                $this->hasRating = false;
+                            }
+                        }
+                        if (!$this->hasRating) {
+                            break;
+                        }
+                    } else {
+                        $this->hasRating = false;
+                        break;
+                    }
+                }
+            }
+
             return view('livewire.opcr-livewire', [
                 'functs' => Funct::paginate(1)
             ]);
@@ -154,7 +183,6 @@ class OpcrLivewire extends Component
             $this->selectedTarget = auth()->user()->targets()->where('id', $target_id)->first();
             $this->targetOutput = $this->selectedTarget->pivot->target_output;
         }
-        $this->dummy = '';
     }
 
     public function editRating($rating_id){
@@ -168,7 +196,6 @@ class OpcrLivewire extends Component
         
         $this->output_finished = $rating->output_finished;
         $this->accomplishment = $rating->accomplishment;
-        $this->efficiency = $rating->efficiency;
         $this->quality = $rating->quality;
         $this->timeliness = $rating->timeliness;
     }
@@ -179,31 +206,39 @@ class OpcrLivewire extends Component
 
         if ($category == 'add') {
             $divisor = 0;
-
-            if(!$this->efficiency){
-                $divisor++;
-            }
-            if(!$this->quality){
-                $divisor++;
-            }
-            if(!$this->timeliness){
-                $divisor++;
-            }
-            $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
-            $average = number_format((float)$number, 2, '.', '');
+            $efficiency = null;
             
             $standard = $this->selectedTarget->standards()->first();
 
-            if ($this->efficiency == '') {
-                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
-                    $error = \Illuminate\Validation\ValidationException::withMessages([
-                        'efficiency' => ['Efficiency cannot be null.'],
-                     ]);
-                     throw $error;
+            if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) {
+                if ($standard->eff_5) {
+                    $eff_5 = strtok($standard->eff_5, '%');
+                }
+                if ($standard->eff_4) {
+                    $eff_4 = strtok($standard->eff_4, '%');
+                }
+                if ($standard->eff_3) {
+                    $eff_3 = strtok($standard->eff_3, '%');
+                }
+                if ($standard->eff_2) {
+                    $eff_2 = strtok($standard->eff_2, '%');
+                }
+    
+                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                
+                if ($output_pecentage >= $eff_5) {
+                    $efficiency = 5;
+                } elseif ($output_pecentage >= $eff_4) {
+                    $efficiency = 4;
+                } elseif ($output_pecentage >= $eff_3) {
+                    $efficiency = 3;
+                } elseif ($output_pecentage >= $eff_2) {
+                    $efficiency = 2;
                 } else {
-                    $this->efficiency = null;
+                    $efficiency = 1;
                 }
             }
+
             if ($this->quality == '') {
                 if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
                     $error = \Illuminate\Validation\ValidationException::withMessages([
@@ -225,10 +260,22 @@ class OpcrLivewire extends Component
                 }
             }
 
+            if(!$efficiency){
+                $divisor++;
+            }
+            if(!$this->quality){
+                $divisor++;
+            }
+            if(!$this->timeliness){
+                $divisor++;
+            }
+            $number = ((int)$efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
+            $average = number_format((float)$number, 2, '.', '');
+
             Rating::create([
                 'output_finished' => $this->output_finished,
                 'accomplishment' => $this->accomplishment,
-                'efficiency' => $this->efficiency,
+                'efficiency' => $efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
                 'average' => $average,
@@ -244,31 +291,38 @@ class OpcrLivewire extends Component
             ]);
         } elseif ($category == 'edit') {
             $divisor = 0;
-
-            if(!$this->efficiency){
-                $divisor++;
-            }
-            if(!$this->quality){
-                $divisor++;
-            }
-            if(!$this->timeliness){
-                $divisor++;
-            }
-            $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
-            $average = number_format((float)$number, 2, '.', '');
             
             $standard = $this->selectedTarget->standards()->first();
 
-            if ($this->efficiency == '') {
-                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
-                    $error = \Illuminate\Validation\ValidationException::withMessages([
-                        'efficiency' => ['Efficiency cannot be null.'],
-                     ]);
-                     throw $error;
+            if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) {
+                if ($standard->eff_5) {
+                    $eff_5 = strtok($standard->eff_5, '%');
+                }
+                if ($standard->eff_4) {
+                    $eff_4 = strtok($standard->eff_4, '%');
+                }
+                if ($standard->eff_3) {
+                    $eff_3 = strtok($standard->eff_3, '%');
+                }
+                if ($standard->eff_2) {
+                    $eff_2 = strtok($standard->eff_2, '%');
+                }
+    
+                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                
+                if ($output_pecentage >= $eff_5) {
+                    $efficiency = 5;
+                } elseif ($output_pecentage >= $eff_4) {
+                    $efficiency = 4;
+                } elseif ($output_pecentage >= $eff_3) {
+                    $efficiency = 3;
+                } elseif ($output_pecentage >= $eff_2) {
+                    $efficiency = 2;
                 } else {
-                    $this->efficiency = null;
+                    $efficiency = 1;
                 }
             }
+
             if ($this->quality == '') {
                 if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
                     $error = \Illuminate\Validation\ValidationException::withMessages([
@@ -290,10 +344,22 @@ class OpcrLivewire extends Component
                 }
             }
 
+            if(!$efficiency){
+                $divisor++;
+            }
+            if(!$this->quality){
+                $divisor++;
+            }
+            if(!$this->timeliness){
+                $divisor++;
+            }
+            $number = ((int)$efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
+            $average = number_format((float)$number, 2, '.', '');
+
             Rating::where('id', $this->rating_id)->update([
                 'output_finished' => $this->output_finished,
                 'accomplishment' => $this->accomplishment,
-                'efficiency' => $this->efficiency,
+                'efficiency' => $efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
                 'average' => $average,
@@ -388,17 +454,26 @@ class OpcrLivewire extends Component
 
     /////////////////////////// SUBFUNCTION/OUTPUT/SUBOUTPUT/TARGET CONFIGURATION ///////////////////////////
 
-    public function selectOpcr($type, $id, $category = null) {
+    public function selectOpcr($type, $output, $id, $category = null) {
         $this->selected = $type;
         switch($type) {
             case 'target_output':
                 $this->target_id = $id;
+                $this->selectedOutput = $output;
+                $this->allocatedTargetSelected[$id] = $id;
                 if ($category) {
                     $data = auth()->user()->targets()->where('id', $id)->first();
 
                     $this->target_output = $data->pivot->target_output;
                     $this->alloted_budget = $data->pivot->alloted_budget;
                     $this->responsible = $data->pivot->responsible;
+                    $this->targetAllocated = $data->pivot->target_allocated;
+                }
+
+                if (isset($this->targetAllocated)) {
+                    foreach (auth()->user()->targets()->wherePivot('target_allocated', $id)->get() as $target) {
+                        $this->allocatedTargetSelected[$target->id] = $target->id;
+                    }
                 }
                 break; 
         }
@@ -410,6 +485,11 @@ class OpcrLivewire extends Component
 
         switch ($this->selected) {
             case 'target_output':
+                if (auth()->user()->targets()->where('id', $this->target_id)->first()->pivot->target_allocated == null) {
+                    foreach ($this->allocatedTargetSelected as $id => $value) {
+                        auth()->user()->targets()->syncWithoutDetaching([$id => ['alloted_budget' => $this->alloted_budget, 'target_allocated' => $this->target_id]]);
+                    }
+                }
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output, 'alloted_budget' => $this->alloted_budget, 'responsible' => $this->responsible]]);
                 break;
         }
@@ -429,6 +509,13 @@ class OpcrLivewire extends Component
 
         switch ($this->selected) {
             case 'target_output':
+                foreach ($this->allocatedTargetSelected as $id => $value) {
+                    if ($value == false) {
+                        auth()->user()->targets()->syncWithoutDetaching([$id => ['alloted_budget' => null, 'target_allocated' => null]]);
+                    } else {
+                        auth()->user()->targets()->syncWithoutDetaching([$id => ['alloted_budget' => $this->alloted_budget, 'target_allocated' => $this->target_id]]);
+                    }
+                }
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output, 'alloted_budget' => $this->alloted_budget, 'responsible' => $this->responsible]]);
                 break;
         }
@@ -445,7 +532,10 @@ class OpcrLivewire extends Component
     public function delete() {
         switch ($this->selected) {
             case 'target_output':
-                auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => null]]);
+                foreach ($this->allocatedTargetSelected as $id => $value) {
+                    auth()->user()->targets()->syncWithoutDetaching([$id => ['alloted_budget' => null, 'target_allocated' => null]]);
+                }
+                auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => null, 'alloted_budget' => null, 'responsible' => null]]);
                 break;
             case 'rating':
                 Rating::where('id', $this->rating_id)->delete();
@@ -550,6 +640,12 @@ class OpcrLivewire extends Component
         $this->quality = '';
         $this->timeliness = '';
         $this->accomplishment = '';
+        $this->allocatedTargetSelected = [];
+
+        $this->target_id = '';
+        $this->target_output = '';
+        $this->alloted_budget = '';
+        $this->responsible = '';
     }
 
     public function closeModal()

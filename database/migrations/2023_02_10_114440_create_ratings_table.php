@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('efficiency')->nullable();
             $table->integer('quality')->nullable();
             $table->integer('timeliness')->nullable();
-            $table->integer('average');
+            $table->float('average');
             $table->string('remarks');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('target_id')->constrained()->onDelete('cascade');

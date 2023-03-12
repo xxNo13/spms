@@ -26,6 +26,7 @@ class TtmaLivewire extends Component
     public $selected;
     public $deadline;
 
+    public $month_filter = '';
     public $filter = 'receive';
 
     protected $rules = [
@@ -76,68 +77,54 @@ class TtmaLivewire extends Component
     }
 
     public function render()
-    {   
+    {  
         $search = $this->search;
         $ttmas = Ttma::query();
-        $assignments = auth()->user()->ttmas();
+        $assignments = Ttma::query()->whereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) {
+            return $query->where('id', auth()->user()->id);
+        });
 
-        if ($search) {
-
-            if($this->duration) {
-                $ttmas->where(function ($query) use ($search) {
-                    $query->whereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
-                        return $query->where('name', 'LIKE', '%' . $search . '%');
-                    })
-                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
-                        ->orWhere('output', 'LIKE', '%' . $search . '%');
-                })->where('duration_id', $this->duration->id)
-                ->where('head_id', Auth::user()->id)
-                ->get();
+        // if ($search) {
+        //     $ttmas->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+        //             return $query->Where('subject', 'LIKE', '%' . $search . '%')
+        //                 ->orWhere('output', 'LIKE', '%' . $search . '%')
+        //                 ->orwhereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+        //                     return $query->where('name', 'LIKE', '%' . $search . '%');
+        //                 });
+        //             });
             
-                
-                $assignments->where(function ($query) use ($search) {
-                    $query->whereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
-                        return $query->where('name', 'LIKE', '%' . $search . '%');
-                    })
-                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
-                        ->orWhere('output', 'LIKE', '%' . $search . '%');
-                })->where('duration_id', $this->duration->id)
-                ->get();
-            } else {
-                $ttmas->where(function ($query) use ($search) {
-                    $query->whereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
-                        return $query->where('name', 'LIKE', '%' . $search . '%');
-                    })
-                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
-                        ->orWhere('output', 'LIKE', '%' . $search . '%');
-                })->where('head_id', Auth::user()->id)
-                    ->get();
+        //     $assignments->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+        //                 return $query->Where('subject', 'LIKE', '%' . $search . '%')
+        //                     ->orWhere('output', 'LIKE', '%' . $search . '%')
+        //                     ->orwhereHas('head', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+        //                     return $query->where('name', 'LIKE', '%' . $search . '%');
+        //                 });
+        //             });
+        // }
 
-                $assignments->where(function ($query) use ($search) {
-                    $query->whereHas('users', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
-                        return $query->where('name', 'LIKE', '%' . $search . '%');
-                    })
-                        ->orWhere('subject', 'LIKE', '%' . $search . '%')
-                        ->orWhere('output', 'LIKE', '%' . $search . '%');
-                })->get();
-            }
-        }
-
-        if($this->duration) {
+        if ($this->month_filter != '') {
             return view('livewire.ttma-livewire', [
                 'ttmas' => $ttmas->orderBy('deadline', 'ASC')
                         ->where('duration_id', $this->duration->id)
                         ->where('head_id', Auth::user()->id)
+                        ->whereMonth('deadline', $this->month_filter)
                         ->paginate(10),
+
                 'assignments' => $assignments->orderBy('deadline', 'ASC')
                                 ->where('duration_id', $this->duration->id)
+                                ->whereMonth('deadline', $this->month_filter)
                                 ->paginate(10),
             ]);
         }
+
         return view('livewire.ttma-livewire', [
-            'ttmas' => $ttmas->where('head_id', Auth::user()->id)->paginate(10),
-            'assignments' => $assignments->orderBy('deadline', 'ASC')->paginate(10),
-            'duration' => $this->duration
+            'ttmas' => $ttmas->orderBy('deadline', 'ASC')
+                    ->where('duration_id', $this->duration->id)
+                    ->where('head_id', Auth::user()->id)
+                    ->paginate(10),
+            'assignments' => $assignments->orderBy('deadline', 'ASC')
+                            ->where('duration_id', $this->duration->id)
+                            ->paginate(10),
         ]);
     }
 

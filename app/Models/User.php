@@ -118,7 +118,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Target::class, 'target_user')
         ->withPivot('target_output')
         ->withPivot('alloted_budget')
-        ->withPivot('responsible');
+        ->withPivot('responsible')
+        ->withPivot('target_allocated');
     }
 
     public function messages() {

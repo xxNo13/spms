@@ -62,7 +62,7 @@
                                     <label>Sub Function: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Sub Function" class="form-control"
-                                            wire:model="sub_funct">
+                                            wire:model.defer="sub_funct">
                                         @error('sub_funct')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -95,7 +95,7 @@
                                     <label>Output: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Output" class="form-control" name="output"
-                                            wire:model="output">
+                                            wire:model.defer="output">
                                         @error('output')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -160,7 +160,7 @@
                                     <label>Suboutput: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Suboutput" class="form-control"
-                                            name="suboutput" wire:model="suboutput">
+                                            name="suboutput" wire:model.defer="suboutput">
                                         @error('suboutput')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -237,7 +237,7 @@
                                     <label>Target: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Target" class="form-control"
-                                            name="target" wire:model="target">
+                                            name="target" wire:model.defer="target">
                                         @error('target')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -245,7 +245,7 @@
                                     @if (isset($userType) && $userType == 'listingFaculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
-                                                name="required" wire:model="required">
+                                                name="required" wire:model.defer="required">
                                             <label>Required to all Faculty</label>
                                         </div>
                                     @endif
@@ -282,7 +282,7 @@
                                     <label>Sub Function: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Sub Function" class="form-control"
-                                            wire:model="sub_funct">
+                                            wire:model.defer="sub_funct">
                                         @error('sub_funct')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -291,7 +291,7 @@
                                     <label>Output: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Output" class="form-control" name="output"
-                                            wire:model="output">
+                                            wire:model.defer="output">
                                         @error('output')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -300,7 +300,7 @@
                                     <label>Suboutput: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Suboutput" class="form-control"
-                                            name="suboutput" wire:model="suboutput">
+                                            name="suboutput" wire:model.defer="suboutput">
                                         @error('suboutput')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -309,7 +309,7 @@
                                     <label>Target: </label>
                                     <div class="form-group">
                                         <input type="text" placeholder="Target" class="form-control"
-                                            name="target" wire:model="target">
+                                            name="target" wire:model.defer="target">
                                         @error('target')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -317,7 +317,7 @@
                                     @if (isset($userType) && $userType == 'listingFaculty')
                                         <div class="form-group hstack gap-2">
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
-                                                name="required" wire:model="required">
+                                                name="required" wire:model.defer="required">
                                             <label>Required to all Faculty</label>
                                         </div>
                                     @endif
@@ -384,7 +384,7 @@
                                 <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished">
+                                        wire:model.defer="output_finished">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
@@ -393,40 +393,14 @@
                             <label>Actual Accomplishment:</label>
                             <div class="form-group">
                                 <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
-                                        wire:model="accomplishment" style="height: 100px;"></textarea>
+                                        wire:model.defer="accomplishment" style="height: 100px;"></textarea>
                                 @error('accomplishment')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Efficiency: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model="efficiency">
-                                    <option value="">Efficiency</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->eff_1)) 
-                                            <option value="1">1 - {{ $standard->eff_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_2)) 
-                                            <option value="2">2 - {{ $standard->eff_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_3)) 
-                                            <option value="3">3 - {{ $standard->eff_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_4))
-                                            <option value="4">4 - {{ $standard->eff_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_5))
-                                            <option value="5">5 - {{ $standard->eff_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('efficiency')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Quality: </label>
                             <div class="form-group">
-                                <select class="form-control" wire:model="quality">
+                                <select class="form-control" wire:model.defer="quality">
                                     <option value="">Quality</option>
                                     @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->qua_1)) 
@@ -452,7 +426,7 @@
                             </div>
                             <label>Timeliness: </label>
                             <div class="form-group">
-                                <select class="form-control" wire:model="timeliness">
+                                <select class="form-control" wire:model.defer="timeliness">
                                     <option value="">Timeliness</option>
                                     @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->time_1)) 
@@ -507,7 +481,7 @@
                                 <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
                                 <div class="form-group">
                                     <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model="output_finished">
+                                        wire:model.defer="output_finished">
                                     @error('output_finished')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
@@ -516,40 +490,14 @@
                             <label>Actual Accomplishment:</label>
                             <div class="form-group">
                                 <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
-                                        wire:model="accomplishment" style="height: 100px;"></textarea>
+                                        wire:model.defer="accomplishment" style="height: 100px;"></textarea>
                                 @error('accomplishment')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Efficiency: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model="efficiency">
-                                    <option value="">Efficiency</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->eff_1)) 
-                                            <option value="1">1 - {{ $standard->eff_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_2)) 
-                                            <option value="2">2 - {{ $standard->eff_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_3)) 
-                                            <option value="3">3 - {{ $standard->eff_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_4))
-                                            <option value="4">4 - {{ $standard->eff_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->eff_5))
-                                            <option value="5">5 - {{ $standard->eff_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('efficiency')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Quality: </label>
                             <div class="form-group">
-                                <select class="form-control" wire:model="quality">
+                                <select class="form-control" wire:model.defer="quality">
                                     <option value="">Quality</option>
                                     @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->qua_1)) 
@@ -575,7 +523,7 @@
                             </div>
                             <label>Timeliness: </label>
                             <div class="form-group">
-                                <select class="form-control" wire:model="timeliness">
+                                <select class="form-control" wire:model.defer="timeliness">
                                     <option value="">Timeliness</option>
                                     @if ($standard = $selectedTarget->standards()->first())
                                         @if (!empty($standard->time_1)) 
@@ -651,7 +599,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="eff_5" wire:model="eff_5" style="width: 100%">
+                                    <select type="text" class="form-control" id="eff_5" wire:loading="disabled" wire:model="eff_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -681,7 +629,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="qua_5" wire:model="qua_5" style="width: 100%">
+                                    <select type="text" class="form-control" id="qua_5" wire:loading="disabled" wire:model="qua_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -711,7 +659,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="time_5" id="time_5" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_5" id="time_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -742,7 +690,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_4" id="eff_4" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_4" id="eff_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -772,7 +720,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_4" id="qua_4" style="width:100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_4" id="qua_4" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -802,7 +750,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="time_4" id="time_4" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_4" id="time_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -833,7 +781,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_3" id="eff_3" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_3" id="eff_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -863,7 +811,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_3" id="qua_3" style="width:100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_3" id="qua_3" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -893,7 +841,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="time_3" id="time_3" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_3" id="time_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -924,7 +872,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_2" id="eff_2" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_2" id="eff_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -954,7 +902,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_2" id="qua_2" style="width:100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_2" id="qua_2" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -984,7 +932,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="time_2" id="time_2" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_2" id="time_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1015,7 +963,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="eff_1" id="eff_1" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_1" id="eff_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1045,7 +993,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="qua_1" id="qua_1" style="width:100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_1" id="qua_1" style="width:100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1075,7 +1023,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="time_1" id="time_1" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_1" id="time_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1153,7 +1101,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="eeff_5" wire:model="eff_5" style="width: 100%">
+                                    <select type="text" class="form-control" id="eeff_5" wire:loading="disabled" wire:model="eff_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1190,7 +1138,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="equa_5" wire:model="qua_5" style="width: 100%">
+                                    <select type="text" class="form-control" id="equa_5" wire:loading="disabled" wire:model="qua_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1227,7 +1175,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" wire:model="time_5" id="etime_5" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_5" id="etime_5" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1265,7 +1213,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" id="eeff_4" wire:model="eff_4" style="width: 100%">
+                                    <select type="text" class="form-control" id="eeff_4" wire:loading="disabled" wire:model="eff_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1302,7 +1250,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" id="equa_4" wire:model="qua_4" style="width: 100%">
+                                    <select type="text" class="form-control" id="equa_4" wire:loading="disabled" wire:model="qua_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1339,7 +1287,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:model="time_4" id="etime_4" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_4" id="etime_4" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1377,7 +1325,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" id="eeff_3" wire:model="eff_3" style="width: 100%">
+                                    <select type="text" class="form-control" id="eeff_3" wire:loading="disabled" wire:model="eff_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1414,7 +1362,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" id="equa_3" wire:model="qua_3" style="width: 100%">
+                                    <select type="text" class="form-control" id="equa_3" wire:loading="disabled" wire:model="qua_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1451,7 +1399,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:model="time_3" id="etime_3" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_3" id="etime_3" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1489,7 +1437,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" id="eeff_2" wire:model="eff_2" style="width: 100%">
+                                    <select type="text" class="form-control" id="eeff_2" wire:loading="disabled" wire:model="eff_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1526,7 +1474,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" id="equa_2" wire:model="qua_2" style="width: 100%">
+                                    <select type="text" class="form-control" id="equa_2" wire:loading="disabled" wire:model="qua_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1563,7 +1511,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:model="time_2" id="etime_2" style="width: 100%">
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="time_2" id="etime_2" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1601,7 +1549,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" id="eeff_1" wire:model="eff_1" style="width: 100%">
+                                    <select type="text" class="form-control" id="eeff_1" wire:loading="disabled" wire:model="eff_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($effs as $eff)
                                             <option value="{{ $eff }}">{{ $eff }}</option>
@@ -1638,7 +1586,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" id="equa_1" wire:model="qua_1" style="width: 100%">
+                                    <select type="text" class="form-control" id="equa_1" wire:loading="disabled" wire:model="qua_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($quas as $qua)
                                             <option value="{{ $qua }}">{{ $qua }}</option>
@@ -1675,7 +1623,7 @@
                             <div class=" w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:model="time_1" id="etime_1" style="width: 100%">
+                                    <select type="text" class="form-control"  wire:loading="disabled" wire:model="time_1" id="etime_1" style="width: 100%">
                                         <option value=""></option>
                                         @foreach ($times as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
@@ -1739,14 +1687,14 @@
                             <label>Subject: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Subject" class="form-control"
-                                    wire:model="subject">
+                                    wire:model.defer="subject">
                                 @error('subject')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Action Officer: </label>
                             <div class="form-group" wire:ignore>
-                                <select style="width: 100%;" name="users_id" id="users_id" class="form-select" wire:model="users_id" multiple="multiple">
+                                <select style="width: 100%;" name="users_id" id="users_id" class="form-select" wire:loading="disabled" wire:model="users_id" multiple="multiple">
                                     <option></option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -1772,14 +1720,14 @@
                             @endpush
                             <label>Output: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Output" class="form-control" wire:model="output">
+                                <input type="text" placeholder="Output" class="form-control" wire:model.defer="output">
                                 @error('output')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Date Deadline: </label>
                             <div class="form-group">
-                                <input type="date" placeholder="Date Deadline" class="form-control" wire:model="deadline" min="{{ date('Y-m-d') }}">
+                                <input type="date" placeholder="Date Deadline" class="form-control" wire:model.defer="deadline" min="{{ date('Y-m-d') }}">
                                 @error('deadline')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -1813,21 +1761,21 @@
                             <label>Subject: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Subject" class="form-control"
-                                    wire:model="subject">
+                                    wire:model.defer="subject">
                                 @error('subject')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Output: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Output" class="form-control" wire:model="output">
+                                <input type="text" placeholder="Output" class="form-control" wire:model.defer="output">
                                 @error('output')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Date Deadline: </label>
                             <div class="form-group">
-                                <input type="date" placeholder="Date Deadline" class="form-control" wire:model="deadline" min="{{ date('Y-m-d') }}">
+                                <input type="date" placeholder="Date Deadline" class="form-control" wire:model.defer="deadline" min="{{ date('Y-m-d') }}">
                                 @error('deadline')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -1925,21 +1873,21 @@
                         <div class="modal-body">
                             <label>Office Name: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
+                                <input type="text" placeholder="Office Name" class="form-control" wire:model.defer="office_name">
                                 @error('office_name')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Office Abbreviation: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="office_abbr">
+                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model.defer="office_abbr">
                                 @error('abr')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Office which it belongs: </label>
                             <div class="form-group" wire:ignore>
-                                <select style="width: 100%;" name="parent_id" id="parent_id" class="form-select" wire:model="parent_id" >
+                                <select style="width: 100%;" name="parent_id" id="parent_id" class="form-select"  wire:loading="disabled" wire:model="parent_id" >
                                     <option></option>
                                     @foreach ($offices as $office) 
                                         <option value="{{ $office->id }}">{{ $office->office_name }}</option>
@@ -1988,21 +1936,21 @@
                         <div class="modal-body">
                             <label>Office Name: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Office Name" class="form-control" wire:model="office_name">
+                                <input type="text" placeholder="Office Name" class="form-control" wire:model.defer="office_name">
                                 @error('office_name')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Office Abbreviation: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model="office_abbr">
+                                <input type="text" placeholder="Office Abbreviation" class="form-control" wire:model.defer="office_abbr">
                                 @error('abr')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <label>Office which it belongs: </label>
                             <div class="form-group" wire:ignore>
-                                <select style="width: 100%;" name="edit_parent_id" id="edit_parent_id" class="form-select" wire:model="parent_id" >
+                                <select style="width: 100%;" name="edit_parent_id" id="edit_parent_id" class="form-select" wire:loading="disabled" wire:model="parent_id" >
                                     <option></option>
                                     @foreach ($offices as $office) 
                                         <option value="{{ $office->id }}" @if (isset($parentId) && $parentId == $office->id) selected @endif>{{ $office->office_name }}</option>
@@ -2053,7 +2001,7 @@
                         <label>Account Type: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Account Type" class="form-control"
-                                wire:model="account_type">
+                                wire:model.defer="account_type">
                                 @error('account_type')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2087,7 +2035,7 @@
                         <label>Account Type: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Account Type" class="form-control"
-                                wire:model="account_type">
+                                wire:model.defer="account_type">
                                 @error('account_type')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2123,7 +2071,7 @@
 
                         <label>Semester Name: </label>
                         <div class="form-group">
-                            <input type="text" placeholder="Semester Name" class="form-control" wire:model="duration_name">
+                            <input type="text" placeholder="Semester Name" class="form-control" wire:model.defer="duration_name">
                                 @error('duration_name')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2132,7 +2080,7 @@
                         <label>Start Date: </label>
                         <div class="form-group">
                             <input type="date" placeholder="Start Date" class="form-control"
-                                wire:change="startChanged" wire:model="start_date" min="{{ date('Y-m-d') }}">
+                                wire:change="startChanged" wire:model.defer="start_date" min="{{ date('Y-m-d') }}">
                                 @error('start_date')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2141,7 +2089,7 @@
                         <label>End Date: </label>
                         <div class="form-group">
                             <input type="date" placeholder="End Date" class="form-control"
-                                wire:model="end_date"
+                                wire:model.defer="end_date"
                                 @if (isset($startDate)) min="{{ $startDate }}"
                                 @else
                                     min="{{ date('Y-m-d') }}" @endif>
@@ -2180,7 +2128,7 @@
 
                         <label>Semester Name: </label>
                         <div class="form-group">
-                            <input type="text" placeholder="Semester Name" class="form-control" wire:model="duration_name">
+                            <input type="text" placeholder="Semester Name" class="form-control" wire:model.defer="duration_name">
                                 @error('duration_name')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2189,7 +2137,7 @@
                         <label>Start Date: </label>
                         <div class="form-group">
                             <input type="date" placeholder="Start Date" class="form-control"
-                                wire:model="start_date" min="{{ date('Y-m-d') }}">
+                                wire:model.defer="start_date" min="{{ date('Y-m-d') }}">
                                 @error('start_date')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2198,7 +2146,7 @@
                         <label>End Date: </label>
                         <div class="form-group">
                             <input type="date" placeholder="End Date" class="form-control"
-                                wire:model="end_date" min="{{ date('Y-m-d') }}">
+                                wire:model.defer="end_date" min="{{ date('Y-m-d') }}">
                                 @error('end_date')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2232,7 +2180,7 @@
                         <label>Core Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Core Function" class="form-control"
-                                wire:model="percent.core">
+                                wire:model.defer="percent.core">
                                 @error('percent.core')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2247,7 +2195,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input required type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2257,7 +2205,7 @@
                         <label>Strategic Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Strategic Function" class="form-control"
-                                wire:model="percent.strategic">
+                                wire:model.defer="percent.strategic">
                                 @error('percent.strategic')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2272,7 +2220,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2282,7 +2230,7 @@
                         <label>Support Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Support Function" class="form-control"
-                                wire:model="percent.support">
+                                wire:model.defer="percent.support">
                                 @error('percent.support')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2297,7 +2245,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2336,7 +2284,7 @@
                         <label>Core Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Core Function" class="form-control"
-                                wire:model="percent.core">
+                                wire:model.defer="percent.core">
                                 @error('percent.core')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2351,7 +2299,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input required type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2361,7 +2309,7 @@
                         <label>Strategic Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Strategic Function" class="form-control"
-                                wire:model="percent.strategic">
+                                wire:model.defer="percent.strategic">
                                 @error('percent.strategic')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2376,7 +2324,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2386,7 +2334,7 @@
                         <label>Support Function %: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Support Function" class="form-control"
-                                wire:model="percent.support">
+                                wire:model.defer="percent.support">
                                 @error('percent.support')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2401,7 +2349,7 @@
                                             <label>{{ $sub_funct->sub_funct }} %: </label>
                                             <div class="form-group">
                                                 <input type="text" placeholder="{{ $sub_funct->sub_funct }}" class="form-control"
-                                                    wire:model="sub_percent.{{ $sub_funct->id }}">
+                                                    wire:model.defer="sub_percent.{{ $sub_funct->id }}">
                                             </div>
                                         @endif
                                     @endforeach
@@ -2437,7 +2385,7 @@
                         <label>Training Name: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Training Name" class="form-control"
-                            wire:model="training_name">
+                            wire:model.defer="training_name">
                             @error('training_name')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
@@ -2445,7 +2393,7 @@
                         <label>Links: </label>
                         <div class="form-group">
                             <textarea placeholder="Links" class="form-control"
-                                wire:model="links">
+                                wire:model.defer="links">
                             </textarea>
                             @error('links')
                                 <p class="text-danger">{{ $message }}</p>
@@ -2454,7 +2402,7 @@
                         <label>Keywords (Seperated with ,): </label>
                         <div class="form-group">
                             <textarea placeholder="Keywords" class="form-control"
-                                wire:model="keywords">
+                                wire:model.defer="keywords">
                             </textarea>
                             @error('keywords')
                                 <p class="text-danger">{{ $message }}</p>
@@ -2489,7 +2437,7 @@
                         <label>Training Name: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Training Name" class="form-control"
-                            wire:model="training_name">
+                            wire:model.defer="training_name">
                             @error('training_name')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
@@ -2497,7 +2445,7 @@
                         <label>Links: </label>
                         <div class="form-group">
                             <textarea placeholder="Links" class="form-control"
-                                wire:model="links">
+                                wire:model.defer="links">
                             </textarea>
                             @error('links')
                                 <p class="text-danger">{{ $message }}</p>
@@ -2506,7 +2454,7 @@
                         <label>Keywords (Seperate with ,): </label>
                         <div class="form-group">
                             <textarea placeholder="Keywords" class="form-control"
-                                wire:model="keywords">
+                                wire:model.defer="keywords">
                             </textarea>
                             @error('keywords')
                                 <p class="text-danger">{{ $message }}</p>
@@ -2553,14 +2501,14 @@
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="out_from">
+                                <input type="text" class="form-control" wire:model.defer="out_from">
                                 @error('out_from')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="out_to">
+                                <input type="text" class="form-control" wire:model.defer="out_to">
                                 @error('out_to')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2573,14 +2521,14 @@
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="verysat_from">
+                                <input type="text" class="form-control" wire:model.defer="verysat_from">
                                 @error('verysat_from')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="verysat_to">
+                                <input type="text" class="form-control" wire:model.defer="verysat_to">
                                 @error('verysat_to')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2593,14 +2541,14 @@
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="sat_from">
+                                <input type="text" class="form-control" wire:model.defer="sat_from">
                                 @error('sat_from')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="sat_to">
+                                <input type="text" class="form-control" wire:model.defer="sat_to">
                                 @error('sat_to')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2613,14 +2561,14 @@
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="unsat_from">
+                                <input type="text" class="form-control" wire:model.defer="unsat_from">
                                 @error('unsat_from')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="unsat_to">
+                                <input type="text" class="form-control" wire:model.defer="unsat_to">
                                 @error('unsat_to')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2633,14 +2581,14 @@
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="poor_from">
+                                <input type="text" class="form-control" wire:model.defer="poor_from">
                                 @error('poor_from')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr"></div>
                             <div class="gap-4 w-100 form-group">
-                                <input type="text" class="form-control" wire:model="poor_to">
+                                <input type="text" class="form-control" wire:model.defer="poor_to">
                                 @error('poor_to')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2683,21 +2631,21 @@
 
                         <div class="d-flex justify-content-around gap-2">
                             <div class="gap-4 w-100 form-group">
-                                <textarea type="text" class="form-control" style="height: 150px" wire:model="efficiency"></textarea>
+                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="efficiency"></textarea>
                                 @error('efficiency')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr my-2"></div>
                             <div class="gap-4 w-100 form-group">
-                                <textarea type="text" class="form-control" style="height: 150px" wire:model="quality"></textarea>
+                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="quality"></textarea>
                                 @error('quality')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr my-2"></div>
                             <div class="gap-4 w-100 form-group">
-                                <textarea type="text" class="form-control" style="height: 150px" wire:model="timeliness"></textarea>
+                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="timeliness"></textarea>
                                 @error('timeliness')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2734,16 +2682,28 @@
                         <label>Target Output: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Target Output" class="form-control"
-                            wire:model="target_output">
+                            wire:model.defer="target_output">
                             @error('target_output')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
                         @if (isset($type) && $type == 'office')
+                            @if ($targetAllocated == null || $targetAllocated == $targetID)
+                                @if ($output = auth()->user()->outputs()->where('id', $selectedOutput)->first())
+                                    @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                        @if ($target->pivot->target_allocated == null)
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" wire:model.defer="allocatedTargetSelected.{{$target->id}}" {{ ($target->id == $targetID) ? "disabled" : "" }}>
+                                                <label class="form-check-label">{{ $target->target }}</label>
+                                            </div> 
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endif
                             <label>Alloted Budget: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Alloted Budget" class="form-control"
-                                wire:model="alloted_budget">
+                                wire:model.defer="alloted_budget" {{ ($targetAllocated == null || $targetAllocated == $targetID) ? "" : "disabled" }}>
                                 @error('alloted_budget')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2751,7 +2711,7 @@
                             <label>Responsible Person/Office: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Responsible Person/Office" class="form-control"
-                                wire:model="responsible">
+                                wire:model.defer="responsible">
                                 @error('responsible')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2781,21 +2741,33 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Edit Target Output</h4>
                 </div>
-                <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "saveOpcr" : "saveIpcr" }}">
+                <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "updateOpcr" : "updateIpcr" }}">
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">
                             <input type="text" placeholder="Target Output" class="form-control"
-                            wire:model="target_output">
+                            wire:model.defer="target_output">
                             @error('target_output')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
                         @if (isset($type) && $type == 'office')
+                            @if ($targetAllocated == null || $targetAllocated == $targetID)
+                                @if ($output = auth()->user()->outputs()->where('id', $selectedOutput)->first())
+                                    @foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target)
+                                        @if ($target->pivot->target_allocated == null || $target->pivot->target_allocated == $targetID)
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" wire:model.defer="allocatedTargetSelected.{{$target->id}}" {{ ($target->id == $targetID) ? "disabled" : "" }}>
+                                                <label class="form-check-label">{{ $target->target }}</label>
+                                            </div> 
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endif
                             <label>Alloted Budget: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Alloted Budget" class="form-control"
-                                wire:model="alloted_budget">
+                                wire:model.defer="alloted_budget" {{ ($targetAllocated == null || $targetAllocated == $targetID) ? "" : "disabled" }}>
                                 @error('alloted_budget')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
@@ -2803,7 +2775,7 @@
                             <label>Responsible Person/Office: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Responsible Person/Office" class="form-control"
-                                wire:model="responsible">
+                                wire:model.defer="responsible">
                                 @error('responsible')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror

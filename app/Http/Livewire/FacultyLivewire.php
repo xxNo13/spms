@@ -55,20 +55,18 @@ class FacultyLivewire extends Component
 
     public $targetOutput;
 
-    public $dummy;
-
     public $add = false;
     public $targetsSelected = [];
 
     public $filter = "";
 
+    public $hasTargetOutput = false;
+    public $hasRating = false;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
         'output_finished' => ['nullable', 'required_if:selected,rating', 'numeric'],
-        'efficiency' => ['required_without_all:quality,timeliness,dummy'],
-        'quality' => ['required_without_all:efficiency,timeliness,dummy'],
-        'timeliness' => ['required_without_all:efficiency,quality,dummy'],
         'accomplishment' => ['required_if:selected,rating'],
         
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
@@ -84,9 +82,6 @@ class FacultyLivewire extends Component
     protected $messages = [
         'output_finished.required_if' => 'Output Finished cannot be null.',
         'output_finished.numeric' => 'Output Finished should be a number.',
-        'efficiency.required_without_all' => 'Efficiency cannot be null.',
-        'quality.required_without_all' => 'Quality cannot be null.',
-        'timeliness.required_without_all' => 'Timeliness cannot be null.',
         'accomplishment' => 'Actual Accomplishment cannot be null.',
         
         'target_output.required_if' => 'Target Output cannot be null',
@@ -156,7 +151,6 @@ class FacultyLivewire extends Component
             foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
                 $this->targetsSelected[$target->id] = $target->id;
             }
-
         }
 
         $depths = [];
@@ -170,8 +164,6 @@ class FacultyLivewire extends Component
                 $this->highestOffice[$id] = $depth;
             }
         }
-
-        $this->dummy = 'has data';
     }
 
     public function render()
@@ -181,6 +173,38 @@ class FacultyLivewire extends Component
                 'functs' => Funct::all()
             ]);
         } else {
+            foreach (auth()->user()->targets as $target) {
+                if (($target->suboutput_id && $target->suboutput->output->user_type == 'faculty') || ($target->output_id && $target->output->user_type == 'faculty')) {
+                    if (!isset($target->pivot->target_output)) {
+                        $this->hasTargetOutput = false;
+                        break;
+                    } else {
+                        $this->hasTargetOutput = true;
+                    }
+                }
+            }
+
+            foreach (auth()->user()->targets as $target) {
+                if (($target->suboutput_id && $target->suboutput->output->user_type == 'faculty') || ($target->output_id && $target->output->user_type == 'faculty')) {
+                    if (count($target->ratings) > 0) {
+                        foreach ($target->ratings as $rating) {
+                            if ($rating->user_id == auth()->user()->id) {
+                                $this->hasRating = true;
+                                break;
+                            } else {
+                                $this->hasRating = false;
+                            }
+                        }
+                        if (!$this->hasRating) {
+                            break;
+                        }
+                    } else {
+                        $this->hasRating = false;
+                        break;
+                    }
+                }
+            }
+
             return view('livewire.faculty-livewire', [
                 'functs' => Funct::paginate(1)
             ]);
@@ -197,7 +221,6 @@ class FacultyLivewire extends Component
             $this->selectedTarget = auth()->user()->targets()->where('id', $target_id)->first();
             $this->targetOutput = $this->selectedTarget->pivot->target_output;
         }
-        $this->dummy = '';
     }
 
     public function editRating($rating_id){
@@ -211,7 +234,6 @@ class FacultyLivewire extends Component
         
         $this->output_finished = $rating->output_finished;
         $this->accomplishment = $rating->accomplishment;
-        $this->efficiency = $rating->efficiency;
         $this->quality = $rating->quality;
         $this->timeliness = $rating->timeliness;
     }
@@ -222,31 +244,39 @@ class FacultyLivewire extends Component
 
         if ($category == 'add') {
             $divisor = 0;
-
-            if(!$this->efficiency){
-                $divisor++;
-            }
-            if(!$this->quality){
-                $divisor++;
-            }
-            if(!$this->timeliness){
-                $divisor++;
-            }
-            $number = ((int)$this->efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
-            $average = number_format((float)$number, 2, '.', '');
+            $efficiency = null;
             
             $standard = $this->selectedTarget->standards()->first();
 
-            if ($this->efficiency == '') {
-                if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1){
-                    $error = \Illuminate\Validation\ValidationException::withMessages([
-                        'efficiency' => ['Efficiency cannot be null.'],
-                     ]);
-                     throw $error;
+            if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) {
+                if ($standard->eff_5) {
+                    $eff_5 = strtok($standard->eff_5, '%');
+                }
+                if ($standard->eff_4) {
+                    $eff_4 = strtok($standard->eff_4, '%');
+                }
+                if ($standard->eff_3) {
+                    $eff_3 = strtok($standard->eff_3, '%');
+                }
+                if ($standard->eff_2) {
+                    $eff_2 = strtok($standard->eff_2, '%');
+                }
+    
+                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                
+                if ($output_pecentage >= $eff_5) {
+                    $efficiency = 5;
+                } elseif ($output_pecentage >= $eff_4) {
+                    $efficiency = 4;
+                } elseif ($output_pecentage >= $eff_3) {
+                    $efficiency = 3;
+                } elseif ($output_pecentage >= $eff_2) {
+                    $efficiency = 2;
                 } else {
-                    $this->efficiency = null;
+                    $efficiency = 1;
                 }
             }
+
             if ($this->quality == '') {
                 if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
                     $error = \Illuminate\Validation\ValidationException::withMessages([
@@ -268,10 +298,22 @@ class FacultyLivewire extends Component
                 }
             }
 
+            if(!$efficiency){
+                $divisor++;
+            }
+            if(!$this->quality){
+                $divisor++;
+            }
+            if(!$this->timeliness){
+                $divisor++;
+            }
+            $number = ((int)$efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
+            $average = number_format((float)$number, 2, '.', '');
+
             Rating::create([
                 'output_finished' => $this->output_finished,
                 'accomplishment' => $this->accomplishment,
-                'efficiency' => $this->efficiency,
+                'efficiency' => $efficiency,
                 'quality' => $this->quality,
                 'timeliness' => $this->timeliness,
                 'average' => $average,

@@ -339,7 +339,6 @@
         @endforeach
         @if (isset($totals))
             @php
-                arsort($totals);
                 $number = 0;
             @endphp
             <tfoot>
@@ -349,25 +348,27 @@
                     @endphp
                     @foreach ($users as $user)
                         @if ($index[0] == $user->id && $user->offices()->wherePivot('isHead', 1)->first()->getDepthAttribute() != 0)
-                            <tr>
-                                <td>{{ ++$number }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->offices()->wherePivot('isHead', 1)->first()->office_abbr }}</td>
-                                <td>{{ $totals[$user->id . ','. $index[1]] }}</td>
-                                <td>
-                                    @if ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->out_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->out_to)
-                                        Outstanding
-                                    @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->verysat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->verysat_to)
-                                        Very Satisfactory
-                                    @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->sat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->sat_to)
-                                        Satisfactory
-                                    @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->unsat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->unsat_to)
-                                        Unsatisfactory
-                                    @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->poor_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->poor_to)
-                                        Poor
-                                    @endif
-                                </td>
-                            </tr>
+                            @if (true)
+                                <tr>
+                                    <td>{{ ++$number }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->offices()->wherePivot('isHead', 1)->first()->office_abbr }}</td>
+                                    <td>{{ $totals[$user->id . ','. $index[1]] }}</td>
+                                    <td>
+                                        @if ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->out_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->out_to)
+                                            Outstanding
+                                        @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->verysat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->verysat_to)
+                                            Very Satisfactory
+                                        @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->sat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->sat_to)
+                                            Satisfactory
+                                        @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->unsat_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->unsat_to)
+                                            Unsatisfactory
+                                        @elseif ($totals[$user->id . ','. $index[1]] >= $scoreEquivalent->poor_from && $totals[$user->id . ','. $index[1]] <= $scoreEquivalent->poor_to)
+                                            Poor
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                             @break
                         @endif
                     @endforeach

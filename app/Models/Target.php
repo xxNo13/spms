@@ -38,6 +38,7 @@ class Target extends Model
         return $this->belongsToMany(User::class, 'target_user')
             ->withPivot('target_output')
             ->withPivot('alloted_budget')
-            ->withPivot('responsible');
+            ->withPivot('responsible')
+            ->withPivot('target_allocated');
     }
 }

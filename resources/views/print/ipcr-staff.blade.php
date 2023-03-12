@@ -596,7 +596,7 @@
                                 <td colspan="7" class="text-end">
                                     Total {{ $funct->funct }} (
                                     @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('duration_id', $duration->id)->get() as $sub_funct)
-                                        @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                        @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                             @if ($x)
                                                 + {{ $sub_percentage->value }}%
                                             @else

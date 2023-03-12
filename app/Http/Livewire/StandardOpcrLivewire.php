@@ -50,6 +50,8 @@ class StandardOpcrLivewire extends Component
     public $review_user;
     public $approve_user;
 
+    public $hasStandard = false;
+
     protected $rules = [
         'eff_5' => ['nullable', 'required_without_all:eff_4,eff_3,eff_2,eff_1,qua_5,qua_4,qua_3,qua_2,qua_1,time_5,time_4,time_3,time_2,time_1,dummy'],
         'eff_4' => ['nullable', 'required_without_all:eff_5,eff_3,eff_2,eff_1,qua_5,qua_4,qua_3,qua_2,qua_1,time_5,time_4,time_3,time_2,time_1,dummy'],
@@ -109,6 +111,27 @@ class StandardOpcrLivewire extends Component
 
     public function render()
     {
+        foreach (auth()->user()->targets as $target) {
+            if (($target->suboutput_id && $target->suboutput->output->user_type == 'office') || ($target->output_id && $target->output->user_type == 'office')) {
+                if (count($target->standards) > 0) {
+                    foreach ($target->standards as $standard) {
+                        if ($standard->user_id == auth()->user()->id || $standard->user_id === null) {
+                            $this->hasStandard = true;
+                            break;
+                        } else {
+                            $this->hasStandard = false;
+                        }
+                    }
+                    if (!$this->hasStandard) {
+                        break;
+                    }
+                } else {
+                    $this->hasStandard = false;
+                    break;
+                }
+            }
+        }
+
         $functs = Funct::paginate(1);
         return view('livewire.standard-opcr-livewire', [
             'functs' => $functs,
@@ -194,6 +217,70 @@ class StandardOpcrLivewire extends Component
     public function save($category){
         $this->validate();
 
+        $standardValue = StandardValue::first();
+
+        $effs = preg_split('/\r\n|\r|\n/', $standardValue->efficiency);
+        $quas = preg_split('/\r\n|\r|\n/', $standardValue->quality);
+        $times = preg_split('/\r\n|\r|\n/', $standardValue->timeliness);
+
+        $efficiency = $standardValue->efficiency;
+        $quality = $standardValue->quality;
+        $timeliness = $standardValue->timeliness;
+
+        if (!in_array($this->eff_5, $effs) && $this->eff_5 != '') {
+            $efficiency .= "\r\n" . $this->eff_5;
+        }
+        if (!in_array($this->eff_4, $effs) && $this->eff_4 != '') {
+            $efficiency .= "\r\n" . $this->eff_4;
+        }
+        if (!in_array($this->eff_3, $effs) && $this->eff_3 != '') {
+            $efficiency .= "\r\n" . $this->eff_3;
+        }
+        if (!in_array($this->eff_2, $effs) && $this->eff_2 != '') {
+            $efficiency .= "\r\n" . $this->eff_2;
+        }
+        if (!in_array($this->eff_1, $effs) && $this->eff_1 != '') {
+            $efficiency .= "\r\n" . $this->eff_1;
+        }
+        
+        if (!in_array($this->qua_5, $quas) && $this->qua_5 != '') {
+            $quality .= "\r\n" . $this->qua_5;
+        }
+        if (!in_array($this->qua_4, $quas) && $this->qua_4 != '') {
+            $quality .= "\r\n" . $this->qua_4;
+        }
+        if (!in_array($this->qua_3, $quas) && $this->qua_3 != '') {
+            $quality .= "\r\n" . $this->qua_3;
+        }
+        if (!in_array($this->qua_2, $quas) && $this->qua_2 != '') {
+            $quality .= "\r\n" . $this->qua_2;
+        }
+        if (!in_array($this->qua_1, $quas) && $this->qua_1 != '') {
+            $quality .= "\r\n" . $this->qua_1;
+        }
+        
+        if (!in_array($this->time_5, $times) && $this->time_5 != '') {
+            $timeliness .= "\r\n" . $this->time_5;
+        }
+        if (!in_array($this->time_4, $times) && $this->time_4 != '') {
+            $timeliness .= "\r\n" . $this->time_4;
+        }
+        if (!in_array($this->time_3, $times) && $this->time_3 != '') {
+            $timeliness .= "\r\n" . $this->time_3;
+        }
+        if (!in_array($this->time_2, $times) && $this->time_2 != '') {
+            $timeliness .= "\r\n" . $this->time_2;
+        }
+        if (!in_array($this->time_1, $times) && $this->time_1 != '') {
+            $timeliness .= "\r\n" . $this->time_1;
+        }
+
+        StandardValue::where('id', 1)->update([
+            'efficiency' => $efficiency,
+            'quality' => $quality,
+            'timeliness' => $timeliness,
+        ]);
+
         if ($category == 'add'){
             Standard::create([
                 'eff_5' => $this->eff_5,
@@ -244,9 +331,8 @@ class StandardOpcrLivewire extends Component
                 'color' => "#28ab55",
             ]);
         }
-        
-        $this->resetInput();
-        $this->dispatchBrowserEvent('close-modal'); 
+
+        return redirect(request()->header('Referer'));
     }
 
     public function delete(){

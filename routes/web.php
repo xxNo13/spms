@@ -7,6 +7,7 @@ use App\Http\Livewire\OpcrLivewire;
 use App\Http\Livewire\TtmaLivewire;
 use App\Http\Livewire\StaffLivewire;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\ArchiveLivewire;
 use App\Http\Livewire\FacultyLivewire;
 use App\Http\Controllers\PdfController;
 use App\Http\Livewire\TrainingLivewire;
@@ -42,6 +43,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/archives', ArchiveLivewire::class)->name('archives');
     Route::get('/ttma', TtmaLivewire::class)->name('ttma');
     Route::get('/recommendation-list', RecommendationListLivewire::class)->name('recommendation.list');
 

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('target_output')->nullable();
             $table->string('alloted_budget')->nullable();
             $table->string('responsible')->nullable();
+            $table->integer('target_allocated')->nullable();
         });
     }
 

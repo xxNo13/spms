@@ -85,12 +85,12 @@
                                     Add OST
                                 </button>
                             @endif
-                            @if ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                            @if ($hasTargetOutput && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
                                 <button type="button" class="btn btn-outline-info" title="Save OPCR" wire:click="submit('approval')">
                                     Submit
                                 </button>
                             @endif
-                            @if (($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
+                            @if ($hasRating && ($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
                                 <button type="button" class="btn btn-outline-info" title="Save OPCR" wire:click="submit('assess')">
                                     Submit
                                 </button>
@@ -189,8 +189,8 @@
                                                                                 @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                     <div class="dropdown-menu">
-                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')">Edit</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}})">Delete</a>
                                                                                     </div>
                                                                                 @endif
                                                                                 {{ $target->pivot->target_output }}
@@ -205,7 +205,7 @@
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <td colspan="3" class="text-center">
                                                                                     <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')" title="Add Target Output">
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 </td>
@@ -364,8 +364,8 @@
                                                                                 @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                     <div class="dropdown-menu">
-                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')">Edit</a>
+                                                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}})">Delete</a>
                                                                                     </div>
                                                                                 @endif
                                                                                 {{ $target->pivot->target_output }}
@@ -380,7 +380,7 @@
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <td colspan="3" class="text-center">
                                                                                     <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                        data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')" title="Add Target Output">
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 </td>
@@ -561,8 +561,8 @@
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                 <div class="dropdown-menu">
-                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')">Edit</a>
+                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}})">Delete</a>
                                                                                 </div>
                                                                             @endif
                                                                             {{ $target->pivot->target_output }}
@@ -577,7 +577,7 @@
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                             <td colspan="3" class="text-center">
                                                                                 <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                    data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                    data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')" title="Add Target Output">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             </td>
@@ -736,8 +736,8 @@
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
                                                                                 <div class="dropdown-menu">
-                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')">Edit</a>
-                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output', {{$target->id}})">Delete</a>
+                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#EditTargetOutputModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')">Edit</a>
+                                                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal"  wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}})">Delete</a>
                                                                                 </div>
                                                                             @endif
                                                                             {{ $target->pivot->target_output }}
@@ -752,7 +752,7 @@
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                             <td colspan="3" class="text-center">
                                                                                 <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
-                                                                                    data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
+                                                                                    data-bs-target="#AddTargetOutputModal" wire:click="selectOpcr('target_output',{{$output->id}}, {{$target->id}}, 'edit')" title="Add Target Output">
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             </td>
@@ -864,6 +864,7 @@
     {{ $functs->links('components.pagination') }}
     @php
         $type = 'office';
+        $targetID = $target_id;
     @endphp
-    <x-modals :selectedTarget="$selectedTarget" :type="$type" :targetOutput="$targetOutput" />
+    <x-modals :targetAllocated="$targetAllocated" :targetID="$targetID" :selectedOutput="$selectedOutput" :selectedTarget="$selectedTarget" :type="$type" :targetOutput="$targetOutput" />
 </div>

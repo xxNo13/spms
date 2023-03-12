@@ -1,6 +1,6 @@
 @props(['href','logo', 'title' => 'Menu'])
 
-<div id="sidebar" class="active position-fixed" style="z-index: 2;">
+<div id="sidebar" class="active position-fixed" style="z-index: 5;">
     <div class="sidebar-wrapper">
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">

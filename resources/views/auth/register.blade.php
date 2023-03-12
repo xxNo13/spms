@@ -16,13 +16,13 @@
         <form action="" method="POST">
             @csrf
             <div class="form-group position-relative has-icon-left mb-4">
-                <input type="text" class="form-control form-control-xl" name="name" placeholder="Fullname">
+                <input type="text" class="form-control form-control-xl" value="{{ old('name') ? old('name') : "" }}" name="name" placeholder="Fullname">
                 <div class="form-control-icon">
                     <i class="bi bi-person"></i>
                 </div>
             </div>
             <div class="form-group position-relative has-icon-left mb-4">
-                <input type="email" class="form-control form-control-xl" name="email" placeholder="Email">
+                <input type="email" class="form-control form-control-xl" value="{{ old('email') ? old('email') : "" }}" name="email" placeholder="Email">
                 <div class="form-control-icon">
                     <i class="bi bi-envelope"></i>
                 </div>

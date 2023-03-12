@@ -1,4 +1,4 @@
-<header class="position-fixed shadow-sm w-100 bg-body" id="header" style="z-index: 1;">
+<header class="position-fixed shadow-sm w-100 bg-body" id="header" style="z-index: 4;">
     <nav class="navbar navbar-expand navbar-light">
         <div class="container-fluid">
             <a class="burger-btn d-block">

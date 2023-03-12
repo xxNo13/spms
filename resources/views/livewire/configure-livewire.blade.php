@@ -18,17 +18,17 @@
 
         <div class="row">
             <div class="hstack gap-3 justify-content-center">
-                <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Faculty">
+                <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print List of Faculty IPCR">
                     <i class="bi bi-printer"></i>
-                    Ranking of Faculty
+                    List of Faculty IPCR
                 </a>
-                <a href="{{ route('print.rankings.staff') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of Staff">
+                <a href="{{ route('print.rankings.staff') }}" target="_blank" class="btn icon btn-primary" title="Print List of Staff IPCR">
                     <i class="bi bi-printer"></i>
-                    Ranking of Staff
+                    List of Staff IPCR
                 </a>
-                <a href="{{ route('print.rankings.opcr') }}" target="_blank" class="btn icon btn-primary" title="Print Ranking of OPCR">
+                <a href="{{ route('print.rankings.opcr') }}" target="_blank" class="btn icon btn-primary" title="Print List of OPCR">
                     <i class="bi bi-printer"></i>
-                    Ranking of OPCR
+                    List of OPCR
                 </a>
             </div>
         </div>

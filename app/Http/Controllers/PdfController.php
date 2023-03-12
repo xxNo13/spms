@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ttma;
 use App\Models\User;
 use App\Models\Funct;
+use App\Models\Office;
 use App\Models\Duration;
 use App\Models\Percentage;
 use Illuminate\Http\Request;
@@ -454,7 +455,8 @@ class PdfController extends Controller
             'durationF' => $durationF,
             'percentage' => $percentage,
             'scoreEquivalent' => $scoreEquivalent,
-            'users' => $users
+            'users' => $users,
+            'offices' => Office::where('id', $office_id)->get(),
         ];
 
         
@@ -481,11 +483,11 @@ class PdfController extends Controller
 
         $users = User::query();
 
-        $users->orwhereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) {
+        $users->whereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) {
             return $query->where('account_type', 'LIKE', '%faculty%');
         });
         
-        $users = $users->distinct()->get();
+        $users = $users->orderBy('name', 'ASC')->distinct()->get();
 
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
@@ -495,7 +497,8 @@ class PdfController extends Controller
             'durationF' => $durationF,
             'percentage' => $percentage,
             'scoreEquivalent' => $scoreEquivalent,
-            'users' => $users
+            'users' => $users,
+            'offices' => Office::where('office_name', 'like', '%dean%')->get(),
         ];
 
         
@@ -522,11 +525,11 @@ class PdfController extends Controller
 
         $users = User::query();
 
-        $users->orwhereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) {
+        $users->whereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) {
             return $query->where('account_type', 'LIKE', '%staff%');
         });
         
-        $users = $users->distinct()->get();
+        $users = $users->orderBy('name', 'ASC')->distinct()->get();
 
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
@@ -536,7 +539,8 @@ class PdfController extends Controller
             'durationS' => $durationS,
             'percentages' => $percentages,
             'scoreEquivalent' => $scoreEquivalent,
-            'users' => $users
+            'users' => $users,
+            'offices' => Office::wherenot('office_name', 'like', '%dean%')->wherenot('id', 1)->get(),
         ];
 
         
@@ -563,11 +567,11 @@ class PdfController extends Controller
 
         $users = User::query();
 
-        $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) {
+        $users->whereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) {
             return $query->where('isHead', true);
         });
         
-        $users = $users->distinct()->get();
+        $users = $users->orderBy('name', 'ASC')->distinct()->get();
 
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
