@@ -29,95 +29,95 @@ class UserSeeder extends Seeder
             'email' => 'agod.joenamarie@dnsc.edu.ph',
         ]);
         $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Aivie Villarta Alfeche',
-        //     'email' => 'alfeche.aivie@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Nezel Ann B. Bantayan',
-        //     'email' => 'bantayan.nezelann@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Edison Quilisadio Bernaldez',
-        //     'email' => 'bernaldez.edison@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Frincess Jade Cabuga Cajano',
-        //     'email' => 'cajano.frincessjade@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Bonita Penaso Cantere',
-        //     'email' => 'cantere.bonita@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15, 22 => ['isHead'=> 1]]);
-        // $user = User::create([
-        //     'name' => 'Danvier C. Cruz',
-        //     'email' => 'cruz.danvier@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Ronel Geraldizo Dagohoy',
-        //     'email' => 'dagohoy.ronel@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Niño Joseph Tio Fabia',
-        //     'email' => 'fabia.ninojoseph@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Joanaros Precillo Fahit',
-        //     'email' => 'fahit.joanaros@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Florie Ann Lupida Fermil',
-        //     'email' => 'fermil.florieann@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15 => ['isHead' => 1]]);
-        // $user = User::create([
-        //     'name' => 'Gerry Louis Ordaneza Gallano',
-        //     'email' => 'gallano.gerrylouis@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Charlo Bianci Montehermos Guray',
-        //     'email' => 'guray.charlobianci@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15, 34 => ['isHead' => 1]]);
-        // $user = User::create([
-        //     'name' => 'Arvin Bargayo Gutang',
-        //     'email' => 'gutang.arvin@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Eliseo Fermo Huesca',
-        //     'email' => 'huesca.eliseo@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15, 30 => ['isHead' => 1]]);
-        // $user = User::create([
-        //     'name' => 'James M. Jadraque',
-        //     'email' => 'jadraque.james@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Marilou Delfin Junsay',
-        //     'email' => 'junsay.marilou@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Glenne Berja Lagura',
-        //     'email' => 'lagura.glenne@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
-        // $user = User::create([
-        //     'name' => 'Junry Remedios Lanoy',
-        //     'email' => 'lanoy.junry@dnsc.edu.ph',
-        // ]);
-        // $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Aivie Villarta Alfeche',
+            'email' => 'alfeche.aivie@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Nezel Ann B. Bantayan',
+            'email' => 'bantayan.nezelann@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Edison Quilisadio Bernaldez',
+            'email' => 'bernaldez.edison@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Frincess Jade Cabuga Cajano',
+            'email' => 'cajano.frincessjade@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Bonita Penaso Cantere',
+            'email' => 'cantere.bonita@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15, 22 => ['isHead'=> 1]]);
+        $user = User::create([
+            'name' => 'Danvier C. Cruz',
+            'email' => 'cruz.danvier@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Ronel Geraldizo Dagohoy',
+            'email' => 'dagohoy.ronel@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Niño Joseph Tio Fabia',
+            'email' => 'fabia.ninojoseph@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Joanaros Precillo Fahit',
+            'email' => 'fahit.joanaros@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Florie Ann Lupida Fermil',
+            'email' => 'fermil.florieann@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15 => ['isHead' => 1]]);
+        $user = User::create([
+            'name' => 'Gerry Louis Ordaneza Gallano',
+            'email' => 'gallano.gerrylouis@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Charlo Bianci Montehermos Guray',
+            'email' => 'guray.charlobianci@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15, 34 => ['isHead' => 1]]);
+        $user = User::create([
+            'name' => 'Arvin Bargayo Gutang',
+            'email' => 'gutang.arvin@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Eliseo Fermo Huesca',
+            'email' => 'huesca.eliseo@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15, 30 => ['isHead' => 1]]);
+        $user = User::create([
+            'name' => 'James M. Jadraque',
+            'email' => 'jadraque.james@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Marilou Delfin Junsay',
+            'email' => 'junsay.marilou@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Glenne Berja Lagura',
+            'email' => 'lagura.glenne@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
+        $user = User::create([
+            'name' => 'Junry Remedios Lanoy',
+            'email' => 'lanoy.junry@dnsc.edu.ph',
+        ]);
+        $user->offices()->attach([15]);
     }
 }

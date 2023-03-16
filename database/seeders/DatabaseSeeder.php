@@ -90,8 +90,8 @@ after deadline'
         ]);
 
         $this->call([
-            UserSeeder::class,
             OfficeSeeder::class,
+            UserSeeder::class,
         ]);
 
     }
