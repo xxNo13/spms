@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>IPCR - {{ $user->name }} - Faculty</title>
+    <link rel="icon" href="{{ asset('images/logo/icon.png') }}">
     <style>
         @page {
             margin: 100px 50px 110px 50px;

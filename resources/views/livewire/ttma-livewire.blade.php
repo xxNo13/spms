@@ -202,7 +202,8 @@
                                             <div class="accordion-body w-100">
                                                 <div class="row">
                                                     <div class="col-6">
-                                                        <h4>{{ $ttma->subject }}</h4> - <h3>{{ $ttma->output }}</h3>
+                                                        <h4>Subject: {{ $ttma->subject }}</h4>
+                                                        <h5>Output: {{ $ttma->output }}</h5>
                                                     </div>
                                                     <div class="col-6 text-end">
                                                         <span class="fw-bold">Date Assigned:</span>{{ date('M d, Y', strtotime($ttma->created_at)) }}</span><br>
@@ -224,7 +225,7 @@
                                                             <livewire:message-ttma-livewire wire:key="assign{{$ttma->id}}" wire:key="assign{{$ttma->id}}" :ttma="$ttma" />
                                                         <hr>
                                                         <form wire:submit.prevent="message" class="col-12 hstack gap-2">
-                                                            <input type="text" class="form-control" wire:model="message" {{ $ttma->remarks ? 'disabled' : '' }}>
+                                                            <input type="text" class="form-control" wire:model.defer="message" {{ $ttma->remarks ? 'disabled' : '' }}>
                                                             <button class="btn btn-primary" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
                                                         </form>
                                                     </div>

@@ -37,7 +37,7 @@
                                             @elseif(isset($approvalIPCRF)&& $approvalIPCRF->approve_status == 1)
                                                 {{ count($ratings) }} / {{ count($targetsF) }}
                                             @else
-                                                Not approved or Semester's not started yet.
+                                                Not approved
                                             @endif
                                         </h6>
                                     </div>
@@ -124,34 +124,27 @@
                             @forelse ($recentTargets as $target)
                                 @if ((isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1) && (isset($approvalIPCRS) && $approvalIPCRS->approve_status == 1))
                                     <h6 class="text-muted mb-2">
-                                        <a
-                                            href="#">
-                                            @if ($target->rating)
-                                                <i class="bi bi-check"></i>
-                                            @endif
-                                            {{ $target->target }}
-                                        </a>
+                                        @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
+                                            <i class="bi bi-check"></i>
+                                        @endif
+                                        {{ $target->target }}
                                     </h6>
                                 @elseif (isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1)
                                     @if ($target->user_type == 'faculty')
                                         <h6 class="text-muted mb-2">
-                                            <a href="">
-                                                @if ($target->rating)
-                                                    <i class="bi bi-check"></i>
-                                                @endif
-                                                {{ $target->target }}
-                                            </a>
+                                            @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
+                                                <i class="bi bi-check"></i>
+                                            @endif
+                                            {{ $target->target }}
                                         </h6>
                                     @endif
                                 @elseif (isset($approvalIPCRS) && $approvalIPCRS->approve_status == 1)
                                     @if ($target->user_type == 'staff')
                                         <h6 class="text-muted mb-2">
-                                            <a href="">
-                                                @if ($target->rating)
-                                                    <i class="bi bi-check"></i>
-                                                @endif
-                                                {{ $target->target }}
-                                            </a>
+                                            @if ($target->rating)
+                                                <i class="bi bi-check"></i>
+                                            @endif
+                                            {{ $target->target }}
                                         </h6>
                                     @endif
                                 @elseif($loop->last)

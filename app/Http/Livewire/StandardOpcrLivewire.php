@@ -164,23 +164,25 @@ class StandardOpcrLivewire extends Component
         }
 
         $this->approve_id = $office->users()->where('isHead', 1)->pluck('id')->first();
-
-        $pmt = Pmt::where('isHead', 1)->first();
-
-        if (!$pmt) {
+        
+        if (!$this->approve_id) {
             return $this->dispatchBrowserEvent('toastify', [
                 'message' => "No Head Found!",
                 'color' => "#f3616d",
             ]);
         }
 
-        $this->review_id = $pmt->user->id;
+        $pmt_head = Pmt::where('isHead', 1)->first();
 
-        if (!$this->review_id || !$this->approve_id) {
+        if (!$pmt_head) {
             return $this->dispatchBrowserEvent('toastify', [
                 'message' => "No Head Found!",
                 'color' => "#f3616d",
             ]);
+        }
+
+        foreach (Pmt::all() as $indi_pmt) {
+            $this->review_id[$indi_pmt->user->id] = $indi_pmt->user->id; 
         }
 
         $approval = Approval::create([
@@ -194,8 +196,12 @@ class StandardOpcrLivewire extends Component
 
         
         $approve = $approval;
+
+        if (isset($this->review_id[auth()->user()->id])) {
+            unset($this->review_id[auth()->user()->id]);
+        }
         
-        $approve->reviewers()->attach([$this->review_id]);
+        $approve->reviewers()->attach($this->review_id);
         
         $reviewer = User::where('id', $this->review_id)->first();
         $approver = User::where('id', $this->approve_id)->first();

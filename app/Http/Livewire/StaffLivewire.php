@@ -244,13 +244,13 @@ class StaffLivewire extends Component
     
                 $output_pecentage = $this->output_finished/$this->targetOutput * 100;
                 
-                if ($output_pecentage >= $eff_5) {
+                if ($output_pecentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= $eff_4) {
+                } elseif ($output_pecentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= $eff_3) {
+                } elseif ($output_pecentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= $eff_2) {
+                } elseif ($output_pecentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -328,13 +328,13 @@ class StaffLivewire extends Component
     
                 $output_pecentage = $this->output_finished/$this->targetOutput * 100;
                 
-                if ($output_pecentage >= $eff_5) {
+                if ($output_pecentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= $eff_4) {
+                } elseif ($output_pecentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= $eff_3) {
+                } elseif ($output_pecentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= $eff_2) {
+                } elseif ($output_pecentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;

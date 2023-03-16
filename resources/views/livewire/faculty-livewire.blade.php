@@ -91,10 +91,14 @@
                                             </button>
                                         @endif
                                     @endforeach
+                                    <button type="button" class="btn btn-outline-warning" title="Add Output/Suboutput/Target" wire:click="add">
+                                        Modify Success Indicators
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">
+                                        Add Success Indicators
+                                    </button>
                                 @endif
-                                <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">
-                                    Add OST
-                                </button>
                             @endif
                             @if ($hasTargetOutput && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
                                 <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('approval')">

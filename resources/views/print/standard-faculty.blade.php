@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Standard - {{ Auth::user()->name }}</title>
+    <link rel="icon" href="{{ asset('images/logo/icon.png') }}">
     <style>
         @page {
             margin: 100px 50px 110px 50px;
@@ -113,10 +114,10 @@
                 <tr>
                     <td class="text-start" colspan="9">{{ $funct->funct }}</td>
                 </tr>
-                @foreach ($user->sub_functs()->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $subFunct)
+                @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <tr>
                         <td colspan="2">
-                            {{ $subFunct->sub_funct }}
+                            {{ $sub_funct->sub_funct }}
                             @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $percent = $sub_percentage->value }}%
                             @endif
@@ -135,7 +136,7 @@
                                 <td colspan="7"></td>
                             </tr>
                             <tr style="page-break-inside: avoid;" >
-                                <td colspan="2" rowspan="{{ count($suboutput->targets) * 5 }}">
+                                <td colspan="2" rowspan="{{ count($suboutput->targets) * 5}}">
                                 {{ $suboutput->suboutput }}
                                 </td>
 
@@ -145,7 +146,7 @@
                                 @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                     @if ($first)
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == null)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -194,7 +195,7 @@
                                     @else
                                         <tr style="page-break-inside: avoid;" >
                                             @foreach ($target->standards as $standard)
-                                                @if ($standard->user_id == null)
+                                                @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                     <td rowspan="5">{{ $target->target }}</td>
                                                     <td>5</td>
                                                     <td>{{ $standard->eff_5 }}</td>
@@ -249,107 +250,51 @@
                                 <td rowspan="{{ count($output->targets)*5 }}">
                                     {{ $output->output }}
                                 </td>
-
-                                @php
-                                    $first = true;
-                                @endphp
                                 @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                    @if ($first)
-                                        @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == null)
-                                                <td rowspan="5">{{ $target->target }}</td>
-                                                <td>5</td>
-                                                <td>{{ $standard->eff_5 }}</td>
-                                                <td>5</td>
-                                                <td>{{ $standard->qua_5 }}</td>
-                                                <td>5</td>
-                                                <td>{{ $standard->time_5 }}</td>
-                                                <tr>
-                                                    <td>4</td>
-                                                    <td>{{ $standard->eff_4 }}</td>
-                                                    <td>4</td>
-                                                    <td>{{ $standard->qua_4 }}</td>
-                                                    <td>4</td>
-                                                    <td>{{ $standard->time_4 }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>{{ $standard->eff_3 }}</td>
-                                                    <td>3</td>
-                                                    <td>{{ $standard->qua_3 }}</td>
-                                                    <td>3</td>
-                                                    <td>{{ $standard->time_3 }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>{{ $standard->eff_2 }}</td>
-                                                    <td>2</td>
-                                                    <td>{{ $standard->qua_2 }}</td>
-                                                    <td>2</td>
-                                                    <td>{{ $standard->time_2 }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>{{ $standard->eff_1 }}</td>
-                                                    <td>1</td>
-                                                    <td>{{ $standard->qua_1 }}</td>
-                                                    <td>1</td>
-                                                    <td>{{ $standard->time_1 }}</td>
-                                                </tr>
-                                                @break
-                                            @endif
-                                        @endforeach
-                                        @php
-                                            $first = false;
-                                        @endphp
-                                    @else
-                                        <tr style="page-break-inside: avoid;" >
-                                            @foreach ($target->standards as $standard)
-                                                @if ($standard->user_id == null)
-                                                    <td rowspan="5">{{ $target->target }}</td>
-                                                    <td>5</td>
-                                                    <td>{{ $standard->eff_5 }}</td>
-                                                    <td>5</td>
-                                                    <td>{{ $standard->qua_5 }}</td>
-                                                    <td>5</td>
-                                                    <td>{{ $standard->time_5 }}</td>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td>{{ $standard->eff_4 }}</td>
-                                                        <td>4</td>
-                                                        <td>{{ $standard->qua_4 }}</td>
-                                                        <td>4</td>
-                                                        <td>{{ $standard->time_4 }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>{{ $standard->eff_3 }}</td>
-                                                        <td>3</td>
-                                                        <td>{{ $standard->qua_3 }}</td>
-                                                        <td>3</td>
-                                                        <td>{{ $standard->time_3 }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>{{ $standard->eff_2 }}</td>
-                                                        <td>2</td>
-                                                        <td>{{ $standard->qua_2 }}</td>
-                                                        <td>2</td>
-                                                        <td>{{ $standard->time_2 }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>{{ $standard->eff_1 }}</td>
-                                                        <td>1</td>
-                                                        <td>{{ $standard->qua_1 }}</td>
-                                                        <td>1</td>
-                                                        <td>{{ $standard->time_1 }}</td>
-                                                    </tr>
-                                                    @break
-                                                @endif
-                                            @endforeach
-                                        </tr>
-                                    @endif
+                                    @foreach ($target->standards as $standard)
+                                        @if ($standard->user_id == $user->id || $standard->user_id == null)
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td>5</td>
+                                            <td>{{ $standard->eff_5 }}</td>
+                                            <td>5</td>
+                                            <td>{{ $standard->qua_5 }}</td>
+                                            <td>5</td>
+                                            <td>{{ $standard->time_5 }}</td>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>{{ $standard->eff_4 }}</td>
+                                                <td>4</td>
+                                                <td>{{ $standard->qua_4 }}</td>
+                                                <td>4</td>
+                                                <td>{{ $standard->time_4 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>{{ $standard->eff_3 }}</td>
+                                                <td>3</td>
+                                                <td>{{ $standard->qua_3 }}</td>
+                                                <td>3</td>
+                                                <td>{{ $standard->time_3 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>{{ $standard->eff_2 }}</td>
+                                                <td>2</td>
+                                                <td>{{ $standard->qua_2 }}</td>
+                                                <td>2</td>
+                                                <td>{{ $standard->time_2 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>{{ $standard->eff_1 }}</td>
+                                                <td>1</td>
+                                                <td>{{ $standard->qua_1 }}</td>
+                                                <td>1</td>
+                                                <td>{{ $standard->time_1 }}</td>
+                                            </tr>
+                                            @break
+                                        @endif
+                                    @endforeach
                                 @endforeach
                             </tr>
                         @endforelse
@@ -377,7 +322,7 @@
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     @foreach ($target->standards as $standard)
-                                        @if ($standard->user_id == null)
+                                        @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
                                             <td>{{ $standard->eff_5 }}</td>
@@ -426,7 +371,7 @@
                                 @else
                                     <tr style="page-break-inside: avoid;" >
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == null)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -488,7 +433,7 @@
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     @foreach ($target->standards as $standard)
-                                        @if ($standard->user_id == null)
+                                        @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
                                             <td>{{ $standard->eff_5 }}</td>
@@ -537,7 +482,7 @@
                                 @else
                                     <tr style="page-break-inside: avoid;" >
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == null)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -557,7 +502,7 @@
                                                     <td>3</td>
                                                     <td>{{ $standard->eff_3 }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->qua_3 }}</td>
+                                                    <td>{{ $standard->quafaculty_3 }}</td>
                                                     <td>3</td>
                                                     <td>{{ $standard->time_3 }}</td>
                                                 </tr>

@@ -26,7 +26,7 @@
                 $pmo = true;
             @endphp
         @endif  
-        @if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr'))
+        @if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr') || auth()->user()->id == 1)
             @php
                 $hrmo = true;
             @endphp

@@ -39,9 +39,10 @@ class Targetchart extends Component
                                 return $query->where('type', 'ipcr');
                             });
                         });
-                    })->where('duration_id', $this->durationS->id)
-                    ->orwhere('duration_id', $this->durationF->id)
-                    ->get();
+                    })->where(function ($query) {
+                        return $query->where('duration_id', $this->durationS->id)
+                            ->orwhere('duration_id', $this->durationF->id);    
+                    })->get();
         $this->targets = [0,0,0,0,0,0,0];
         foreach($ratings as $rating) {
             if(date('M-d-Y', strtotime($rating->created_at)) == date('M-d-Y')){

@@ -194,7 +194,7 @@
                         <h5>
                             {{ $sub_funct->sub_funct }}
                             @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
-                                {{ $sub_percentage->value }}
+                                {{ $sub_percentage->value }}%
                             @endif
                         </h5>
                         @foreach ($user->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output)
@@ -274,39 +274,41 @@
                                                                         @else
                                                                             <td></td>
                                                                         @endif
-                            
-                                                                        @foreach ($target->ratings as $rating)
-                                                                            @if ($rating->user_id == $user->id) 
-                                                                                <td>{{ $rating->accomplishment }}
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->efficiency)
-                                                                                        {{ $rating->efficiency }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->quality)
-                                                                                        {{ $rating->quality }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->timeliness)
-                                                                                        {{ $rating->timeliness }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>{{ $rating->average }}
-                                                                                </td>
-                                                                                <td>{{ $rating->remarks }}
-                                                                                </td>
-                                                                                @break
-                                                                            @endif
-                                                                        @endforeach
+                                                                        
+                                                                        @if ($approval->name == 'assess')
+                                                                            @foreach ($target->ratings as $rating)
+                                                                                @if ($rating->user_id == $user->id) 
+                                                                                    <td>{{ $rating->accomplishment }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->efficiency)
+                                                                                            {{ $rating->efficiency }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->quality)
+                                                                                            {{ $rating->quality }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->timeliness)
+                                                                                            {{ $rating->timeliness }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>{{ $rating->average }}
+                                                                                    </td>
+                                                                                    <td>{{ $rating->remarks }}
+                                                                                    </td>
+                                                                                    @break
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endif
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -375,39 +377,41 @@
                                                                         @else
                                                                             <td></td>
                                                                         @endif
-                            
-                                                                        @foreach ($target->ratings as $rating)
-                                                                            @if ($rating->user_id == $user->id) 
-                                                                                <td>{{ $rating->accomplishment }}
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->efficiency)
-                                                                                        {{ $rating->efficiency }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->quality)
-                                                                                        {{ $rating->quality }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>
-                                                                                    @if ($rating->timeliness)
-                                                                                        {{ $rating->timeliness }}
-                                                                                    @else
-                                                                                        NR
-                                                                                    @endif
-                                                                                </td>
-                                                                                <td>{{ $rating->average }}
-                                                                                </td>
-                                                                                <td>{{ $rating->remarks }}
-                                                                                </td>
-                                                                                @break
-                                                                            @endif
-                                                                        @endforeach
+                                                                        
+                                                                        @if ($approval->name == 'assess')
+                                                                            @foreach ($target->ratings as $rating)
+                                                                                @if ($rating->user_id == $user->id) 
+                                                                                    <td>{{ $rating->accomplishment }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->efficiency)
+                                                                                            {{ $rating->efficiency }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->quality)
+                                                                                            {{ $rating->quality }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @if ($rating->timeliness)
+                                                                                            {{ $rating->timeliness }}
+                                                                                        @else
+                                                                                            NR
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>{{ $rating->average }}
+                                                                                    </td>
+                                                                                    <td>{{ $rating->remarks }}
+                                                                                    </td>
+                                                                                    @break
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endif
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -499,38 +503,40 @@
                                                                 <td></td>
                                                             @endif
                 
-                                                            @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == $user->id) 
-                                                                    <td>{{ $rating->accomplishment }}
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->efficiency)
-                                                                            {{ $rating->efficiency }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->quality)
-                                                                            {{ $rating->quality }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->timeliness)
-                                                                            {{ $rating->timeliness }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>{{ $rating->average }}
-                                                                    </td>
-                                                                    <td>{{ $rating->remarks }}
-                                                                    </td>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
+                                                            @if ($approval->name == 'assess')
+                                                                @foreach ($target->ratings as $rating)
+                                                                    @if ($rating->user_id == $user->id) 
+                                                                        <td>{{ $rating->accomplishment }}
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->efficiency)
+                                                                                {{ $rating->efficiency }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->quality)
+                                                                                {{ $rating->quality }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->timeliness)
+                                                                                {{ $rating->timeliness }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>{{ $rating->average }}
+                                                                        </td>
+                                                                        <td>{{ $rating->remarks }}
+                                                                        </td>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -597,38 +603,40 @@
                                                                 <td></td>
                                                             @endif
                 
-                                                            @foreach ($target->ratings as $rating)
-                                                                @if ($rating->user_id == $user->id) 
-                                                                    <td>{{ $rating->accomplishment }}
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->efficiency)
-                                                                            {{ $rating->efficiency }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->quality)
-                                                                            {{ $rating->quality }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($rating->timeliness)
-                                                                            {{ $rating->timeliness }}
-                                                                        @else
-                                                                            NR
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>{{ $rating->average }}
-                                                                    </td>
-                                                                    <td>{{ $rating->remarks }}
-                                                                    </td>
-                                                                    @break
-                                                                @endif
-                                                            @endforeach
+                                                            @if ($approval->name == 'assess')
+                                                                @foreach ($target->ratings as $rating)
+                                                                    @if ($rating->user_id == $user->id) 
+                                                                        <td>{{ $rating->accomplishment }}
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->efficiency)
+                                                                                {{ $rating->efficiency }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->quality)
+                                                                                {{ $rating->quality }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($rating->timeliness)
+                                                                                {{ $rating->timeliness }}
+                                                                            @else
+                                                                                NR
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>{{ $rating->average }}
+                                                                        </td>
+                                                                        <td>{{ $rating->remarks }}
+                                                                        </td>
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
                                                         </tr>
                                                     </tbody>
                                                 </table>

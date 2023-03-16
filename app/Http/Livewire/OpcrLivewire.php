@@ -32,7 +32,7 @@ class OpcrLivewire extends Component
     public $alloted_budget;
     public $responsible;
 
-    public $review_id;
+    public $review_id = [];
     public $approve_id;
     public $highestOffice;
     
@@ -89,6 +89,8 @@ class OpcrLivewire extends Component
 
     public function mount() {
         $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
+        $this->durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
             $this->sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $this->duration->id)->get();
@@ -119,7 +121,7 @@ class OpcrLivewire extends Component
             }
 
 
-            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->get() as $target) {
+            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->orwhere('duration_id', $this->durationS->id)->orwhere('duration_id', $this->durationF->id)->get() as $target) {
                 $this->targetsSelected[$target->id] = $target->id;
             }
 
@@ -226,13 +228,13 @@ class OpcrLivewire extends Component
     
                 $output_pecentage = $this->output_finished/$this->targetOutput * 100;
                 
-                if ($output_pecentage >= $eff_5) {
+                if ($output_pecentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= $eff_4) {
+                } elseif ($output_pecentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= $eff_3) {
+                } elseif ($output_pecentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= $eff_2) {
+                } elseif ($output_pecentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -291,6 +293,7 @@ class OpcrLivewire extends Component
             ]);
         } elseif ($category == 'edit') {
             $divisor = 0;
+            $efficiency = null;
             
             $standard = $this->selectedTarget->standards()->first();
 
@@ -310,13 +313,13 @@ class OpcrLivewire extends Component
     
                 $output_pecentage = $this->output_finished/$this->targetOutput * 100;
                 
-                if ($output_pecentage >= $eff_5) {
+                if ($output_pecentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= $eff_4) {
+                } elseif ($output_pecentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= $eff_3) {
+                } elseif ($output_pecentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= $eff_2) {
+                } elseif ($output_pecentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -400,23 +403,25 @@ class OpcrLivewire extends Component
         }
 
         $this->approve_id = $office->users()->where('isHead', 1)->pluck('id')->first();
-
-        $pmt = Pmt::where('isHead', 1)->first();
-
-        if (!$pmt) {
+        
+        if (!$this->approve_id) {
             return $this->dispatchBrowserEvent('toastify', [
                 'message' => "No Head Found!",
                 'color' => "#f3616d",
             ]);
         }
 
-        $this->review_id = $pmt->user->id;
+        $pmt_head = Pmt::where('isHead', 1)->first();
 
-        if (!$this->review_id || !$this->approve_id) {
+        if (!$pmt_head) {
             return $this->dispatchBrowserEvent('toastify', [
                 'message' => "No Head Found!",
                 'color' => "#f3616d",
             ]);
+        }
+
+        foreach (Pmt::all() as $indi_pmt) {
+            $this->review_id[$indi_pmt->user->id] = $indi_pmt->user->id; 
         }
 
         $approval = Approval::create([
@@ -430,8 +435,12 @@ class OpcrLivewire extends Component
 
         
         $approve = $approval;
+
+        if (isset($this->review_id[auth()->user()->id])) {
+            unset($this->review_id[auth()->user()->id]);
+        }
         
-        $approve->reviewers()->attach([$this->review_id]);
+        $approve->reviewers()->attach($this->review_id);
         
         $reviewer = User::where('id', $this->review_id)->first();
         $approver = User::where('id', $this->approve_id)->first();
@@ -633,7 +642,7 @@ class OpcrLivewire extends Component
         $this->target = '';
         $this->target_id = '';
         $this->target_output = '';    
-        $this->review_id = '';
+        $this->review_id = [];
         $this->approve_id = '';
         $this->output_finished = '';
         $this->efficiency = '';

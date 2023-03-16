@@ -152,6 +152,10 @@ class TtmaLivewire extends Component
                 'deadline' => $this->deadline,
             ]);
 
+            $ttma = Ttma::find($this->ttma_id);
+
+            $ttma->users()->sync($this->users_id);
+
             $this->dispatchBrowserEvent('toastify', [
                 'message' => "Updated Successfully",
                 'color' => "#28ab55",
@@ -248,6 +252,8 @@ class TtmaLivewire extends Component
             $this->subject = $data->subject;
             $this->output = $data->output;
             $this->deadline = $data->deadline;
+
+            $this->users_id = $data->users()->pluck('id')->toArray();
         }
     }
 

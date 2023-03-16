@@ -71,7 +71,7 @@
                                     <label>Sub Function (Optional): </label>
                                     <div class="form-group">
                                         <select placeholder="Sub Function" class="form-control"
-                                            wire:model="sub_funct_id">
+                                            wire:model.defer="sub_funct_id">
                                             <option value="" selected>Select a Sub Function</option>
                                             @if ($duration)
                                                 @if (isset($userType) && ($userType == 'listing' || $userType == 'listingFaculty'))
@@ -103,7 +103,7 @@
                                 @elseif ($selected == 'suboutput')
                                     <label>Output: </label>
                                     <div class="form-group">
-                                        <select placeholder="Output" class="form-control" wire:model="output_id"
+                                        <select placeholder="Output" class="form-control" wire:model.defer="output_id"
                                             required>
                                             <option value="" selected>Select an output</option>
                                             @php
@@ -168,7 +168,7 @@
                                 @elseif ($selected == 'target')
                                     <label>Output/Suboutput: </label>
                                     <div class="form-group">
-                                        <select placeholder="Output/Suboutput" class="form-control" wire:model="subput"
+                                        <select placeholder="Output/Suboutput" class="form-control" wire:model.defer="subput"
                                             required>
                                             <option value="" selected>Select an/a Output/Suboutput</option>s
                                             @php
@@ -612,16 +612,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#eff_5").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
-
                                     $('#eff_5').on('change', function () {
                                         var data = $('#eff_5').select2("val");
                                         @this.set('eff_5', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eff_5').select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -642,16 +646,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#qua_5").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#qua_5').on('change', function () {
                                         var data = $('#qua_5').select2("val");
                                         @this.set('qua_5', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_5").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -672,16 +680,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#time_5").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#time_5').on('change', function () {
                                         var data = $('#time_5').select2("val");
                                         @this.set('time_5', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#time_5").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -703,16 +715,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#eff_4").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#eff_4').on('change', function () {
                                         var data = $('#eff_4').select2("val");
                                         @this.set('eff_4', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_4").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -733,16 +749,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#qua_4").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#qua_4').on('change', function () {
                                         var data = $('#qua_4').select2("val");
                                         @this.set('qua_4', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_4").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -763,16 +783,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#time_4").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#time_4').on('change', function () {
                                         var data = $('#time_4').select2("val");
                                         @this.set('time_4', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#time_4").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -794,16 +818,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#eff_3").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#eff_3').on('change', function () {
                                         var data = $('#eff_3').select2("val");
                                         @this.set('eff_3', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_3").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -824,16 +852,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#qua_3").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#qua_3').on('change', function () {
                                         var data = $('#qua_3').select2("val");
                                         @this.set('qua_3', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_3").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -854,16 +886,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#time_3").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#time_3').on('change', function () {
                                         var data = $('#time_3').select2("val");
                                         @this.set('time_3', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#time_3").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -885,16 +921,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#eff_2").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#eff_2').on('change', function () {
                                         var data = $('#eff_2').select2("val");
                                         @this.set('eff_2', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_2").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -915,16 +955,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#qua_2").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#qua_2').on('change', function () {
                                         var data = $('#qua_2').select2("val");
                                         @this.set('qua_2', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_2").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -945,16 +989,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#time_2").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#time_2').on('change', function () {
                                         var data = $('#time_2').select2("val");
                                         @this.set('time_2', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#time_2").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -976,16 +1024,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#eff_1").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#eff_1').on('change', function () {
                                         var data = $('#eff_1').select2("val");
                                         @this.set('eff_1', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_1").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -1006,16 +1058,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#qua_1").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#qua_1').on('change', function () {
                                         var data = $('#qua_1').select2("val");
                                         @this.set('qua_1', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_1").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -1036,16 +1092,20 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#time_1").select2({
-                                        placeholder: "",
-                                        allowClear: true,
-                                        tags: true,
-                                        dropdownParent: $("#AddStandardModal")
-                                    });
 
                                     $('#time_1').on('change', function () {
                                         var data = $('#time_1').select2("val");
                                         @this.set('time_1', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#time_1").select2({
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -1114,22 +1174,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initEff5=()=>{
+                                    $('#eeff_5').on('change', function () {
+                                        var data = $('#eeff_5').select2("val");
+                                        @this.set('eff_5', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#eeff_5').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initEff5();
-                                        $('#eeff_5').on('change', function (e) {
-                                            var data = $('#eeff_5').select2("val");
-                                            @this.set('eff_5', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initEff5();
                                         });
                                     });
                                 </script>
@@ -1151,22 +1208,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initQua5=()=>{
+                                    $('#equa_5').on('change', function () {
+                                        var data = $('#equa_5').select2("val");
+                                        @this.set('qua_5', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#equa_5').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initQua5();
-                                        $('#equa_5').on('change', function (e) {
-                                            var data = $('#equa_5').select2("val");
-                                            @this.set('qua_5', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initQua5();
                                         });
                                     });
                                 </script>
@@ -1188,22 +1242,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initTime5=()=>{
+                                    $('#etime_5').on('change', function () {
+                                        var data = $('#etime_5').select2("val");
+                                        @this.set('time_5', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#etime_5').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initTime5();
-                                        $('#etime_5').on('change', function (e) {
-                                            var data = $('#etime_5').select2("val");
-                                            @this.set('time_5', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initTime5();
                                         });
                                     });
                                 </script>
@@ -1226,22 +1277,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initEff4=()=>{
+                                    $('#eeff_4').on('change', function () {
+                                        var data = $('#eeff_4').select2("val");
+                                        @this.set('eff_4', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#eeff_4').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initEff4();
-                                        $('#eeff_4').on('change', function (e) {
-                                            var data = $('#eeff_4').select2("val");
-                                            @this.set('eff_4', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initEff4();
                                         });
                                     });
                                 </script>
@@ -1263,22 +1311,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initQua4=()=>{
+                                    $('#equa_4').on('change', function () {
+                                        var data = $('#equa_4').select2("val");
+                                        @this.set('qua_4', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#equa_4').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initQua4();
-                                        $('#equa_4').on('change', function (e) {
-                                            var data = $('#equa_4').select2("val");
-                                            @this.set('qua_4', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initQua4();
                                         });
                                     });
                                 </script>
@@ -1300,22 +1345,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initTime4=()=>{
+                                    $('#etime_4').on('change', function () {
+                                        var data = $('#etime_4').select2("val");
+                                        @this.set('time_4', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#etime_4').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initTime4();
-                                        $('#etime_4').on('change', function (e) {
-                                            var data = $('#etime_4').select2("val");
-                                            @this.set('time_4', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initTime4();
                                         });
                                     });
                                 </script>
@@ -1338,22 +1380,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initEff3=()=>{
+                                    $('#eeff_3').on('change', function () {
+                                        var data = $('#eeff_3').select2("val");
+                                        @this.set('eff_3', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#eeff_3').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initEff3();
-                                        $('#eeff_3').on('change', function (e) {
-                                            var data = $('#eeff_3').select2("val");
-                                            @this.set('eff_3', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initEff3();
                                         });
                                     });
                                 </script>
@@ -1375,22 +1414,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initQua3=()=>{
+                                    $('#equa_3').on('change', function () {
+                                        var data = $('#equa_3').select2("val");
+                                        @this.set('qua_3', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#equa_3').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initQua3();
-                                        $('#equa_3').on('change', function (e) {
-                                            var data = $('#equa_3').select2("val");
-                                            @this.set('qua_3', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initQua3();
                                         });
                                     });
                                 </script>
@@ -1412,22 +1448,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initTime3=()=>{
+                                    $('#etime_3').on('change', function () {
+                                        var data = $('#etime_3').select2("val");
+                                        @this.set('time_3', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#etime_3').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initTime3();
-                                        $('#etime_3').on('change', function (e) {
-                                            var data = $('#etime_3').select2("val");
-                                            @this.set('time_3', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initTime3();
                                         });
                                     });
                                 </script>
@@ -1450,22 +1483,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initEff2=()=>{
+                                    $('#eeff_2').on('change', function () {
+                                        var data = $('#eeff_2').select2("val");
+                                        @this.set('eff_2', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#eeff_2').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initEff2();
-                                        $('#eeff_2').on('change', function (e) {
-                                            var data = $('#eeff_2').select2("val");
-                                            @this.set('eff_2', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initEff2();
                                         });
                                     });
                                 </script>
@@ -1487,22 +1517,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initQua2=()=>{
+                                    $('#equa_2').on('change', function () {
+                                        var data = $('#equa_2').select2("val");
+                                        @this.set('qua_2', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#equa_2').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initQua2();
-                                        $('#equa_2').on('change', function (e) {
-                                            var data = $('#equa_2').select2("val");
-                                            @this.set('qua_2', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initQua2();
                                         });
                                     });
                                 </script>
@@ -1524,22 +1551,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initTime2=()=>{
+                                    $('#etime_2').on('change', function () {
+                                        var data = $('#etime_2').select2("val");
+                                        @this.set('time_2', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#etime_2').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initTime2();
-                                        $('#etime_2').on('change', function (e) {
-                                            var data = $('#etime_2').select2("val");
-                                            @this.set('time_2', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initTime2();
                                         });
                                     });
                                 </script>
@@ -1562,22 +1586,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initEff1=()=>{
+                                    $('#eeff_1').on('change', function () {
+                                        var data = $('#eeff_1').select2("val");
+                                        @this.set('eff_1', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#eeff_1').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initEff1();
-                                        $('#eeff_1').on('change', function (e) {
-                                            var data = $('#eeff_1').select2("val");
-                                            @this.set('eff_1', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initEff1();
                                         });
                                     });
                                 </script>
@@ -1599,22 +1620,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initQua1=()=>{
+                                    $('#equa_1').on('change', function () {
+                                        var data = $('#equa_1').select2("val");
+                                        @this.set('qua_1', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#equa_1').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initQua1();
-                                        $('#equa_1').on('change', function (e) {
-                                            var data = $('#equa_1').select2("val");
-                                            @this.set('qua_1', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initQua1();
                                         });
                                     });
                                 </script>
@@ -1636,22 +1654,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $(document).ready(function() {
-                                        window.initTime1=()=>{
+                                    $('#etime_1').on('change', function () {
+                                        var data = $('#etime_1').select2("val");
+                                        @this.set('time_1', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
                                             $('#etime_1').select2({
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
                                                 dropdownParent: $("#EditStandardModal")
                                             });
-                                        }
-                                        initTime1();
-                                        $('#etime_1').on('change', function (e) {
-                                            var data = $('#etime_1').select2("val");
-                                            @this.set('time_1', data);
-                                        });
-                                        window.livewire.on('select2',()=>{
-                                            initTime1();
                                         });
                                     });
                                 </script>
@@ -1706,15 +1721,19 @@
                             </div>
                             @push ('script')
                                 <script>
-                                    $("#users_id").select2({
-                                        multiple: true,
-                                        placeholder: "Select an Action Officer.",
-                                        dropdownParent: $("#AddTTMAModal")
-                                    });
-
                                     $('#users_id').on('change', function () {
                                         var data = $('#users_id').select2("val");
                                         @this.set('users_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#users_id").select2({
+                                                multiple: true,
+                                                placeholder: "Select an Action Officer.",
+                                                dropdownParent: $("#AddTTMAModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -1766,6 +1785,36 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <label>Action Officer: </label>
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="users_id" id="eusers_id" class="form-select" wire:loading="disabled" wire:model="users_id" multiple="multiple">
+                                    <option></option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eusers_id').on('change', function () {
+                                        var data = $('#eusers_id').select2("val");
+                                        @this.set('users_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eusers_id").select2({
+                                                multiple: true,
+                                                placeholder: "Select an Action Officer.",
+                                                dropdownParent: $("#EditTTMAModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
                             <label>Output: </label>
                             <div class="form-group">
                                 <input type="text" placeholder="Output" class="form-control" wire:model.defer="output">
@@ -1898,13 +1947,18 @@
                         @if (isset($offices))
                             @push ('script')
                                 <script>
-                                    $("#parent_id").select2({
-                                        placeholder: "Select an Office which it belongs.",
-                                        dropdownParent: $("#AddOfficeModal")
-                                    });
                                     $('#parent_id').on('change', function () {
                                         var data = $('#parent_id').select2("val");
                                         @this.set('parent_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#parent_id").select2({
+                                                placeholder: "Select an Office which it belongs.",
+                                                dropdownParent: $("#AddOfficeModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush
@@ -1961,13 +2015,18 @@
                         @if (isset($offices))
                             @push ('script')
                                 <script>
-                                    $("#edit_parent_id").select2({
-                                        placeholder: "Select an Office which it belongs.",
-                                        dropdownParent: $("#EditOfficeModal")
-                                    });
                                     $('#edit_parent_id').on('change', function () {
                                         var data = $('#edit_parent_id').select2("val");
                                         @this.set('parent_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#edit_parent_id").select2({
+                                                placeholder: "Select an Office which it belongs.",
+                                                dropdownParent: $("#EditOfficeModal")
+                                            });
+                                        });
                                     });
                                 </script>
                             @endpush

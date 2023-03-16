@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Standard - {{ Auth::user()->name }}</title>
+    <link rel="icon" href="{{ asset('images/logo/icon.png') }}">
     <style>
         @page {
             margin: 100px 50px 110px 50px;
@@ -113,10 +114,10 @@
                 <tr>
                     <td class="text-start" colspan="9">{{ $funct->funct }}</td>
                 </tr>
-                @foreach ($user->sub_functs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $subFunct)
+                @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <tr>
                         <td colspan="2">
-                            {{ $subFunct->sub_funct }}
+                            {{ $sub_funct->sub_funct }}
                             @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
                                 {{ $percent = $sub_percentage->value }}%
                             @endif
@@ -145,7 +146,7 @@
                                 @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                     @if ($first)
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == $user->id)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -194,7 +195,7 @@
                                     @else
                                         <tr style="page-break-inside: avoid;" >
                                             @foreach ($target->standards as $standard)
-                                                @if ($standard->user_id == $user->id)
+                                                @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                     <td rowspan="5">{{ $target->target }}</td>
                                                     <td>5</td>
                                                     <td>{{ $standard->eff_5 }}</td>
@@ -256,7 +257,7 @@
                                 @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                     @if ($first)
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == $user->id)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -305,7 +306,7 @@
                                     @else
                                         <tr style="page-break-inside: avoid;" >
                                             @foreach ($target->standards as $standard)
-                                                @if ($standard->user_id == $user->id)
+                                                @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                     <td rowspan="5">{{ $target->target }}</td>
                                                     <td>5</td>
                                                     <td>{{ $standard->eff_5 }}</td>
@@ -377,7 +378,7 @@
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     @foreach ($target->standards as $standard)
-                                        @if ($standard->user_id == $user->id)
+                                        @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
                                             <td>{{ $standard->eff_5 }}</td>
@@ -426,7 +427,7 @@
                                 @else
                                     <tr style="page-break-inside: avoid;" >
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == $user->id)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>
@@ -488,7 +489,7 @@
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     @foreach ($target->standards as $standard)
-                                        @if ($standard->user_id == $user->id)
+                                        @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
                                             <td>{{ $standard->eff_5 }}</td>
@@ -537,7 +538,7 @@
                                 @else
                                     <tr style="page-break-inside: avoid;" >
                                         @foreach ($target->standards as $standard)
-                                            @if ($standard->user_id == $user->id)
+                                            @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
                                                 <td>{{ $standard->eff_5 }}</td>

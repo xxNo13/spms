@@ -1,5 +1,5 @@
 <div>
-    <div wire:poll.keep-alive class="overflow-auto" style="height: 225px;">
+    <div wire:poll.visible class="overflow-auto" style="height: 225px;">
         @php
             $user_id = 0;
         @endphp

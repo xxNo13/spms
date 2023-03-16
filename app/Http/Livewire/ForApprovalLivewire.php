@@ -125,14 +125,7 @@ class ForApprovalLivewire extends Component
             return view('components.individual-ipcr',[
                 'functs' => $functs,
                 'user' => $user,
-                'url' => $this->url,
-                'approval' => $this->approval,
-                'duration' => $this->duration,
-                'user_type' => $this->user_type,
-                'percentage' => $this->percentage,
                 'number' => 1,
-                'prevApproval' => $this->prevApproval,
-                'prevApprover' => $this->prevApprover
             ]);
         } elseif ($this->view && $this->category == 'opcr'){
             $functs = Funct::all();
@@ -140,14 +133,7 @@ class ForApprovalLivewire extends Component
             return view('components.individual-opcr',[
                 'functs' => $functs,
                 'user' => $user,
-                'url' => $this->url,
-                'approval' => $this->approval,
-                'duration' => $this->duration,
-                'user_type' => $this->user_type,
-                'percentage' => $this->percentage,
                 'number' => 1,
-                'prevApproval' => $this->prevApproval,
-                'prevApprover' => $this->prevApprover
             ]);
         } elseif ($this->view && $this->category == 'standard'){
             if ($this->user_type == 'office') {
@@ -156,15 +142,8 @@ class ForApprovalLivewire extends Component
                 return view('components.individual-standard',[
                     'functs' => $functs,
                     'user' => $user,
-                    'url' => $this->url,
                     'type' => 'opcr',
-                    'approval' => $this->approval,
-                    'duration' => $this->duration,
-                    'user_type' => $this->user_type,
-                    'percentage' => $this->percentage,
                     'number' => 1,
-                    'prevApproval' => $this->prevApproval,
-                    'prevApprover' => $this->prevApprover
                 ]);
             } else {
                 $functs = Funct::all();
@@ -172,15 +151,8 @@ class ForApprovalLivewire extends Component
                 return view('components.individual-standard',[
                     'functs' => $functs,
                     'user' => $user,
-                    'url' => $this->url,
                     'type' => 'ipcr',
-                    'approval' => $this->approval,
-                    'duration' => $this->duration,
-                    'user_type' => $this->user_type,
-                    'percentage' => $this->percentage,
                     'number' => 1,
-                    'prevApproval' => $this->prevApproval,
-                    'prevApprover' => $this->prevApprover
                 ]);
             }
         } else {
@@ -255,7 +227,13 @@ class ForApprovalLivewire extends Component
                 ]]);
 
             $head = auth()->user();
-            
+
+            if ($approval->approve_id == Auth::user()->id) {
+                Approval::where('id', $id)->update([
+                    'approve_status' => 1,
+                    'approve_date' => Carbon::now(),
+                ]);
+            }
         }
 
         $user = User::where('id', $approval->user_id)->first();
