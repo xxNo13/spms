@@ -87,16 +87,16 @@
                                         @elseif ($loop->last)
                                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                                                 data-bs-target="#AddOSTModal" title="Add Output/Suboutput/Target">
-                                                Add Individual OST
+                                                Add Designated OST
                                             </button>
                                         @endif
                                     @endforeach
                                     <button type="button" class="btn btn-outline-warning" title="Add Output/Suboutput/Target" wire:click="add">
-                                        Modify Success Indicators
+                                        Modify Non-Designated OST
                                     </button>
                                 @else
                                     <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">
-                                        Add Success Indicators
+                                        Add Non-Designated OST
                                     </button>
                                 @endif
                             @endif
@@ -120,6 +120,19 @@
                     </div>
                 </div>
                 @if ($duration)
+                    @php
+                        $core_sub_funct_id = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->toArray();
+                    @endphp
+                    @foreach (auth()->user()->account_types as $account_type)
+                        @if (str_contains(strtolower($account_type->account_type), 'no'))
+                            @break;
+                        @elseif ($loop->last && $funct->id == 1 && count($core_sub_funct_id) > 1)
+                            <button type="button" class="mb-2 btn btn-outline-secondary" title="Configure Sub Percentage"  data-bs-toggle="modal"
+                            data-bs-target="#FacultyCorePercentageModal" wire:click="sub_percentage">
+                                Sub-percentages
+                            </button>
+                        @endif
+                    @endforeach
                     @foreach (auth()->user()->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                         <div>
                             <h5>

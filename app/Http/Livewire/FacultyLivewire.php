@@ -63,6 +63,8 @@ class FacultyLivewire extends Component
     public $hasTargetOutput = false;
     public $hasRating = false;
 
+    public $deloading;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -77,6 +79,8 @@ class FacultyLivewire extends Component
         'suboutput' => ['required_if:selected,suboutput'],
         'subput' => ['nullable', 'required_if:selected,target_id'],
         'target' => ['required_if:selected,target'],
+
+        'deloading' => ['nullable', 'required_if:selected,deloading', 'numeric', 'max:18'],
     ];
 
     protected $messages = [
@@ -84,15 +88,19 @@ class FacultyLivewire extends Component
         'output_finished.numeric' => 'Output Finished should be a number.',
         'accomplishment' => 'Actual Accomplishment cannot be null.',
         
-        'target_output.required_if' => 'Target Output cannot be null',
+        'target_output.required_if' => 'Target Output cannot be null.',
         'target_output.numeric' => 'Target Output should be a number.',
 
-        'sub_funct.required_if' => 'Sub Function cannot be null',
-        'output.required_if' => 'Output cannot be null',
-        'output_id.required_if' => 'Output cannot be null',
-        'suboutput.required_if' => 'Suboutput cannot be null',
-        'subput.required_if' => 'Suboutput/Output cannot be null',
-        'target.required_if' => 'Target cannot be null',
+        'sub_funct.required_if' => 'Sub Function cannot be null.',
+        'output.required_if' => 'Output cannot be null.',
+        'output_id.required_if' => 'Output cannot be null.',
+        'suboutput.required_if' => 'Suboutput cannot be null.',
+        'subput.required_if' => 'Suboutput/Output cannot be null.',
+        'target.required_if' => 'Target cannot be null.',
+
+        'deloading.required_if' => 'Number of Deloading cannot be null.',
+        'deloading.numeric' => 'Number of Deloading should be a number.',
+        'deloading.max' => 'Number of Deloading should not be greater than 18.',
     ];
     
     public function updated($property)
@@ -150,6 +158,7 @@ class FacultyLivewire extends Component
             foreach(Target::where('required', true)->get() as $target) {
                 $this->targetsSelected[$target->id] = $target->id;
             }
+            
             foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->orwhere('duration_id', $this->durationS->id)->orwhere('duration_id', $this->durationO->id)->get() as $target) {
                 $this->targetsSelected[$target->id] = $target->id;
             }
@@ -718,7 +727,6 @@ class FacultyLivewire extends Component
                 auth()->user()->targets()->syncWithoutDetaching([$this->target_id => ['target_output' => $this->target_output]]);
                 break;
         }
-        $this->updateSubPercentage();
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Added Successfully",
@@ -790,7 +798,6 @@ class FacultyLivewire extends Component
                 Rating::where('id', $this->rating_id)->delete();
                 break;
         }
-        $this->updateSubPercentage();
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Deleted Successfully",
@@ -861,8 +868,20 @@ class FacultyLivewire extends Component
         } else {
             auth()->user()->sub_functs()->detach();
         }
+        $core_sub_funct_id = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->first();
 
-        $this->updateSubPercentage();
+        $sub_percent = SubPercentage::where('sub_funct_id', $core_sub_funct_id)->where('user_id', auth()->user()->id)->first();
+
+        if (!$sub_percent) {
+            SubPercentage::create([
+                'value' => 100,
+                'sub_funct_id' => $core_sub_funct_id, 
+                'type' => 'ipcr',
+                'user_type' => 'faculty',
+                'user_id' => auth()->user()->id,
+                'duration_id' => $this->duration->id,
+            ]);
+        }
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Added Successfully",
@@ -877,75 +896,52 @@ class FacultyLivewire extends Component
 
     /////////////////////////// PERCENTAGE CONFIGURATION ///////////////////////////
 
+    public function sub_percentage() {
+        $this->selected = 'deloading';
+        
+        $core_sub_funct_id = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->first();
+        
+        $sub_percentage = SubPercentage::find($core_sub_funct_id);
+
+        $deloading = ($sub_percentage->value / 100) * 18;
+
+        $this->deloading = 18 - round($deloading);
+    }
+
+
     public function updateSubPercentage() {
-        $targets = 0;
-        $core_sub_funct = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->toArray();
+        $this->validate();
+        $core_sub_funct_ids = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->toArray();
         
-        foreach (auth()->user()->targets()->pluck('id')->toArray() as $id) {            
-            if ($target = Target::where('id',$id)->first()) {
-                if ($target->output) {
-                    if ($target->output->sub_funct_id == end($core_sub_funct)) {
-                        $targets++;
-                    }
-                } else if ($target->suboutput) {
-                    if ($target->suboutput->output) {
-                        if ($target->suboutput->output->sub_funct_id == end($core_sub_funct)) {
-                            $targets++;
-                        }
-                    }
-                }
-            }
-        }
+        $sub_percent1 = ((18 - (int)$this->deloading) / 18) * 100;
+        $sub_percent2 = 100 - round($sub_percent1);
 
-        $sub_percent1 = ($targets/18)*100;
-        $sub_percent2 = 100 - $sub_percent1;
-
-
-        if (count($core_sub_funct) > 1) {
-            $first = true;
-            foreach (array_unique($core_sub_funct) as $id) {
-                if ($first) {
-                    $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
-                        'value' => $sub_percent2,
-                    ]);
-        
-                    if (!$sub_percent) {
-                        SubPercentage::create([
-                            'value' => $sub_percent2,
-                            'sub_funct_id' => $id, 
-                            'type' => 'ipcr',
-                            'user_type' => 'faculty',
-                            'user_id' => auth()->user()->id,
-                            'duration_id' => $this->duration->id,
-                        ]);
-                    }
-                    $first = false;
-                } else {
-                    $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
-                        'value' => $sub_percent1,
-                    ]);
-        
-                    if (!$sub_percent) {
-                        SubPercentage::create([
-                            'value' => $sub_percent1,
-                            'sub_funct_id' => $id, 
-                            'type' => 'ipcr',
-                            'user_type' => 'faculty',
-                            'user_id' => auth()->user()->id,
-                            'duration_id' => $this->duration->id,
-                        ]);
-                    }
-                }
-            }
-        } else {
-            foreach (array_unique($core_sub_funct) as $id) {
+        $first = true;
+        foreach (array_unique($core_sub_funct_ids) as $id) {
+            if ($first) {
                 $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
-                    'value' => 100,
+                    'value' => round($sub_percent1),
                 ]);
-
+    
                 if (!$sub_percent) {
                     SubPercentage::create([
-                        'value' => 100,
+                        'value' => round($sub_percent1),
+                        'sub_funct_id' => $id, 
+                        'type' => 'ipcr',
+                        'user_type' => 'faculty',
+                        'user_id' => auth()->user()->id,
+                        'duration_id' => $this->duration->id,
+                    ]);
+                }
+                $first = false;
+            } else {
+                $sub_percent = SubPercentage::where('sub_funct_id', $id)->where('user_id', auth()->user()->id)->update([
+                    'value' => round($sub_percent2),
+                ]);
+    
+                if (!$sub_percent) {
+                    SubPercentage::create([
+                        'value' => round($sub_percent2),
                         'sub_funct_id' => $id, 
                         'type' => 'ipcr',
                         'user_type' => 'faculty',
@@ -955,6 +951,13 @@ class FacultyLivewire extends Component
                 }
             }
         }
+
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Updated Successfully",
+            'color' => "#28ab55",
+        ]);
+        $this->resetInput();
+        $this->dispatchBrowserEvent('close-modal');
     }
 
     /////////////////////////// PERCENTAGE CONFIGURATION END ///////////////////////////
@@ -980,6 +983,7 @@ class FacultyLivewire extends Component
         $this->quality = '';
         $this->timeliness = '';
         $this->accomplishment = '';
+        $this->deloading = '';
     }
 
     public function closeModal()

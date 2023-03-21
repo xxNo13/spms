@@ -2855,4 +2855,38 @@
             </div>
         </div>
     </div>
+
+    {{-- Configure Number of Units Deloading --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="FacultyCorePercentageModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Configure Number of Units Deloading</h4>
+                </div>
+                <form wire:submit.prevent="updateSubPercentage">
+                    <div class="modal-body">
+                        <label>Number of Units Deloading: </label>
+                        <div class="form-group">
+                            <input type="number" placeholder="Deloading" class="form-control"
+                            wire:model.defer="deloading">
+                            @error('deloading')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

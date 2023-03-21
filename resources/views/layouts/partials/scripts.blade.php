@@ -71,6 +71,7 @@
         $('#EditStandardValueModal').modal('hide');
         $('#AddTargetOutputModal').modal('hide');
         $('#EditTargetOutputModal').modal('hide');
+        $('#FacultyCorePercentageModal').modal('hide');
     });
 </script>
 
