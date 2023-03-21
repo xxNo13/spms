@@ -53,7 +53,8 @@ class UserSeeder extends Seeder
             'name' => 'Bonita Penaso Cantere',
             'email' => 'cantere.bonita@dnsc.edu.ph',
         ]);
-        $user->offices()->attach([15, 22 => ['isHead'=> 1]]);
+        $user->offices()->attach([15]);
+        $user->offices()->attach([22 => ['isHead'=> 1]]);
         $user = User::create([
             'name' => 'Danvier C. Cruz',
             'email' => 'cruz.danvier@dnsc.edu.ph',
@@ -88,7 +89,8 @@ class UserSeeder extends Seeder
             'name' => 'Charlo Bianci Montehermos Guray',
             'email' => 'guray.charlobianci@dnsc.edu.ph',
         ]);
-        $user->offices()->attach([15, 34 => ['isHead' => 1]]);
+        $user->offices()->attach([15]);
+        $user->offices()->attach([34 => ['isHead' => 1]]);
         $user = User::create([
             'name' => 'Arvin Bargayo Gutang',
             'email' => 'gutang.arvin@dnsc.edu.ph',
@@ -98,7 +100,8 @@ class UserSeeder extends Seeder
             'name' => 'Eliseo Fermo Huesca',
             'email' => 'huesca.eliseo@dnsc.edu.ph',
         ]);
-        $user->offices()->attach([15, 30 => ['isHead' => 1]]);
+        $user->offices()->attach([15]);
+        $user->offices()->attach([30 => ['isHead' => 1]]);
         $user = User::create([
             'name' => 'James M. Jadraque',
             'email' => 'jadraque.james@dnsc.edu.ph',

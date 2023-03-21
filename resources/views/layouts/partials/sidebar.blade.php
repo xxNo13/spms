@@ -10,6 +10,13 @@
         $bool = true;
         $president = false;
     @endphp
+    @if (auth()->user()->id == 1)
+        @php
+            $head = true;
+            $hrmo = true;
+            $pmo = true;
+        @endphp
+    @endif
     @foreach (Auth::user()->offices as $office)
         @if ($office->pivot->isHead)
             @php

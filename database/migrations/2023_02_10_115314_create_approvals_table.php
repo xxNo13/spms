@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('approve_id')->nullable();
             $table->smallInteger('approve_status')->nullable();
             $table->date('approve_date')->nullable();
-            $table->mediumText('approve_message')->nullable();
+            $table->longText('approve_message')->nullable();
             $table->string('type');
             $table->string('user_type');
             $table->smallInteger('added_id')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
 
             $table->smallInteger('review_status')->nullable();
             $table->date('review_date')->nullable();
-            $table->mediumText('review_message')->nullable();
+            $table->longText('review_message')->nullable();
         });
     }
 

@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('standard_values', function (Blueprint $table) {
             $table->id();
-            $table->string('efficiency');
-            $table->string('quality');
-            $table->string('timeliness');
+            $table->longText('efficiency');
+            $table->longText('quality');
+            $table->longText('timeliness');
             $table->timestamps();
         });
     }

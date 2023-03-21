@@ -16,8 +16,12 @@ class Hrmo
      */
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->id == 1) {
+            return $next($request);
+        }
+
         foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr') || auth()->user()->id == 1) {
+            if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_abbr), 'hr')) {
                 return $next($request);
             }
         }

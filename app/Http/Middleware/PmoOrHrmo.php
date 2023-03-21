@@ -16,6 +16,9 @@ class PmoOrHrmo
      */
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->id == 1) {
+            return $next($request);
+        }
         foreach (auth()->user()->offices as $office) {
             if (str_contains(strtolower($office->office_name), 'planning')) {
                 return $next($request);

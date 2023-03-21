@@ -40,5 +40,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('ttmas');
+        Schema::dropIfExists('ttma_user');
     }
 };

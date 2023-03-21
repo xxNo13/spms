@@ -16,6 +16,9 @@ class Head
      */
     public function handle(Request $request, Closure $next)
     {
+        if (auth()->user()->id == 1) {
+            return $next($request);
+        }
         foreach (auth()->user()->offices as $office) {
             if ($office->pivot->isHead) {
                 return $next($request);
