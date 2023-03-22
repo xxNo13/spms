@@ -126,7 +126,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    @if ($target->pivot->target_output)
+                                                                    @if (isset($target->pivot->target_output))
                                                                         <td style="white-space: nowrap;">
                                                                             {{ $target->pivot->target_output }}
                                                                         </td>
@@ -239,7 +239,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    @if ($target->pivot->target_output)
+                                                                    @if (isset($target->pivot->target_output))
                                                                         <td style="white-space: nowrap;">
                                                                             {{ $target->pivot->target_output }}
                                                                         </td>
@@ -370,7 +370,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        @if ($target->pivot->target_output)
+                                                        @if (isset($target->pivot->target_output))
                                                             <td style="white-space: nowrap;">
                                                                 {{ $target->pivot->target_output }}
                                                             </td>
@@ -480,7 +480,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        @if ($target->pivot->target_output)
+                                                        @if (isset($target->pivot->target_output))
                                                             <td style="white-space: nowrap;">
                                                                 {{ $target->pivot->target_output }}
                                                             </td>

@@ -184,7 +184,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        @if ($target->pivot->target_output)
+                                                                        @if (isset($target->pivot->target_output))
                                                                             <td style="white-space: nowrap;">
                                                                                 @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -359,7 +359,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        @if ($target->pivot->target_output)
+                                                                        @if (isset($target->pivot->target_output))
                                                                             <td style="white-space: nowrap;">
                                                                                 @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                     <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -556,7 +556,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    @if ($target->pivot->target_output)
+                                                                    @if (isset($target->pivot->target_output))
                                                                         <td style="white-space: nowrap;">
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
@@ -731,7 +731,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    @if ($target->pivot->target_output)
+                                                                    @if (isset($target->pivot->target_output))
                                                                         <td style="white-space: nowrap;">
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
                                                                                 <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" style="cursor: pointer;"></i>
