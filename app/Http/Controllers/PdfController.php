@@ -255,11 +255,12 @@ class PdfController extends Controller
         }
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $user = User::find($id);
+        
         if($duration) {
-            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', null)->where('duration_id', $duration->id)->first();
+            $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
         }
 
-        $user = User::find($id);
 
         $data = [
             'functs' => Funct::all(),

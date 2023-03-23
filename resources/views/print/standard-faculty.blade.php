@@ -112,7 +112,22 @@
             @endphp
             @foreach ($functs as $funct)
                 <tr>
-                    <td class="text-start" colspan="9">{{ $funct->funct }}</td>
+                    <td class="text-start" colspan="9">
+                        {{ $funct->funct }}
+                        @switch(strtolower($funct->funct))
+                            @case('core function')
+                                {{ $percentage->core }}%
+                            @break
+
+                            @case('strategic function')
+                                {{ $percentage->strategic }}%
+                            @break
+
+                            @case('support function')
+                                {{ $percentage->support }}%
+                            @break
+                        @endswitch
+                    </td>
                 </tr>
                 @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('duration_id', $duration->id)->get() as $sub_funct)
                     <tr>
