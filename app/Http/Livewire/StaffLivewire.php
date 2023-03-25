@@ -62,6 +62,8 @@ class StaffLivewire extends Component
     public $hasTargetOutput = false;
     public $hasRating = false;
 
+    public $print;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -824,6 +826,9 @@ class StaffLivewire extends Component
 
     /////////////////////////// PERCENTAGE CONFIGURATION END ///////////////////////////
 
+    public function print() {
+        $this->print = 'staff';
+    }
     
     public function resetInput(){
         $this->percent = [];

@@ -20,6 +20,8 @@ class ArchiveLivewire extends Component
     public $user_type;
     public $category;
 
+    public $print;
+
     public function mount() {
         $this->durations = Duration::where('end_date', '<=', date('Y-m-d'))->get();
     }
@@ -57,5 +59,9 @@ class ArchiveLivewire extends Component
         }
         
         $this->viewed = true;
+    }
+
+    public function print() {
+        $this->print = $this->user_type;
     }
 }

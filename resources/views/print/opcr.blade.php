@@ -82,18 +82,63 @@
         .text-center {
             text-align: center;
         }
+
+        .comment-section {
+            widows: 100%;
+            height: 250px;
+        }
+
+        .iso-table {
+            width: 150px;
+            border-collapse: collapse;
+            position: absolute;
+            top: -15px;
+            right: 0;
+        }
+
+        .iso-table th{
+            padding-top: 0;
+            padding-bottom: 0; 
+        }
     </style>
 </head>
 
 <body>
     <div id="header">
         <img src="{{ public_path('images/logo/header.jpg') }}">
+        <table class="iso-table">
+            <tbody>
+                <tr>
+                    <th class="text-start">Form No.</th>
+                    <th>FM-DNSC-SPE-01</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Issue Status</th>
+                    <th>03</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Revision No.</th>
+                    <th>04</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Effective Date</th>
+                    <th>27-Jan-2022</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Approved by</th>
+                    <th>President</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div id="footer">
         <img src="{{ public_path('images/logo/footer.jpg') }}">
     </div>
     <div>
-        <p style="font-size: 10px;" class="text-center">I, {{ $user->name }}, commit to deliver and agree to be rated
+        <p style="font-size: 10px;" class="text-center">
+            I, <u>{{ $user->name }}</u>,
+            <u><b>{{ $title }}</b></u> of 
+            <u><b>{{ $office }}</b></u>, commit to deliver and agree to be rated
             on the attainment of the following targets in accordance with the indicated measures for the period {{ date('Y', strtotime($duration->end_date)) }}.
         </p>
     </div>
@@ -119,40 +164,43 @@
             <tr>
                 <td colspan="2" rowspan="5" class="bordered">
                     <div class="d-flex">
-                        <div style="margin: 1.5rem 0;">
-                            {{ $approval_reviewer->name }} <br/> 
-                            @if ($office = $approval_reviewer->offices()->wherePivot('isHead', true)->first()) 
-                                @if ($office->getDepthAttribute() == 0)
-                                    <small>(Head of Agency)</small>
-                                @elseif ($office->getDepthAttribute() == 1)
-                                    <small>(Head of Delivery Unit)</small>
-                                @else
-                                    <small>(Head of Office)</small>
-                                @endif
-                            @endif 
-                            <br/>
-                        </div>
+                        @foreach ($approval_reviewer as $reviewer)
+                            <div style="margin: 1.5rem 0;">
+                                {{ $reviewer->name }} <br/> 
+                                @if ($office = $reviewer->offices()->wherePivot('isHead', true)->first()) 
+                                    @if ($office->getDepthAttribute() == 0)
+                                        <small>(Head of Agency)</small>
+                                    @elseif ($office->getDepthAttribute() == 1)
+                                        <small>(Head of Delivery Unit)</small>
+                                    @else
+                                        <small>(Head of Office)</small>
+                                    @endif
+                                @endif 
+                                <br/>
+                            </div>
+                        @endforeach
                     </div>
                 </td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }}</td>
+                <td rowspan="5" class="bordered">
+                    {{-- {{ date('M d, Y', strtotime($approval->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
+                </td>
                 <td colspan="2" rowspan="5" class="bordered">
-                    <div class="d-flex">
-                        <div style="margin: 1.5rem 0;">
-                            {{ $approval_approver->name }} <br/> 
-                            @if ($office = $approval_approver->offices()->wherePivot('isHead', true)->first()) 
-                                @if ($office->getDepthAttribute() == 0)
-                                    <small>(Head of Agency)</small>
-                                @elseif ($office->getDepthAttribute() == 1)
-                                    <small>(Head of Delivery Unit)</small>
-                                @else
-                                    <small>(Head of Office)</small>
-                                @endif
-                            @endif 
-                            <br/>
-                        </div>
-                    </div>
+                    @if (isset($approval_approver->name))
+                        {{ $approval_approver->name }} <br/> 
+                        @if ($office = $approval_approver->offices()->wherePivot('isHead', true)->first()) 
+                            @if ($office->getDepthAttribute() == 0)
+                                <small>(Head of Agency)</small>
+                            @elseif ($office->getDepthAttribute() == 1)
+                                <small>(Head of Delivery Unit)</small>
+                            @else
+                                <small>(Head of Office)</small>
+                            @endif
+                        @endif
+                    @endif 
                 </td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->approve_date)) }}</td>
+                <td rowspan="5" class="bordered">
+                    {{-- {{ date('M d, Y', strtotime($approval->approve_date)) }} --}}
+                </td>
                 <td class="bold">Q</td>
                 <td class="border-right">Quality</td>
                 <td class="bold">5</td>
@@ -218,6 +266,8 @@
                     </th>
                     <th rowspan="2">Success Indicator (Target + Measure)</th>
                     <th rowspan="2">Actual Accomplishment</th>
+                    <th rowspan="2">Alloted Budget</th>
+                    <th rowspan="2">Responsible Person/Office</th>
                     <th colspan="4">Rating</th>
                     <th rowspan="2">Remarks</th>
                 </tr>
@@ -233,7 +283,7 @@
                     $numberSubF = 0;
                 @endphp
                 @if ($funct->sub_functs)
-                    @foreach ($user->sub_functs()->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                    @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                         @php
                             $total = 0;
                             $numberSubF = 0;
@@ -241,11 +291,13 @@
                         <tr>
                             <td colspan="2">
                                 {{ $sub_funct->sub_funct }} 
-                                @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                     {{ $percent = $sub_percentage->value }}%
+                                @else
+                                    {{ $percent = 0 }}%
                                 @endif
                             </td>
-                            <td colspan="7">
+                            <td colspan="9">
 
                             </td>
                         </tr>
@@ -258,7 +310,7 @@
                                     <td>
                                         {{ $output->output }}
                                     </td>
-                                    <td colspan="7"></td>
+                                    <td colspan="9"></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
@@ -271,7 +323,9 @@
                                     @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
-                                            @foreach ($target->ratings as $rating)
+                                            <td>{{ $target->pivot->alloted_budget }}</td>
+                                            <td>{{ $target->pivot->responsible }}</td>
+                                            @forelse ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
@@ -321,15 +375,31 @@
                                                             @break
                                                     @endswitch
                                                     @break;
+                                                @elseif ($loop->last)
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 @endif
-                                            @endforeach
+                                            @empty
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
                                             @php
                                                 $first = false;
                                             @endphp
                                         @else
                                             <tr>
                                                 <td>{{ $target->target }}</td>
-                                                @foreach ($target->ratings as $rating)
+                                                <td>{{ $target->pivot->alloted_budget }}</td>
+                                                <td>{{ $target->pivot->responsible }}</td>
+                                                @forelse ($target->ratings as $rating)
                                                     @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
@@ -379,8 +449,22 @@
                                                                 @break
                                                         @endswitch
                                                         @break;
+                                                    @elseif ($loop->last)
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     @endif
-                                                @endforeach
+                                                @empty
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                @endforelse
                                             </tr>
                                         @endif
                                     @endforeach
@@ -400,7 +484,9 @@
                                     @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
-                                            @foreach ($target->ratings as $rating)
+                                            <td>{{ $target->pivot->alloted_budget }}</td>
+                                            <td>{{ $target->pivot->responsible }}</td>
+                                            @forelse ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
@@ -450,15 +536,31 @@
                                                             @break
                                                     @endswitch
                                                     @break;
+                                                @elseif ($loop->last)
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 @endif
-                                            @endforeach
+                                            @empty
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
                                             @php
                                                 $first = false;
                                             @endphp
                                         @else
                                             <tr>
                                                 <td>{{ $target->target }}</td>
-                                                @foreach ($target->ratings as $rating)
+                                                <td>{{ $target->pivot->alloted_budget }}</td>
+                                                <td>{{ $target->pivot->responsible }}</td>
+                                                @forelse ($target->ratings as $rating)
                                                     @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
@@ -508,8 +610,22 @@
                                                                 @break
                                                         @endswitch
                                                         @break;
+                                                    @elseif ($loop->last)
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     @endif
-                                                @endforeach
+                                                @empty
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                @endforelse
                                             </tr>
                                         @endif
                                     @endforeach
@@ -517,12 +633,12 @@
                             @endforelse
                         @endforeach
                         <tr>
-                            <td colspan="7" class="text-end">Total {{ $sub_funct->sub_funct }}</td>
+                            <td colspan="9" class="text-end">Total {{ $sub_funct->sub_funct }}</td>
                             <td>{{ $total }}</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td colspan="7" class="text-end">Total / {{ $numberSubF }} x {{ $percent }}% x 
+                            <td colspan="9" class="text-end">Total / {{ $numberSubF }} x {{ $percent }}% x 
                                 @switch($funct->funct)
                                     @case('Core Function')
                                         {{ $percentage->core }}
@@ -539,22 +655,43 @@
                             <td>
                                 @switch($funct->funct)
                                     @case('Core Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->core/100) }}
-                                        @php
-                                            $totalCF += (($total/$numberSubF)*($percent/100))*($percentage->core/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->core/100) }}
+                                            @php
+                                                $totalCF += (($total/$numberSubF)*($percent/100))*($percentage->core/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalCF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                     @case('Strategic Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->strategic/100) }}
-                                        @php
-                                            $totalSTF += (($total/$numberSubF)*($percent/100))*($percentage->strategic/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->strategic/100) }}
+                                            @php
+                                                $totalSTF += (($total/$numberSubF)*($percent/100))*($percentage->strategic/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalSTF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                     @case('Support Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->support/100) }}
-                                        @php
-                                            $totalSF += (($total/$numberSubF)*($percent/100))*($percentage->support/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->support/100) }}
+                                            @php
+                                                $totalSF += (($total/$numberSubF)*($percent/100))*($percentage->support/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalSF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                 @endswitch
                             </td>
@@ -568,10 +705,10 @@
                                     @php
                                         $x = 0;
                                     @endphp
-                                    <td colspan="7" class="text-end">
+                                    <td colspan="9" class="text-end">
                                         Total {{ $funct->funct }} (
-                                        @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
-                                            @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                        @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                            @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                                 @if ($x)
                                                     + {{ $sub_percentage->value }}%
                                                 @else
@@ -597,10 +734,10 @@
                                 @php
                                     $x = 0;
                                 @endphp
-                                <td colspan="7" class="text-end">
+                                <td colspan="9" class="text-end">
                                     Total {{ $funct->funct }} (
-                                    @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
-                                        @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                    @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                        @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                             @if ($x)
                                                 + {{ $sub_percentage->value }}%
                                             @else
@@ -627,10 +764,10 @@
                                 @php
                                     $x = 0;
                                 @endphp
-                                <td colspan="7" class="text-end">
+                                <td colspan="9" class="text-end">
                                     Total {{ $funct->funct }} (
-                                    @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
-                                        @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
+                                    @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                                        @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                             @if ($x)
                                                 + {{ $sub_percentage->value }}%
                                             @else
@@ -662,7 +799,7 @@
                             <td>
                                 {{ $output->output }}
                             </td>
-                            <td colspan="7"></td>
+                            <td colspan="9"></td>
                         </tr>
                         <tr>
                             <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
@@ -675,7 +812,9 @@
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
-                                    @foreach ($target->ratings as $rating)
+                                    <td>{{ $target->pivot->alloted_budget }}</td>
+                                    <td>{{ $target->pivot->responsible }}</td>
+                                    @forelse ($target->ratings as $rating)
                                         @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
@@ -704,36 +843,54 @@
                                             @switch($funct->funct)
                                                 @case('Core Function')
                                                     @php
-                                                        $totalCF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberCF++;
                                                     @endphp
                                                     @break
                                                 @case('Strategic Function')
                                                     @php
-                                                        $totalSTF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSTF++;
                                                     @endphp
                                                     @break
                                                 @case('Support Function')
                                                     @php
-                                                        $totalSF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSF++;
                                                     @endphp
                                                     @break
                                             @endswitch
                                             @break;
+                                        @elseif ($loop->last)
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr>
                                         <td>{{ $target->target }}</td>
-                                        @foreach ($target->ratings as $rating)
+                                        <td>{{ $target->pivot->alloted_budget }}</td>
+                                        <td>{{ $target->pivot->responsible }}</td>
+                                        <td>{{ $target->pivot->alloted_budget }}</td>
+                                        <td>{{ $target->pivot->responsible }}</td>
+                                        @forelse ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
@@ -762,29 +919,43 @@
                                                 @switch($funct->funct)
                                                     @case('Core Function')
                                                         @php
-                                                            $totalCF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberCF++;
                                                         @endphp
                                                         @break
                                                     @case('Strategic Function')
                                                         @php
-                                                            $totalSTF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSTF++;
                                                         @endphp
                                                         @break
                                                     @case('Support Function')
                                                         @php
-                                                            $totalSF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSF++;
                                                         @endphp
                                                         @break
                                                 @endswitch
                                                 @break;
+                                            @elseif ($loop->last)
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -804,7 +975,9 @@
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
-                                    @foreach ($target->ratings as $rating)
+                                    <td>{{ $target->pivot->alloted_budget }}</td>
+                                    <td>{{ $target->pivot->responsible }}</td>
+                                    @forelse ($target->ratings as $rating)
                                         @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
@@ -833,36 +1006,52 @@
                                             @switch($funct->funct)
                                                 @case('Core Function')
                                                     @php
-                                                        $totalCF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberCF++;
                                                     @endphp
                                                     @break
                                                 @case('Strategic Function')
                                                     @php
-                                                        $totalSTF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSTF++;
                                                     @endphp
                                                     @break
                                                 @case('Support Function')
                                                     @php
-                                                        $totalSF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSF++;
                                                     @endphp
                                                     @break
                                             @endswitch
                                             @break;
+                                        @elseif ($loop->last)
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr>
                                         <td>{{ $target->target }}</td>
-                                        @foreach ($target->ratings as $rating)
+                                        <td>{{ $target->pivot->alloted_budget }}</td>
+                                        <td>{{ $target->pivot->responsible }}</td>
+                                        @forelse ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
@@ -891,29 +1080,43 @@
                                                 @switch($funct->funct)
                                                     @case('Core Function')
                                                         @php
-                                                            $totalCF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberCF++;
                                                         @endphp
                                                         @break
                                                     @case('Strategic Function')
                                                         @php
-                                                            $totalSTF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSTF++;
                                                         @endphp
                                                         @break
                                                     @case('Support Function')
                                                         @php
-                                                            $totalSF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSF++;
                                                         @endphp
                                                         @break
                                                 @endswitch
                                                 @break;
+                                            @elseif ($loop->last)
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -924,7 +1127,7 @@
                 @switch($funct->funct)
                     @case('Core Function')
                         <tr>
-                            <td colspan="7" class="text-end">
+                            <td colspan="9" class="text-end">
                                 Total {{ $funct->funct }}
                             </td>
                             <td>{{ $totalCF }}</td>
@@ -933,7 +1136,7 @@
                         @break
                     @case('Strategic Function')
                         <tr>
-                            <td colspan="7" class="text-end">
+                            <td colspan="9" class="text-end">
                                 Total {{ $funct->funct }}
                             </td>
                             <td>{{ $totalSTF }}</td>
@@ -942,7 +1145,7 @@
                         @break
                     @case('Support Function')
                         <tr>
-                            <td colspan="7" class="text-end">
+                            <td colspan="9" class="text-end">
                                 Total {{ $funct->funct }}
                             </td>
                             <td>{{ $totalSF }}</td>
@@ -957,13 +1160,13 @@
             <tr>
                 <th colspan="3">Category</th>
                 <th>Average</th>
-                <th colspan="3">MFO (tot. no.)</th>
-                <th>Percentage</th>
+                <th colspan="4">MFO (tot. no.)</th>
+                <th colspan="2">Percentage</th>
                 <th>Total</th>
             </tr>
             @foreach ($functs as $funct)
                 @if ($funct->funct == 'Core Function')
-                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                         <tr>
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">
@@ -974,9 +1177,9 @@
                                 @endif
                             </td>
                             <td style="border-right: none; border-left: none;">/</td>
-                            <td style="border-right: none; border-left: none;">{{ $numberCF }}</td>
+                            <td style="border-right: none; border-left: none;" colspan="2">{{ $numberCF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->core/100 }}</td>
+                            <td colspan="2">{{ $percentage->core/100 }}</td>
                             <td>{{ $total1 = $totalCF }}</td>
                         </tr>
                         @break
@@ -985,9 +1188,9 @@
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">{{ $totalCF }}</td>
                             <td style="border-right: none; border-left: none;">/</td>
-                            <td style="border-right: none; border-left: none;">{{ $numberCF }}</td>
+                            <td style="border-right: none; border-left: none;" colspan="2">{{ $numberCF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->core/100 }}</td>
+                            <td colspan="2">{{ $percentage->core/100 }}</td>
                             <td>
                                 @if ($numberCF == 0 && $total1 == 0)
                                     {{ $total1 = 0 }}
@@ -998,7 +1201,7 @@
                         </tr>
                     @endforelse
                 @elseif ($funct->funct == 'Strategic Function')
-                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                         <tr>
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">
@@ -1009,9 +1212,9 @@
                                 @endif
                             </td>
                             <td style="border: none;">/</td>
-                            <td style="border: none;">{{ $numberSTF }}</td>
+                            <td style="border: none;" colspan="2">{{ $numberSTF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->strategic/100 }}</td>
+                            <td colspan="2">{{ $percentage->strategic/100 }}</td>
                             <td>{{ $total2 = $totalSTF }}</td>
                         </tr>
                         @break
@@ -1020,9 +1223,9 @@
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">{{ $totalSTF }}</td>
                             <td style="border: none;">/</td>
-                            <td style="border: none;">{{ $numberSTF }}</td>
+                            <td style="border: none;" colspan="2">{{ $numberSTF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->strategic/100 }}</td>
+                            <td colspan="2">{{ $percentage->strategic/100 }}</td>
                             <td>
                                 @if ($numberSTF == 0 && $total2 == 0)
                                     {{ $total2 = 0 }}
@@ -1033,7 +1236,7 @@
                         </tr>
                     @endforelse
                 @elseif ($funct->funct == 'Support Function')
-                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
+                    @forelse ($user->sub_functs()->where('funct_id', $funct->id)->where('funct_id', $funct->id)->where('type', 'opcr')->where('user_type', 'office')->where('duration_id', $duration->id)->get() as $sub_funct)
                         <tr>
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">
@@ -1044,9 +1247,9 @@
                                 @endif
                             </td>
                             <td style="border-right: none; border-left: none;">/</td>
-                            <td style="border-right: none; border-left: none;">{{ $numberSF }}</td>
+                            <td style="border-right: none; border-left: none;" colspan="2">{{ $numberSF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->support/100 }}</td>
+                            <td colspan="2">{{ $percentage->support/100 }}</td>
                             <td>{{ $total3 = $totalSF }}</td>
                         </tr>
                         @break
@@ -1055,9 +1258,9 @@
                             <td colspan="3" class="text-start">{{ $funct->funct }}</td>
                             <td style="border-right: none;">{{ $totalSF }}</td>
                             <td style="border-right: none; border-left: none;">/</td>
-                            <td style="border-right: none; border-left: none;">{{ $numberSF }}</td>
+                            <td style="border-right: none; border-left: none;" colspan="2">{{ $numberSF }}</td>
                             <td style="border-left: none;">X</td>
-                            <td>{{ $percentage->support/100 }}</td>
+                            <td colspan="2">{{ $percentage->support/100 }}</td>
                             <td>
                                 @if ($numberSF == 0 && $total3 == 0)
                                     {{ $total3 = 0 }}
@@ -1070,18 +1273,18 @@
                 @endif
             @endforeach
             <tr>
-                <td colspan="2"></td>
-                <td colspan="6" class="text-start">Total/Final Overall Rating</td>
+                <td colspan="3"></td>
+                <td colspan="7" class="text-start">Total/Final Overall Rating</td>
                 <td>{{ $total = round($total1+$total2+$total3, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="2"></td>
-                <td colspan="6" class="text-start">Final Average Rating</td>
+                <td colspan="3"></td>
+                <td colspan="7" class="text-start">Final Average Rating</td>
                 <td>{{ $total = round($total1+$total2+$total3, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="2"></td>
-                <td colspan="6" class="text-start">Adjectival Rating</td>
+                <td colspan="3"></td>
+                <td colspan="7" class="text-start">Adjectival Rating</td>
                 <td>
                     @if ($total >= $scoreEquivalent->out_from && $total <= $scoreEquivalent->out_to)
                         Outstanding
@@ -1098,27 +1301,40 @@
             </tr>
             
             <tr>
-                <td colspan="4" class="text-start">Discussed with:</td>
-                <td colspan="5" class="text-start">Assessed by:</td>
+                <td colspan="5" class="text-start">Discussed with:</td>
+                <td colspan="6" class="text-start">Assessed by:</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <p><u>{{ $user->name }}</u></p>
                 </td>
-                <td>Date: {{ date('M d, Y') }}</td>
+                <td>Date: 
+                    {{-- {{ date('M d, Y') }} --}}
+                </td>
                 <td style="width: 300px;">
                     <p style="word-wrap: initial;">I certify that I discussed my assessment of the performance with the employee.</p>
-                    <p><u>{{ $assess_reviewer->name }}</u></p>
+                    @foreach ($assess_reviewer as $reviewer)
+                        <p><u>{{ $reviewer->name }}</u></p>
+                        <br/>
+                    @endforeach
                 </td>
-                <td>Date: {{ date('M d, Y', strtotime($assess->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }}</td>
+                <td colspan="2">Date: 
+                    {{-- {{ date('M d, Y', strtotime($assess->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
+                </td>
                 <td colspan="3">
                     <p class="text-start">Final rating by:</p>
-                    <p><u>{{ $assess_approver->name }}</u></p>
+                    <p><u>{{ isset($assess_approver->name) ? $assess_approver->name : '' }}</u></p>
                 </td>
-                <td>Date: {{ date('M d, Y', strtotime($assess->approve_date)) }}</td>
+                <td colspan="2">Date: 
+                    {{-- {{ date('M d, Y', strtotime($assess->approve_date)) }} --}}
+                </td>
             </tr>
         </tfoot>
     </table>
+
+    <div class="comment-section bordered" style="margin-top: 20px; padding: 10px;">
+        <h6>Comment:</h6>
+    </div>
 </body>
 
 </html>

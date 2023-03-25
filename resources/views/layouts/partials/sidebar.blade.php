@@ -87,7 +87,8 @@
         </x-maz-sidebar-item>
     @endif
     
-    @if (($head && !$president) || $pmo || $hrmo)
+    {{-- @if (($head && !$president) || $pmo || $hrmo) --}}
+    @if ($head && !$president)
         <x-maz-sidebar-item alias="opcr" link="#" name="OPCR" icon="bi bi-clipboard-data-fill">
             @if ($head && !$president)
                 <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
@@ -95,8 +96,8 @@
             @endif
 
             @if ($pmo || $hrmo)
-                <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item>
-                <x-maz-sidebar-sub-item name="Listing Standards for OPCR" :link="route('opcr.listing.standard')"></x-maz-sidebar-sub-item>
+                {{-- <x-maz-sidebar-sub-item name="Listing for OPCR" :link="route('opcr.listing')"></x-maz-sidebar-sub-item> --}}
+                {{-- <x-maz-sidebar-sub-item name="Listing Standards for OPCR" :link="route('opcr.listing.standard')"></x-maz-sidebar-sub-item> --}}
             @endif
         </x-maz-sidebar-item>
     @endif

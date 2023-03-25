@@ -95,11 +95,9 @@
                         </button>
                     @endif
 
-                    @if ($duration && $approval && $approval->approve_status == 1)
-                        <a href="{{ route('print.standard.faculty', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Standard">
-                            <i class="bi bi-printer"></i>
-                        </a>
-                    @endif
+                    <a href="{{ route('print.standard.faculty', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print Standard">
+                        <i class="bi bi-printer"></i>
+                    </a>
                 </div>
             </div>
             @if ($duration)

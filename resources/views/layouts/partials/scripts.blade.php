@@ -72,6 +72,8 @@
         $('#AddTargetOutputModal').modal('hide');
         $('#EditTargetOutputModal').modal('hide');
         $('#FacultyCorePercentageModal').modal('hide');
+
+        $('#PrintModal').modal('hide');
     });
 </script>
 

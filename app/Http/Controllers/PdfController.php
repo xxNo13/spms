@@ -58,19 +58,34 @@ class PdfController extends Controller
         if ($duration) {
             $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
 
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
+
+                $percentage = (object) $array;
+            }
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'faculty')->first();
             
-            foreach ($approval->reviewers as $reviewer) {
-                array_push($approval_reviewer, $reviewer);
+            $approval_approver = '';
+            if ($approval) {
+                foreach ($approval->reviewers as $reviewer) {
+                    array_push($approval_reviewer, $reviewer);
+                }
+                $approval_approver = User::find($approval->approve_id);
             }
-            $approval_approver = User::find($approval->approve_id);
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'faculty')->first();
             
-            foreach ($assess->reviewers as $reviewer) {
-                array_push($assess_reviewer, $reviewer);
+            $assess_approver = '';
+            if ($assess) {
+                foreach ($assess->reviewers as $reviewer) {
+                    array_push($assess_reviewer, $reviewer);
+                }
+                $assess_approver = User::find($assess->approve_id);
             }
-            $assess_approver = User::find($assess->approve_id);
         }
 
         $data = [
@@ -86,6 +101,8 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
+            'title' => $request->title,
+            'office' => $request->office,
         ];
 
         $pdf = PDF::loadView('print.ipcr-faculty', $data)->setPaper('a4','landscape');
@@ -128,6 +145,16 @@ class PdfController extends Controller
 
         if($duration) {
             $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $duration->id)->first();
+        
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
+
+                $percentage = (object) $array;
+            }
         }
 
         $user = User::find($id);
@@ -187,19 +214,34 @@ class PdfController extends Controller
         if ($duration) {
             $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
 
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
+
+                $percentage = (object) $array;
+            }
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first();
             
-            foreach ($approval->reviewers as $reviewer) {
-                array_push($approval_reviewer, $reviewer);
+            $approval_approver = '';
+            if ($approval) {
+                foreach ($approval->reviewers as $reviewer) {
+                    array_push($approval_reviewer, $reviewer);
+                }
+                $approval_approver = User::find($approval->approve_id);
             }
-            $approval_approver = User::find($approval->approve_id);
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $duration->id)->where('user_type', 'staff')->first();
             
-            foreach ($assess->reviewers as $reviewer) {
-                array_push($assess_reviewer, $reviewer);
+            $assess_approver = '';
+            if ($assess) {
+                foreach ($assess->reviewers as $reviewer) {
+                    array_push($assess_reviewer, $reviewer);
+                }
+                $assess_approver = User::find($assess->approve_id);
             }
-            $assess_approver = User::find($assess->approve_id);
         }
 
         $data = [
@@ -215,6 +257,8 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
+            'title' => $request->title,
+            'office' => $request->office,
         ];
 
         $pdf = PDF::loadView('print.ipcr-staff', $data)->setPaper('a4','landscape');
@@ -259,6 +303,16 @@ class PdfController extends Controller
         
         if($duration) {
             $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
+        
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
+
+                $percentage = (object) $array;
+            }
         }
 
 
@@ -278,6 +332,8 @@ class PdfController extends Controller
     public function opcr($id, Request $request) {
         $head = false;
         $yours = false;
+        $approval_reviewer = [];
+        $assess_reviewer = [];
         foreach (auth()->user()->offices as $office) {
             if ($office->pivot->isHead) {
                 $head = true;
@@ -305,22 +361,36 @@ class PdfController extends Controller
         $user = User::find($id);
 
         if ($duration) {
-            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
-            $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
+            
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
 
-            $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
-            foreach ($approval->reviewers as $reviewer) {
-                $approval_reviewer = $reviewer;
-                break;
+                $percentage = (object) $array;
             }
-            $approval_approver = User::find($approval->approve_id);
+            $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
+            
+            $approval_approver = '';
+            if ($approval) {
+                foreach ($approval->reviewers as $reviewer) {
+                    array_push($approval_reviewer, $reviewer);
+                }
+                $approval_approver = User::find($approval->approve_id);
+            }
 
             $assess = $user->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
-            foreach ($assess->reviewers as $reviewer) {
-                $assess_reviewer = $reviewer;
-                break;
+            
+            $assess_approver = '';
+            if ($assess) {
+                foreach ($assess->reviewers as $reviewer) {
+                    array_push($assess_reviewer, $reviewer);
+                }
+                $assess_approver = User::find($assess->approve_id);
             }
-            $assess_approver = User::find($assess->approve_id);
         }
 
         $data = [
@@ -333,10 +403,11 @@ class PdfController extends Controller
             'assess_approver' => $assess_approver,
             'duration' => $duration,
             'percentage' => $percentage,
-            'sub_percentages' => $sub_percentages,
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
-            'user' => $user
+            'user' => $user,
+            'title' => $request->title,
+            'office' => $request->office,
         ];
 
         $pdf = PDF::loadView('print.opcr', $data)->setPaper('a4','landscape');
@@ -369,18 +440,27 @@ class PdfController extends Controller
         }
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $user = User::find($id);
+
         if($duration) {
-            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->first();
-            $sub_percentages = SubPercentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', null)->where('duration_id', $duration->id)->get();
+            $percentage = Percentage::where('type', 'opcr')->where('user_type', 'office')->where('user_id', $user->id)->where('duration_id', $duration->id)->first();
+            
+            if (!$percentage) {
+                $array = [
+                    'core' => 0,
+                    'strategic' => 0,
+                    'support' => 0
+                ];
+
+                $percentage = (object) $array;
+            }
         }
 
-        $user = User::find($id);
 
         $data = [
             'functs' => Funct::all(),
             'duration' => $duration,
             'percentage' => $percentage,
-            'sub_percentages' => $sub_percentages,
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,

@@ -3,12 +3,13 @@
         {{-- Add Output/Suboutput/Target Modal --}}
         <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddOSTModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="myModalLabel33">Add Output/Suboutput/Target</h4>
                     </div>
-                    <form wire:submit.prevent="saveIpcr">
+                    <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? 'saveOpcr' : 'saveIpcr' }}">
+                        @csrf
                         <div class="modal-body">
                             
                             @if (isset($userType) && ($userType == 'listing'))
@@ -24,7 +25,7 @@
                                 <hr>
                             @endif
 
-                            <div class="mt-3 form-group d-flex justify-content-between">
+                            <div class="mt-3 form-group d-flex justify-content-around">
                                 <div class="form-check form-switch">
                                     <input wire:change="$emit('resetInput')" type="radio" class="form-check-input" id="output"
                                         value="sub_funct" name="selected" wire:model="selected">
@@ -50,7 +51,7 @@
                                     <input wire:change="$emit('resetInput')" type="radio" class="form-check-input" id="target"
                                         value="target" name="selected" wire:model="selected">
                                     <label class="form-check-label" for="target">
-                                        Target
+                                        Success Indicator
                                     </label>
                                 </div>
                             </div>
@@ -85,9 +86,15 @@
                                                         <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
                                                     @endforeach
                                                 @else
-                                                    @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
-                                                        <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
-                                                    @endforeach
+                                                    @if (isset($type) && $type == 'office')
+                                                        @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'opcr')->where('user_type', 'office')->where('funct_id', $currentPage)->get() as $sub_funct)
+                                                            <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                        @endforeach
+                                                    @else
+                                                        @foreach (auth()->user()->sub_functs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('funct_id', $currentPage)->get() as $sub_funct)
+                                                            <option value="{{ $sub_funct->id }}">{{ $sub_funct->sub_funct }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 @endif
                                             @endif
                                         </select>
@@ -142,14 +149,25 @@
                                                         @endforelse
                                                     @endforeach
                                                 @else
-                                                    @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                        @forelse ($output->targets as $target)
-                                                        @empty
-                                                            <option value="{{ $output->id }}"> 
-                                                                {{ $output->output }}
-                                                            </option>
-                                                        @endforelse
-                                                    @endforeach
+                                                    @if (isset($type) && $type == 'office')
+                                                        @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'opcr')->where('user_type', 'office')->where('code', $code)->get() as $output)
+                                                            @forelse ($output->targets as $target)
+                                                            @empty
+                                                                <option value="{{ $output->id }}"> 
+                                                                    {{ $output->output }}
+                                                                </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @else  
+                                                        @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                            @forelse ($output->targets as $target)
+                                                            @empty
+                                                                <option value="{{ $output->id }}"> 
+                                                                    {{ $output->output }}
+                                                                </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @endif
                                                 @endif
                                             @endif
                                         </select>
@@ -215,18 +233,33 @@
                                                         @endforelse
                                                     @endforeach
                                                 @else
-                                                    @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
-                                                        @forelse ($output->suboutputs as $suboutput)
-                                                            <option value="suboutput, {{ $suboutput->id }}">
-                                                                {{ $suboutput->output->output }} -
-                                                                {{ $suboutput->suboutput }}
-                                                            </option>
-                                                        @empty
-                                                                <option value="output, {{ $output->id }}">
-                                                                    {{ $output->output }}
+                                                    @if (isset($type) && $type == 'office')
+                                                        @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'opcr')->where('user_type', 'office')->where('code', $code)->get() as $output)
+                                                            @forelse ($output->suboutputs as $suboutput)
+                                                                <option value="suboutput, {{ $suboutput->id }}">
+                                                                    {{ $suboutput->output->output }} -
+                                                                    {{ $suboutput->suboutput }}
                                                                 </option>
-                                                        @endforelse
-                                                    @endforeach
+                                                            @empty
+                                                                    <option value="output, {{ $output->id }}">
+                                                                        {{ $output->output }}
+                                                                    </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @else
+                                                        @foreach (auth()->user()->outputs()->where('duration_id', $duration->id)->where('type', 'ipcr')->where('user_type', 'staff')->where('code', $code)->get() as $output)
+                                                            @forelse ($output->suboutputs as $suboutput)
+                                                                <option value="suboutput, {{ $suboutput->id }}">
+                                                                    {{ $suboutput->output->output }} -
+                                                                    {{ $suboutput->suboutput }}
+                                                                </option>
+                                                            @empty
+                                                                    <option value="output, {{ $output->id }}">
+                                                                        {{ $output->output }}
+                                                                    </option>
+                                                            @endforelse
+                                                        @endforeach
+                                                    @endif
                                                 @endif
                                             @endif
                                         </select>
@@ -234,9 +267,9 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    <label>Target: </label>
+                                    <label>Success Indicator: </label>
                                     <div class="form-group">
-                                        <input type="text" placeholder="Target" class="form-control"
+                                        <input type="text" placeholder="Success Indicator" class="form-control"
                                             name="target" wire:model.defer="target">
                                         @error('target')
                                             <p class="text-danger">{{ $message }}</p>
@@ -275,7 +308,8 @@
                     <div class="modal-header">
                         <h4 class="modal-title" id="myModalLabel33">Edit Output/Suboutput/Target</h4>
                     </div>
-                    <form wire:submit.prevent="updateIpcr">
+                    <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? 'updateOpcr' : 'updateIpcr' }}">
+                        @csrf
                         <div class="modal-body">
                             <div class="mt-3">
                                 @if ($selected == 'sub_funct')
@@ -306,9 +340,9 @@
                                         @enderror
                                     </div>
                                 @elseif ($selected == 'target')
-                                    <label>Target: </label>
+                                    <label>Success Indicator: </label>
                                     <div class="form-group">
-                                        <input type="text" placeholder="Target" class="form-control"
+                                        <input type="text" placeholder="Success Indicator" class="form-control"
                                             name="target" wire:model.defer="target">
                                         @error('target')
                                             <p class="text-danger">{{ $message }}</p>
@@ -349,6 +383,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Delete Modal</h4>
                 </div>
                 <form wire:submit.prevent="delete">
+                    @csrf
                     <div class="modal-body">
                         <p>You sure you want to delete?</p>
                         <p>Can't recover data once you delete it!</p>
@@ -368,201 +403,201 @@
         </div>
     </div>
 
-    @if (isset($selectedTarget) && isset($targetOutput))
-        {{-- Add Rating Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddRatingModal" tabindex="-1" role="dialog"
-            aria-labelledby="myModalLabel33" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel33">Add Rating</h4>
-                    </div>
-
-                    <form wire:submit.prevent="saveRating('{{ 'add' }}')">
-                        <div class="modal-body">
-                            @if (isset($targetOutput))
-                                <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
-                                <div class="form-group">
-                                    <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model.defer="output_finished">
-                                    @error('output_finished')
-                                        <p class="text-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            @endif
-                            <label>Actual Accomplishment:</label>
-                            <div class="form-group">
-                                <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
-                                        wire:model.defer="accomplishment" style="height: 100px;"></textarea>
-                                @error('accomplishment')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Quality: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model.defer="quality">
-                                    <option value="">Quality</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->qua_1)) 
-                                            <option value="1">1 - {{ $standard->qua_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_2)) 
-                                            <option value="2">2 - {{ $standard->qua_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_3)) 
-                                            <option value="3">3 - {{ $standard->qua_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_4))
-                                            <option value="4">4 - {{ $standard->qua_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_5))
-                                            <option value="5">5 - {{ $standard->qua_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('quality')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Timeliness: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model.defer="timeliness">
-                                    <option value="">Timeliness</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->time_1)) 
-                                            <option value="1">1 - {{ $standard->time_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_2)) 
-                                            <option value="2">2 - {{ $standard->time_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_3)) 
-                                            <option value="3">3 - {{ $standard->time_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_4))
-                                            <option value="4">4 - {{ $standard->time_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_5))
-                                            <option value="5">5 - {{ $standard->time_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('timeliness')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Close</span>
-                            </button>
-                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Save</span>
-                            </button>
-                        </div>
-                    </form>
+    {{-- Add Rating Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddRatingModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Add Rating</h4>
                 </div>
+
+                <form wire:submit.prevent="saveRating('{{ 'add' }}')">
+                    @csrf
+                    <div class="modal-body">
+                        @if (isset($targetOutput))
+                            <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
+                            <div class="form-group">
+                                <input type="number" placeholder="Output Finished" class="form-control"
+                                    wire:model.defer="output_finished">
+                                @error('output_finished')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
+                        <label>Actual Accomplishment:</label>
+                        <div class="form-group">
+                            <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
+                                    wire:model.defer="accomplishment" style="height: 100px;"></textarea>
+                            @error('accomplishment')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <label>Quality: </label>
+                        <div class="form-group">
+                            <select class="form-control" wire:model.defer="quality">
+                                <option value="">Quality</option>
+                                @if (isset($selectedTarget) && ($standard = $selectedTarget->standards()->first()))
+                                    @if (!empty($standard->qua_1)) 
+                                        <option value="1">1 - {{ $standard->qua_1 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_2)) 
+                                        <option value="2">2 - {{ $standard->qua_2 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_3)) 
+                                        <option value="3">3 - {{ $standard->qua_3 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_4))
+                                        <option value="4">4 - {{ $standard->qua_4 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_5))
+                                        <option value="5">5 - {{ $standard->qua_5 }}</option>
+                                    @endif
+                                @endif
+                            </select>
+                            @error('quality')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <label>Timeliness: </label>
+                        <div class="form-group">
+                            <select class="form-control" wire:model.defer="timeliness">
+                                <option value="">Timeliness</option>
+                                @if (isset($selectedTarget) && ($standard = $selectedTarget->standards()->first()))
+                                    @if (!empty($standard->time_1)) 
+                                        <option value="1">1 - {{ $standard->time_1 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_2)) 
+                                        <option value="2">2 - {{ $standard->time_2 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_3)) 
+                                        <option value="3">3 - {{ $standard->time_3 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_4))
+                                        <option value="4">4 - {{ $standard->time_4 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_5))
+                                        <option value="5">5 - {{ $standard->time_5 }}</option>
+                                    @endif
+                                @endif
+                            </select>
+                            @error('timeliness')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Save</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        {{-- Edit Rating Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditRatingModal" tabindex="-1" role="dialog"
-            aria-labelledby="myModalLabel33" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel33">Edit Rating</h4>
-                    </div>
-
-                    <form wire:submit.prevent="saveRating('{{ 'edit' }}')">
-                        <div class="modal-body">
-                            @if (isset($targetOutput))
-                                <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
-                                <div class="form-group">
-                                    <input type="number" placeholder="Output Finished" class="form-control"
-                                        wire:model.defer="output_finished">
-                                    @error('output_finished')
-                                        <p class="text-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            @endif
-                            <label>Actual Accomplishment:</label>
-                            <div class="form-group">
-                                <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
-                                        wire:model.defer="accomplishment" style="height: 100px;"></textarea>
-                                @error('accomplishment')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Quality: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model.defer="quality">
-                                    <option value="">Quality</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->qua_1)) 
-                                            <option value="1">1 - {{ $standard->qua_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_2)) 
-                                            <option value="2">2 - {{ $standard->qua_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_3)) 
-                                            <option value="3">3 - {{ $standard->qua_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_4))
-                                            <option value="4">4 - {{ $standard->qua_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->qua_5))
-                                            <option value="5">5 - {{ $standard->qua_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('quality')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <label>Timeliness: </label>
-                            <div class="form-group">
-                                <select class="form-control" wire:model.defer="timeliness">
-                                    <option value="">Timeliness</option>
-                                    @if ($standard = $selectedTarget->standards()->first())
-                                        @if (!empty($standard->time_1)) 
-                                            <option value="1">1 - {{ $standard->time_1 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_2)) 
-                                            <option value="2">2 - {{ $standard->time_2 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_3)) 
-                                            <option value="3">3 - {{ $standard->time_3 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_4))
-                                            <option value="4">4 - {{ $standard->time_4 }}</option>
-                                        @endif
-                                        @if (!empty($standard->time_5))
-                                            <option value="5">5 - {{ $standard->time_5 }}</option>
-                                        @endif
-                                    @endif
-                                </select>
-                                @error('timeliness')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Close</span>
-                            </button>
-                            <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Update</span>
-                            </button>
-                        </div>
-                    </form>
+    {{-- Edit Rating Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditRatingModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Edit Rating</h4>
                 </div>
+
+                <form wire:submit.prevent="saveRating('{{ 'edit' }}')">
+                    @csrf
+                    <div class="modal-body">
+                        @if (isset($targetOutput))
+                            <label>Output Finished (Target Output is "{{ $targetOutput }}"): </label>
+                            <div class="form-group">
+                                <input type="number" placeholder="Output Finished" class="form-control"
+                                    wire:model.defer="output_finished">
+                                @error('output_finished')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @endif
+                        <label>Actual Accomplishment:</label>
+                        <div class="form-group">
+                            <textarea cols="30" rows="10" placeholder="Actual Accomplishment" class="form-control"
+                                    wire:model.defer="accomplishment" style="height: 100px;"></textarea>
+                            @error('accomplishment')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <label>Quality: </label>
+                        <div class="form-group">
+                            <select class="form-control" wire:model.defer="quality">
+                                <option value="">Quality</option>
+                                @if (isset($selectedTarget) && ($standard = $selectedTarget->standards()->first()))
+                                    @if (!empty($standard->qua_1)) 
+                                        <option value="1">1 - {{ $standard->qua_1 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_2)) 
+                                        <option value="2">2 - {{ $standard->qua_2 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_3)) 
+                                        <option value="3">3 - {{ $standard->qua_3 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_4))
+                                        <option value="4">4 - {{ $standard->qua_4 }}</option>
+                                    @endif
+                                    @if (!empty($standard->qua_5))
+                                        <option value="5">5 - {{ $standard->qua_5 }}</option>
+                                    @endif
+                                @endif
+                            </select>
+                            @error('quality')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <label>Timeliness: </label>
+                        <div class="form-group">
+                            <select class="form-control" wire:model.defer="timeliness">
+                                <option value="">Timeliness</option>
+                                @if (isset($selectedTarget) && ($standard = $selectedTarget->standards()->first()))
+                                    @if (!empty($standard->time_1)) 
+                                        <option value="1">1 - {{ $standard->time_1 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_2)) 
+                                        <option value="2">2 - {{ $standard->time_2 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_3)) 
+                                        <option value="3">3 - {{ $standard->time_3 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_4))
+                                        <option value="4">4 - {{ $standard->time_4 }}</option>
+                                    @endif
+                                    @if (!empty($standard->time_5))
+                                        <option value="5">5 - {{ $standard->time_5 }}</option>
+                                    @endif
+                                @endif
+                            </select>
+                            @error('timeliness')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                        <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
+                            <i class="bx bx-check d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Update</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    @endif
+    </div>
 
     {{-- Add Standard Modal --}}
     <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddStandardModal" tabindex="-1" role="dialog"
@@ -572,7 +607,11 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel33">Add Standard</h4>
                 </div>
+                <div class="text-center">
+                    <h5>Important Notice: Leave Blank if Not Rated/NR</h5>
+                </div>
                 <form wire:submit.prevent="save('{{ 'add' }}')">
+                    @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
                             <div class="w-100 text-center">Efficiency: </div>
@@ -1135,6 +1174,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Edit Standard</h4>
                 </div>
                 <form wire:submit.prevent="save('{{ 'edit' }}')">
+                    @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
                             <div class="w-100 text-center">Efficiency: </div>
@@ -1698,6 +1738,7 @@
                         <h4 class="modal-title" id="myModalLabel33">Add Assignment</h4>
                     </div>
                     <form wire:submit.prevent="save">
+                        @csrf
                         <div class="modal-body">
                             <label>Subject: </label>
                             <div class="form-group">
@@ -1776,6 +1817,7 @@
                         <h4 class="modal-title" id="myModalLabel33">Edit Assignment</h4>
                     </div>
                     <form wire:submit.prevent="save">
+                        @csrf
                         <div class="modal-body">
                             <label>Subject: </label>
                             <div class="form-group">
@@ -1856,6 +1898,7 @@
                     <button type="button" class="btn btn-light rounded-circle" data-bs-dismiss="modal"><i class="bi bi-fullscreen-exit"></i></button>
                 </div>
                 <form wire:submit.prevent="declined">
+                    @csrf
                     <div class="modal-body">
                         <label>Comment: </label>
                         <div class="form-group">
@@ -1891,6 +1934,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Done</h4>
                 </div>
                 <form wire:submit.prevent="done">
+                    @csrf
                     <div class="modal-body">
                         <p>Mark Assignment as Done?</p>
                     </div>
@@ -1919,6 +1963,7 @@
                         <h4 class="modal-title" id="myModalLabel33">Add Office</h4>
                     </div>
                     <form wire:submit.prevent="save">
+                        @csrf
                         <div class="modal-body">
                             <label>Office Name: </label>
                             <div class="form-group">
@@ -1987,6 +2032,7 @@
                         <h4 class="modal-title" id="myModalLabel33">Edit Office</h4>
                     </div>
                     <form wire:submit.prevent="save">
+                        @csrf
                         <div class="modal-body">
                             <label>Office Name: </label>
                             <div class="form-group">
@@ -2056,6 +2102,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Add Account Type</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <label>Account Type: </label>
                         <div class="form-group">
@@ -2090,6 +2137,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Edit Account Type</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <label>Account Type: </label>
                         <div class="form-group">
@@ -2124,6 +2172,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Add Duration</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <h5>IMPORT NOTICE!<br />You can't add, edit or delete semester duration if already started.</h5>
 
@@ -2181,6 +2230,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Edit Duration</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <h5>IMPORT NOTICE!<br />You can't add, edit or delete semester duration if already started.</h5>
 
@@ -2235,6 +2285,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Add Percentage</h4>
                 </div>
                 <form wire:submit.prevent="savePercentage">
+                    @csrf
                     <div class="modal-body">
                         <label>Core Function %: </label>
                         <div class="form-group">
@@ -2336,6 +2387,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Edit Percentage</h4>
                 </div>
                 <form wire:submit.prevent="updatePercentage">
+                    @csrf
                     <div class="modal-body">
                         @error('sub_percent')
                             <p class="text-danger">{{ $message }}</p>
@@ -2440,6 +2492,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Add Training</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <label>Training Name: </label>
                         <div class="form-group">
@@ -2492,6 +2545,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Update Training</h4>
                 </div>
                 <form wire:submit.prevent="update">
+                    @csrf
                     <div class="modal-body">
                         <label>Training Name: </label>
                         <div class="form-group">
@@ -2544,6 +2598,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Update Score Equivalent</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
                             <div class="w-100 text-center">Equivalent: </div>
@@ -2678,6 +2733,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Update Standard Values</h4>
                 </div>
                 <form wire:submit.prevent="save">
+                    @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
                             <div class="w-100 text-center">Efficiency: </div>
@@ -2737,6 +2793,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Add Target Output</h4>
                 </div>
                 <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "saveOpcr" : "saveIpcr" }}">
+                    @csrf
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">
@@ -2801,6 +2858,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Edit Target Output</h4>
                 </div>
                 <form wire:submit.prevent="{{ (isset($type) && $type == 'office') ? "updateOpcr" : "updateIpcr" }}">
+                    @csrf
                     <div class="modal-body">
                         <label>Target Output: </label>
                         <div class="form-group">
@@ -2865,6 +2923,7 @@
                     <h4 class="modal-title" id="myModalLabel33">Configure Number of Units Deloading</h4>
                 </div>
                 <form wire:submit.prevent="updateSubPercentage">
+                    @csrf
                     <div class="modal-body">
                         <label>Number of Units Deloading: </label>
                         <div class="form-group">
@@ -2886,6 +2945,61 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Print Modal --}}
+    <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="PrintModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Print Modal</h4>
+                </div>
+                
+                    <form action="
+                        @if (isset($print))
+                            @switch($print)
+                                @case('office')
+                                    {{ route('print.opcr', ['id' => auth()->user()->id]) }}
+                                    @break
+                                @case('faculty')
+                                    {{ route('print.ipcr.faculty', ['id' => auth()->user()->id]) }}
+                                    @break
+                                @case('staff')
+                                    {{ route('print.ipcr.staff', ['id' => auth()->user()->id]) }}
+                                    @break
+                            @endswitch
+                        @endif
+                        "
+                        method="GET" target="_blank">
+                        @csrf
+                        @method('GET')
+                        <div class="modal-body">
+                            <label>Title/Position: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Title/Position" class="form-control" name="title">
+                            </div>
+                            <label>Office: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Office" class="form-control" name="office">
+                            </div>
+                            @if (isset($durationId))
+                                <input type="hidden" name="duration_id" value="{{ $durationId }}">
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Save</span>
+                            </button>
+                        </div>
+                    </form>
             </div>
         </div>
     </div>

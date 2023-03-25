@@ -39,6 +39,24 @@
                         @endswitch
                     @endif
                 </h4>
+                <div class="hstack ms-auto">
+                    <a href="
+                        @switch($user_type)
+                            @case('office')
+                                {{ route('print.standard.opcr', ['id' => auth()->user()->id]) }}?duration_id={{ $duration->id }}
+                                @break
+                            @case('faculty')
+                                {{ route('print.standard.faculty', ['id' => auth()->user()->id]) }}?duration_id={{ $duration->id }}
+                                @break
+                            @case('staff')
+                                {{ route('print.standard.staff', ['id' => auth()->user()->id]) }}?duration_id={{ $duration->id }}
+                                @break
+                                
+                        @endswitch
+                        " target="_blank" class="btn icon btn-primary" title="Print Standard">
+                        <i class="bi bi-printer"></i>
+                    </a>
+                </div>
             </div>
             @if ($funct->sub_functs)
                 @foreach (auth()->user()->sub_functs()->where('type', $type)->where('user_type', $user_type)->where('duration_id', $duration->id)->where('funct_id', $funct->id)->get() as $sub_funct)

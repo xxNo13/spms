@@ -47,6 +47,10 @@
         .main-table td {
             border: 1px solid black;
         }
+        tr {
+            page-break-inside: avoid; 
+            page-break-before: auto;
+        }
 
         th,
         .bordered {
@@ -82,18 +86,63 @@
         .text-center {
             text-align: center;
         }
+
+        .comment-section {
+            widows: 100%;
+            height: 250px;
+        }
+
+        .iso-table {
+            width: 150px;
+            border-collapse: collapse;
+            position: absolute;
+            top: -15px;
+            right: 0;
+        }
+
+        .iso-table th{
+            padding-top: 0;
+            padding-bottom: 0; 
+        }
     </style>
 </head>
 
 <body>
     <div id="header">
         <img src="{{ public_path('images/logo/header.jpg') }}">
+        <table class="iso-table">
+            <tbody>
+                <tr>
+                    <th class="text-start">Form No.</th>
+                    <th>FM-DNSC-SPE-01</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Issue Status</th>
+                    <th>03</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Revision No.</th>
+                    <th>04</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Effective Date</th>
+                    <th>27-Jan-2022</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Approved by</th>
+                    <th>President</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div id="footer">
         <img src="{{ public_path('images/logo/footer.jpg') }}">
     </div>
     <div>
-        <p style="font-size: 10px;" class="text-center">I, {{ $user->name }}, commit to deliver and agree to be rated
+        <p style="font-size: 10px;" class="text-center">
+            I, <u>{{ $user->name }}</u>,
+            <u><b>{{ $title }}</b></u> of 
+            <u><b>{{ $office }}</b></u>, commit to deliver and agree to be rated
             on the attainment of the following targets in accordance with the indicated measures for the period {{ date('Y', strtotime($duration->end_date)) }}.
         </p>
     </div>
@@ -101,7 +150,9 @@
         <div style="text-align: center;">
             <p>______________________</p>
             <p>(Employee's Signature)</p>
-            <p>Date: <u>{{ date('m-d-Y') }}</u></p>
+            <p>Date: 
+                {{-- <u>{{ date('m-d-Y') }}</u> --}}
+            </p>
         </div>
     </div>
     <table class="top-table">
@@ -136,20 +187,26 @@
                         @endforeach
                     </div>
                 </td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }}</td>
-                <td colspan="2" rowspan="5" class="bordered">
-                    {{ $approval_approver->name }} <br/> 
-                    @if ($office = $approval_approver->offices()->wherePivot('isHead', true)->first()) 
-                        @if ($office->getDepthAttribute() == 0)
-                            <small>(Head of Agency)</small>
-                        @elseif ($office->getDepthAttribute() == 1)
-                            <small>(Head of Delivery Unit)</small>
-                        @else
-                            <small>(Head of Office)</small>
-                        @endif
-                    @endif 
+                <td rowspan="5" class="bordered">
+                    {{-- {{ date('M d, Y', strtotime($approval->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
                 </td>
-                <td rowspan="5" class="bordered">{{ date('M d, Y', strtotime($approval->approve_date)) }}</td>
+                <td colspan="2" rowspan="5" class="bordered">
+                    @if (isset($approval_approver->name))
+                        {{ $approval_approver->name}} <br/> 
+                        @if ($office = $approval_approver->offices()->wherePivot('isHead', true)->first()) 
+                            @if ($office->getDepthAttribute() == 0)
+                                <small>(Head of Agency)</small>
+                            @elseif ($office->getDepthAttribute() == 1)
+                                <small>(Head of Delivery Unit)</small>
+                            @else
+                                <small>(Head of Office)</small>
+                            @endif
+                        @endif 
+                    @endif
+                </td>
+                <td rowspan="5" class="bordered">
+                    {{-- {{ date('M d, Y', strtotime($approval->approve_date)) }} --}}
+                </td>
                 <td class="bold">Q</td>
                 <td class="border-right">Quality</td>
                 <td class="bold">5</td>
@@ -240,6 +297,8 @@
                                 {{ $sub_funct->sub_funct }} 
                                 @if ($sub_percentage = $user->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
                                     {{ $percent = $sub_percentage->value }}%
+                                @else
+                                    {{ $percent = 0 }}%
                                 @endif
                             </td>
                             <td colspan="7">
@@ -268,7 +327,7 @@
                                     @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
-                                            @foreach ($target->ratings as $rating)
+                                            @forelse ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
@@ -318,15 +377,29 @@
                                                             @break
                                                     @endswitch
                                                     @break;
+                                                @elseif ($loop->last)
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 @endif
-                                            @endforeach
+                                            @empty
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
                                             @php
                                                 $first = false;
                                             @endphp
                                         @else
                                             <tr>
                                                 <td>{{ $target->target }}</td>
-                                                @foreach ($target->ratings as $rating)
+                                                @forelse ($target->ratings as $rating)
                                                     @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
@@ -376,8 +449,22 @@
                                                                 @break
                                                         @endswitch
                                                         @break;
+                                                    @elseif ($loop->last)
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     @endif
-                                                @endforeach
+                                                @empty
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                @endforelse
                                             </tr>
                                         @endif
                                     @endforeach
@@ -397,7 +484,7 @@
                                     @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
                                             <td>{{ $target->target }}</td>
-                                            @foreach ($target->ratings as $rating)
+                                            @forelse ($target->ratings as $rating)
                                                 @if ($rating->user_id == $user->id)
                                                     <td>{{ $rating->accomplishment }}</td>
                                                     <td>
@@ -447,15 +534,29 @@
                                                             @break
                                                     @endswitch
                                                     @break;
+                                                @elseif ($loop->last)
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 @endif
-                                            @endforeach
+                                            @empty
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
                                             @php
                                                 $first = false;
                                             @endphp
                                         @else
                                             <tr>
                                                 <td>{{ $target->target }}</td>
-                                                @foreach ($target->ratings as $rating)
+                                                @forelse ($target->ratings as $rating)
                                                     @if ($rating->user_id == $user->id)
                                                         <td>{{ $rating->accomplishment }}</td>
                                                         <td>
@@ -505,8 +606,22 @@
                                                                 @break
                                                         @endswitch
                                                         @break;
+                                                    @elseif ($loop->last)
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     @endif
-                                                @endforeach
+                                                @empty
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                @endforelse
                                             </tr>
                                         @endif
                                     @endforeach
@@ -536,22 +651,43 @@
                             <td>
                                 @switch($funct->funct)
                                     @case('Core Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->core/100) }}
-                                        @php
-                                            $totalCF += (($total/$numberSubF)*($percent/100))*($percentage->core/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->core/100) }}
+                                            @php
+                                                $totalCF += (($total/$numberSubF)*($percent/100))*($percentage->core/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalCF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                     @case('Strategic Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->strategic/100) }}
-                                        @php
-                                            $totalSTF += (($total/$numberSubF)*($percent/100))*($percentage->strategic/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->strategic/100) }}
+                                            @php
+                                                $totalSTF += (($total/$numberSubF)*($percent/100))*($percentage->strategic/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalSTF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                     @case('Support Function')
-                                        {{ (($total/$numberSubF)*($percent/100))*($percentage->support/100) }}
-                                        @php
-                                            $totalSF += (($total/$numberSubF)*($percent/100))*($percentage->support/100)
-                                        @endphp
+                                        @if ($numberSubF != 0)
+                                            {{ (($total/$numberSubF)*($percent/100))*($percentage->support/100) }}
+                                            @php
+                                                $totalSF += (($total/$numberSubF)*($percent/100))*($percentage->support/100)
+                                            @endphp
+                                        @else
+                                            0
+                                            @php
+                                                $totalSF += 0
+                                            @endphp
+                                        @endif
                                         @break
                                 @endswitch
                             </td>
@@ -672,7 +808,7 @@
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
-                                    @foreach ($target->ratings as $rating)
+                                    @forelse ($target->ratings as $rating)
                                         @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
@@ -701,36 +837,50 @@
                                             @switch($funct->funct)
                                                 @case('Core Function')
                                                     @php
-                                                        $totalCF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberCF++;
                                                     @endphp
                                                     @break
                                                 @case('Strategic Function')
                                                     @php
-                                                        $totalSTF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSTF++;
                                                     @endphp
                                                     @break
                                                 @case('Support Function')
                                                     @php
-                                                        $totalSF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSF++;
                                                     @endphp
                                                     @break
                                             @endswitch
                                             @break;
+                                        @elseif ($loop->last)
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr>
                                         <td>{{ $target->target }}</td>
-                                        @foreach ($target->ratings as $rating)
+                                        @forelse ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
@@ -759,29 +909,43 @@
                                                 @switch($funct->funct)
                                                     @case('Core Function')
                                                         @php
-                                                            $totalCF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberCF++;
                                                         @endphp
                                                         @break
                                                     @case('Strategic Function')
                                                         @php
-                                                            $totalSTF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSTF++;
                                                         @endphp
                                                         @break
                                                     @case('Support Function')
                                                         @php
-                                                            $totalSF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSF++;
                                                         @endphp
                                                         @break
                                                 @endswitch
                                                 @break;
+                                            @elseif ($loop->last)
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -801,7 +965,7 @@
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
                                     <td>{{ $target->target }}</td>
-                                    @foreach ($target->ratings as $rating)
+                                    @forelse ($target->ratings as $rating)
                                         @if ($rating->user_id == $user->id)
                                             <td>{{ $rating->accomplishment }}</td>
                                             <td>
@@ -830,36 +994,50 @@
                                             @switch($funct->funct)
                                                 @case('Core Function')
                                                     @php
-                                                        $totalCF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberCF++;
                                                     @endphp
                                                     @break
                                                 @case('Strategic Function')
                                                     @php
-                                                        $totalSTF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSTF++;
                                                     @endphp
                                                     @break
                                                 @case('Support Function')
                                                     @php
-                                                        $totalSF += $rating->average;
+                                                        $total += $rating->average;
                                                         $numberSubF++;
                                                         $numberSF++;
                                                     @endphp
                                                     @break
                                             @endswitch
                                             @break;
+                                        @elseif ($loop->last)
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr>
                                         <td>{{ $target->target }}</td>
-                                        @foreach ($target->ratings as $rating)
+                                        @forelse ($target->ratings as $rating)
                                             @if ($rating->user_id == $user->id)
                                                 <td>{{ $rating->accomplishment }}</td>
                                                 <td>
@@ -888,29 +1066,43 @@
                                                 @switch($funct->funct)
                                                     @case('Core Function')
                                                         @php
-                                                            $totalCF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberCF++;
                                                         @endphp
                                                         @break
                                                     @case('Strategic Function')
                                                         @php
-                                                            $totalSTF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSTF++;
                                                         @endphp
                                                         @break
                                                     @case('Support Function')
                                                         @php
-                                                            $totalSF += $rating->average;
+                                                            $total += $rating->average;
                                                             $numberSubF++;
                                                             $numberSF++;
                                                         @endphp
                                                         @break
                                                 @endswitch
                                                 @break;
+                                            @elseif ($loop->last)
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -1102,7 +1294,9 @@
                 <td colspan="2">
                     <p><u>{{ $user->name }}</u></p>
                 </td>
-                <td>Date: {{ date('M d, Y') }}</td>
+                <td>Date: 
+                    {{-- {{ date('M d, Y') }} --}}
+                </td>
                 <td style="width: 300px;">
                     <p style="word-wrap: initial;">I certify that I discussed my assessment of the performance with the employee.</p>
                     <div>
@@ -1112,15 +1306,23 @@
                         @endforeach
                     </div>
                 </td>
-                <td>Date: {{ date('M d, Y', strtotime($assess->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }}</td>
+                <td>Date: 
+                    {{-- {{ date('M d, Y', strtotime($assess->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
+                </td>
                 <td colspan="3">
                     <p class="text-start">Final rating by:</p>
-                    <p><u>{{ $assess_approver->name }}</u></p>
+                    <p><u>{{ isset($assess_approver->name) ? $assess_approver->name : '' }}</u></p>
                 </td>
-                <td>Date: {{ date('M d, Y', strtotime($assess->approve_date)) }}</td>
+                <td>Date: 
+                    {{-- {{ date('M d, Y', strtotime($assess->approve_date)) }} --}}
+                </td>
             </tr>
         </tfoot>
     </table>
+
+    <div class="comment-section bordered" style="margin-top: 20px; padding: 10px;">
+        <h6>Comment:</h6>
+    </div>
 </body>
 
 </html>

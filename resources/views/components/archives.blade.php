@@ -39,6 +39,12 @@
                         @endswitch
                     @endif
                 </h4>
+                <div class="hstack ms-auto">
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#PrintModal" title="Print IPCR" wire:click="print">
+                        <i class="bi bi-printer"></i>
+                    </button>
+                </div>
             </div>
             @if ($funct->sub_functs)
                 @foreach (auth()->user()->sub_functs()->where('type', $type)->where('user_type', $user_type)->where('duration_id', $duration->id)->where('funct_id', $funct->id)->get() as $sub_funct)
@@ -541,4 +547,8 @@
             @endforeach
         @endforeach
     </section>
+    @php
+        $durationId = $duration->id;
+    @endphp
+    <x-modals :print="$print" :durationId="$durationId"/>
 </div>

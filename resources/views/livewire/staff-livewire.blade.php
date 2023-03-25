@@ -112,11 +112,10 @@
                                 
                         @endif
         
-                        @if ($duration && $assess && $assess->approve_status == 1)
-                            <a href="{{ route('print.ipcr.staff', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print IPCR">
-                                <i class="bi bi-printer"></i>
-                            </a>
-                        @endif
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#PrintModal" title="Print IPCR" wire:click="print">
+                            <i class="bi bi-printer"></i>
+                        </button>
                     </div>
                 </div>
                 @if ($duration)
@@ -916,5 +915,5 @@
         $currentPage = $functs->currentPage();
         $type = "IPCR";
     @endphp
-    <x-modals :filter="$filter" :selected="$selected" :targetOutput="$targetOutput" :type="$type" :selectedTarget="$selectedTarget" :currentPage="$currentPage" :duration="$duration" :subFuncts="$subFuncts" />
+    <x-modals :print="$print" :filter="$filter" :selected="$selected" :targetOutput="$targetOutput" :type="$type" :selectedTarget="$selectedTarget" :currentPage="$currentPage" :duration="$duration" :subFuncts="$subFuncts" />
 </div>

@@ -82,12 +82,54 @@
         .text-center {
             text-align: center;
         }
+
+        .comment-section {
+            widows: 100%;
+            height: 250px;
+        }
+
+        .iso-table {
+            width: 150px;
+            border-collapse: collapse;
+            position: absolute;
+            top: -15px;
+            right: 0;
+        }
+
+        .iso-table th{
+            padding-top: 0;
+            padding-bottom: 0; 
+        }
     </style>
 </head>
 
 <body>
     <div id="header">
         <img src="{{ public_path('images/logo/header.jpg') }}">
+        <table class="iso-table">
+            <tbody>
+                <tr>
+                    <th class="text-start">Form No.</th>
+                    <th>FM-DNSC-SPE-01</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Issue Status</th>
+                    <th>03</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Revision No.</th>
+                    <th>04</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Effective Date</th>
+                    <th>27-Jan-2022</th>
+                </tr>
+                <tr>
+                    <th class="text-start">Approved by</th>
+                    <th>President</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div id="footer">
         <img src="{{ public_path('images/logo/footer.jpg') }}">
@@ -160,99 +202,259 @@
                                 @endphp
                                 @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                     @if ($first)
-                                        @foreach ($target->standards as $standard)
+                                        @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->eff_5 }}</td>
+                                                <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->qua_5 }}</td>
+                                                <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->time_5 }}</td>
+                                                <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
                                                     <td>4</td>
-                                                    <td>{{ $standard->eff_4 }}</td>
+                                                    <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->qua_4 }}</td>
+                                                    <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->time_4 }}</td>
+                                                    <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>3</td>
-                                                    <td>{{ $standard->eff_3 }}</td>
+                                                    <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->qua_3 }}</td>
+                                                    <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->time_3 }}</td>
+                                                    <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
-                                                    <td>{{ $standard->eff_2 }}</td>
+                                                    <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->qua_2 }}</td>
+                                                    <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->time_2 }}</td>
+                                                    <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ $standard->eff_1 }}</td>
+                                                    <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->qua_1 }}</td>
+                                                    <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->time_1 }}</td>
+                                                    <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
+                                            @elseif ($loop->last)
+                                                <td rowspan="5">{{ $target->target }}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        @endforelse
                                         @php
                                             $first = false;
                                         @endphp
                                     @else
                                         <tr style="page-break-inside: avoid;" >
-                                            @foreach ($target->standards as $standard)
+                                            @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                     <td rowspan="5">{{ $target->target }}</td>
                                                     <td>5</td>
-                                                    <td>{{ $standard->eff_5 }}</td>
+                                                    <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                     <td>5</td>
-                                                    <td>{{ $standard->qua_5 }}</td>
+                                                    <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                                     <td>5</td>
-                                                    <td>{{ $standard->time_5 }}</td>
+                                                    <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                     <tr>
                                                         <td>4</td>
-                                                        <td>{{ $standard->eff_4 }}</td>
+                                                        <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                         <td>4</td>
-                                                        <td>{{ $standard->qua_4 }}</td>
+                                                        <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                         <td>4</td>
-                                                        <td>{{ $standard->time_4 }}</td>
+                                                        <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>3</td>
-                                                        <td>{{ $standard->eff_3 }}</td>
+                                                        <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                         <td>3</td>
-                                                        <td>{{ $standard->qua_3 }}</td>
+                                                        <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                         <td>3</td>
-                                                        <td>{{ $standard->time_3 }}</td>
+                                                        <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>2</td>
-                                                        <td>{{ $standard->eff_2 }}</td>
+                                                        <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                         <td>2</td>
-                                                        <td>{{ $standard->qua_2 }}</td>
+                                                        <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                         <td>2</td>
-                                                        <td>{{ $standard->time_2 }}</td>
+                                                        <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td>1</td>
-                                                        <td>{{ $standard->eff_1 }}</td>
+                                                        <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                         <td>1</td>
-                                                        <td>{{ $standard->qua_1 }}</td>
+                                                        <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                         <td>1</td>
-                                                        <td>{{ $standard->time_1 }}</td>
+                                                        <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                     </tr>
                                                     @break
+                                                @elseif ($loop->last)
+                                                    <td rowspan="5">{{ $target->target }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
                                                 @endif
-                                            @endforeach
+                                            @empty
+                                                <td rowspan="5">{{ $target->target }}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            @endforelse
                                         </tr>
                                     @endif
                                 @endforeach
@@ -266,50 +468,130 @@
                                     {{ $output->output }}
                                 </td>
                                 @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
-                                    @foreach ($target->standards as $standard)
+                                    @forelse ($target->standards as $standard)
                                         @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->eff_5 }}</td>
+                                            <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->qua_5 }}</td>
+                                            <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->time_5 }}</td>
+                                            <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                             <tr>
                                                 <td>4</td>
-                                                <td>{{ $standard->eff_4 }}</td>
+                                                <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->qua_4 }}</td>
+                                                <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->time_4 }}</td>
+                                                <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
-                                                <td>{{ $standard->eff_3 }}</td>
+                                                <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->qua_3 }}</td>
+                                                <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->time_3 }}</td>
+                                                <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td>{{ $standard->eff_2 }}</td>
+                                                <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->qua_2 }}</td>
+                                                <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->time_2 }}</td>
+                                                <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
-                                                <td>{{ $standard->eff_1 }}</td>
+                                                <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->qua_1 }}</td>
+                                                <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->time_1 }}</td>
+                                                <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                             </tr>
                                             @break
+                                        @elseif ($loop->last)
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td rowspan="5">{{ $target->target }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    @endforelse
                                 @endforeach
                             </tr>
                         @endforelse
@@ -336,99 +618,259 @@
                             @endphp
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
-                                    @foreach ($target->standards as $standard)
+                                    @forelse ($target->standards as $standard)
                                         @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->eff_5 }}</td>
+                                            <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->qua_5 }}</td>
+                                            <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->time_5 }}</td>
+                                            <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                             <tr>
                                                 <td>4</td>
-                                                <td>{{ $standard->eff_4 }}</td>
+                                                <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->qua_4 }}</td>
+                                                <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->time_4 }}</td>
+                                                <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
-                                                <td>{{ $standard->eff_3 }}</td>
+                                                <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->qua_3 }}</td>
+                                                <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->time_3 }}</td>
+                                                <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td>{{ $standard->eff_2 }}</td>
+                                                <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->qua_2 }}</td>
+                                                <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->time_2 }}</td>
+                                                <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
-                                                <td>{{ $standard->eff_1 }}</td>
+                                                <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->qua_1 }}</td>
+                                                <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->time_1 }}</td>
+                                                <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                             </tr>
                                             @break
+                                        @elseif ($loop->last)
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td rowspan="5">{{ $target->target }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr style="page-break-inside: avoid;" >
-                                        @foreach ($target->standards as $standard)
+                                        @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->eff_5 }}</td>
+                                                <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->qua_5 }}</td>
+                                                <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->time_5 }}</td>
+                                                <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
                                                     <td>4</td>
-                                                    <td>{{ $standard->eff_4 }}</td>
+                                                    <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->qua_4 }}</td>
+                                                    <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->time_4 }}</td>
+                                                    <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>3</td>
-                                                    <td>{{ $standard->eff_3 }}</td>
+                                                    <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->qua_3 }}</td>
+                                                    <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->time_3 }}</td>
+                                                    <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
-                                                    <td>{{ $standard->eff_2 }}</td>
+                                                    <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->qua_2 }}</td>
+                                                    <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->time_2 }}</td>
+                                                    <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ $standard->eff_1 }}</td>
+                                                    <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->qua_1 }}</td>
+                                                    <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->time_1 }}</td>
+                                                    <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
+                                            @elseif ($loop->last)
+                                                <td rowspan="5">{{ $target->target }}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -447,99 +889,259 @@
                             @endphp
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
-                                    @foreach ($target->standards as $standard)
+                                    @forelse ($target->standards as $standard)
                                         @if ($standard->user_id == $user->id || $standard->user_id == null)
                                             <td rowspan="5">{{ $target->target }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->eff_5 }}</td>
+                                            <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->qua_5 }}</td>
+                                            <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                             <td>5</td>
-                                            <td>{{ $standard->time_5 }}</td>
+                                            <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                             <tr>
                                                 <td>4</td>
-                                                <td>{{ $standard->eff_4 }}</td>
+                                                <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->qua_4 }}</td>
+                                                <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>4</td>
-                                                <td>{{ $standard->time_4 }}</td>
+                                                <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
-                                                <td>{{ $standard->eff_3 }}</td>
+                                                <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->qua_3 }}</td>
+                                                <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>3</td>
-                                                <td>{{ $standard->time_3 }}</td>
+                                                <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td>{{ $standard->eff_2 }}</td>
+                                                <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->qua_2 }}</td>
+                                                <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>2</td>
-                                                <td>{{ $standard->time_2 }}</td>
+                                                <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                             </tr>
                                             <tr>
                                                 <td>1</td>
-                                                <td>{{ $standard->eff_1 }}</td>
+                                                <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->qua_1 }}</td>
+                                                <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                 <td>1</td>
-                                                <td>{{ $standard->time_1 }}</td>
+                                                <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                             </tr>
                                             @break
+                                        @elseif ($loop->last)
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         @endif
-                                    @endforeach
+                                    @empty
+                                        <td rowspan="5">{{ $target->target }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    @endforelse
                                     @php
                                         $first = false;
                                     @endphp
                                 @else
                                     <tr style="page-break-inside: avoid;" >
-                                        @foreach ($target->standards as $standard)
+                                        @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->eff_5 }}</td>
+                                                <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->qua_5 }}</td>
+                                                <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
                                                 <td>5</td>
-                                                <td>{{ $standard->time_5 }}</td>
+                                                <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
                                                     <td>4</td>
-                                                    <td>{{ $standard->eff_4 }}</td>
+                                                    <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->qua_4 }}</td>
+                                                    <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>4</td>
-                                                    <td>{{ $standard->time_4 }}</td>
+                                                    <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>3</td>
-                                                    <td>{{ $standard->eff_3 }}</td>
+                                                    <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
                                                     <td>3</td>
                                                     <td>{{ $standard->quafaculty_3 }}</td>
                                                     <td>3</td>
-                                                    <td>{{ $standard->time_3 }}</td>
+                                                    <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
-                                                    <td>{{ $standard->eff_2 }}</td>
+                                                    <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->qua_2 }}</td>
+                                                    <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>2</td>
-                                                    <td>{{ $standard->time_2 }}</td>
+                                                    <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ $standard->eff_1 }}</td>
+                                                    <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->qua_1 }}</td>
+                                                    <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
                                                     <td>1</td>
-                                                    <td>{{ $standard->time_1 }}</td>
+                                                    <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
+                                            @elseif ($loop->last)
+                                                <td rowspan="5">{{ $target->target }}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
                                             @endif
-                                        @endforeach
+                                        @empty
+                                            <td rowspan="5">{{ $target->target }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        @endforelse
                                     </tr>
                                 @endif
                             @endforeach
@@ -549,6 +1151,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="comment-section bordered" style="margin-top: 20px; padding: 10px;">
+        <h6>Comment:</h6>
+    </div>
 </body>
 
 </html>

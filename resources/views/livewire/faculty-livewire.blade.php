@@ -112,11 +112,10 @@
                             @endif
                         @endif
         
-                        @if ($duration && $assess && $assess->approve_status == 1)
-                            <a href="{{ route('print.ipcr.faculty', ['id' => auth()->user()->id]) }}" target="_blank" class="btn icon btn-primary" title="Print IPCR">
-                                <i class="bi bi-printer"></i>
-                            </a>
-                        @endif
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#PrintModal" title="Print IPCR" wire:click="print">
+                            <i class="bi bi-printer"></i>
+                        </button>
                     </div>
                 </div>
                 @if ($duration)
@@ -929,5 +928,5 @@
         $userType = 'faculty';
         $type = "IPCR";
     @endphp
-    <x-modals :filter="$filter" :selectedTarget="$selectedTarget" :selected="$selected" :duration="$duration" :userType="$userType" :currentPage="$currentPage" :type="$type" :targetOutput="$targetOutput" />
+    <x-modals :print="$print" :filter="$filter" :selectedTarget="$selectedTarget" :selected="$selected" :duration="$duration" :userType="$userType" :currentPage="$currentPage" :type="$type" :targetOutput="$targetOutput" />
 </div>

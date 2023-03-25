@@ -65,6 +65,8 @@ class FacultyLivewire extends Component
 
     public $deloading;
 
+    public $print;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -839,8 +841,8 @@ class FacultyLivewire extends Component
                         array_push($output_ids, $target->suboutput->output_id);
                         if ($target->suboutput->output->sub_funct) {
                             array_push($sub_funct_ids, $target->suboutput->output->sub_funct_id);
-                            if ($target->output->sub_funct->funct_id == 1) {
-                                array_push($core_sub_funct, $target->output->sub_funct_id);
+                            if ($target->suboutput->output->sub_funct->funct_id == 1) {
+                                array_push($core_sub_funct, $target->suboutput->output->sub_funct_id);
                             }
                         }
                     }
@@ -962,6 +964,9 @@ class FacultyLivewire extends Component
 
     /////////////////////////// PERCENTAGE CONFIGURATION END ///////////////////////////
 
+    public function print() {
+        $this->print = 'faculty';
+    }
     
     public function resetInput(){
         $this->percent = [];
