@@ -17,6 +17,14 @@
     </div>
 
     <section class="section pt-3">
+        <div class="row">
+            <div class="col-12 hstack">
+                <button type="button" class="ms-auto btn btn-outline-primary" data-bs-toggle="modal"
+                    data-bs-target="#PrintModal" title="Print IPCR" wire:click="print">
+                    <i class="bi bi-printer"></i>
+                </button>
+            </div>
+        </div>
 
         @foreach ($functs as $funct)
             @php
@@ -24,7 +32,12 @@
             @endphp
             <div class="hstack mb-3 gap-2">
                 <h4>
-                    {{ $funct->funct }}
+                    {{ $funct->funct }} 
+                    @switch($funct->funct)
+                        @case('Core Function')
+                            100%
+                            @break
+                    @endswitch
                     @if ($percentage)
                         @switch($funct->funct)
                             @case('Core Function')
@@ -39,12 +52,6 @@
                         @endswitch
                     @endif
                 </h4>
-                <div class="hstack ms-auto">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#PrintModal" title="Print IPCR" wire:click="print">
-                        <i class="bi bi-printer"></i>
-                    </button>
-                </div>
             </div>
             @if ($funct->sub_functs)
                 @foreach (auth()->user()->sub_functs()->where('type', $type)->where('user_type', $user_type)->where('duration_id', $duration->id)->where('funct_id', $funct->id)->get() as $sub_funct)
@@ -53,11 +60,11 @@
                             {{ $sub_funct->sub_funct }}
                             @if (isset($sub_percentages))
                                 @if ($sub_percentage = $sub_percentages->where('sub_funct_id', $sub_funct->id)->first())
-                                    {{ $sub_percentage->value }}
+                                    {{ $sub_percentage->value }}%
                                 @endif
                             @else
                                 @if ($sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first())
-                                    {{ $sub_percentage->value }}
+                                    {{ $sub_percentage->value }}%
                                 @endif
                             @endif
                         </h5>

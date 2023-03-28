@@ -47,8 +47,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/ttma', TtmaLivewire::class)->name('ttma');
     Route::get('/recommendation-list', RecommendationListLivewire::class)->name('recommendation.list');
 
-    Route::middleware(['head'])->group(function () {
+    Route::middleware(['pmoorhrmoorhead'])->group(function () {
         Route::get('/trainings', TrainingLivewire::class)->name('trainings');
+    });
+
+    Route::middleware(['head'])->group(function () {
         Route::get('/recommended-for-training', RecommendedForTrainingLivewire::class)->name('recommended.for.training');
         Route::get('/for-approval', ForApprovalLivewire::class)->name('for.approval');
         Route::get('/subordinates', SubordinateLivewire::class)->name('subordinates');
@@ -72,7 +75,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
 
 
-        Route::middleware(['pmoorhrmoorhead'])->group(function () {
+        Route::middleware(['pmoorhrmo'])->group(function () {
             Route::get('/listing/faculty', ListingFacultyLivewire::class)->name('listing.faculty');
             Route::get('/listing/standard/faculty', ListingStandardFacultyLivewire::class)->name('listing.standard.faculty');
         });

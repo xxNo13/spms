@@ -8,9 +8,12 @@ use App\Models\Duration;
 use App\Models\Percentage;
 use App\Models\AccountType;
 use App\Models\SubPercentage;
+use Livewire\WithPagination;
 
 class ArchiveLivewire extends Component
 {
+    use WithPagination;
+    
     public $durations;
 
     public $viewed = false;
@@ -20,18 +23,52 @@ class ArchiveLivewire extends Component
     public $user_type;
     public $category;
 
+    public $search;
+
     public $print;
 
-    public function mount() {
-        $this->durations = Duration::where('end_date', '<=', date('Y-m-d'))->get();
+    protected  $queryString = ['search'];
+
+    public function updated($property)
+    {
+        if ($property == 'search') {
+            $this->resetPage();
+        }
     }
 
     public function render()
     {
+        $durations = Duration::query();
+
+        if ($this->search) {
+            $search = $this->search;
+            
+            $results = preg_split('/\s+/', strtolower($search));
+
+            foreach ($results as $result) {
+                $durations->where(function ($query) use ($result) {
+                    return $query->where('type', 'LIKE', '%'.$result.'%')->orwhere('duration_name', 'LIKE', '%'.$result.'%');
+                });
+            }
+
+            if (str_contains($search, 'opcr')) {
+                $durations->where('type', 'office');
+            }
+            if (str_contains($search, 'ipcr')) {
+                $durations->where(function ($query) {
+                    return $query->where('type', 'staff')->orwhere('type', 'faculty');
+                });
+            }
+        }
+
+        $durations->distinct();
+        $this->durations = $durations->where('end_date', '<=', date('Y-m-d'))->get();
+
+
         if (isset($this->category)) {
             $functs = Funct::all();
             return view('components.archives-standard',[
-                'functs' => $functs
+                'functs' => $functs,
             ]);
         }
         if ($this->viewed) {
@@ -63,5 +100,9 @@ class ArchiveLivewire extends Component
 
     public function print() {
         $this->print = $this->user_type;
+    }
+
+    public function closeModal(){
+        $this->dispatchBrowserEvent('close-modal'); 
     }
 }

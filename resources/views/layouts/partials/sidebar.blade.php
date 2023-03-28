@@ -68,7 +68,7 @@
     <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
     <x-maz-sidebar-item alias="recommendation.list" name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
     
-    @if ($faculty || $staff || $pmo || $hrmo || $head)
+    @if ($faculty || $staff || $pmo || $hrmo)
         <x-maz-sidebar-item alias="ipcr" link="#" name="IPCR" icon="bi bi-clipboard2-data-fill">
             @if ($faculty)
                 <x-maz-sidebar-sub-item name="Faculty" :link="route('ipcr.faculty')"></x-maz-sidebar-sub-item>
@@ -80,7 +80,7 @@
                 <x-maz-sidebar-sub-item name="Standards for Staff" :link="route('ipcr.standard.staff')"></x-maz-sidebar-sub-item>
             @endif
 
-            @if ($pmo || $hrmo || $head)
+            @if ($pmo || $hrmo)
                 <x-maz-sidebar-sub-item name="Listing for Faculty" :link="route('ipcr.listing.faculty')"></x-maz-sidebar-sub-item>
                 <x-maz-sidebar-sub-item name="Listing Standards for Faculty" :link="route('ipcr.listing.standard.faculty')"></x-maz-sidebar-sub-item>
             @endif
@@ -102,8 +102,11 @@
         </x-maz-sidebar-item>
     @endif
 
-    @if ($head)    
+    @if ($head || $pmo || $hrmo)
         <x-maz-sidebar-item alias="trainings" name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>
+    @endif
+
+    @if ($head)    
         <x-maz-sidebar-item alias="subordinates" name="Subordinates" :link="route('subordinates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
         <x-maz-sidebar-item alias="recommended.for.training" name="Recommended for Trainings" :link="route('recommended.for.training')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
     @endif
