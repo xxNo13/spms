@@ -121,8 +121,6 @@ class FacultyLivewire extends Component
         }
 
         $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
-        $this->durationO = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $this->duration->id)->first();
 
@@ -161,7 +159,7 @@ class FacultyLivewire extends Component
                 $this->targetsSelected[$target->id] = $target->id;
             }
             
-            foreach(auth()->user()->targets()->where('duration_id', $this->duration->id)->orwhere('duration_id', $this->durationS->id)->orwhere('duration_id', $this->durationO->id)->get() as $target) {
+            foreach(auth()->user()->targets as $target) {
                 $this->targetsSelected[$target->id] = $target->id;
             }
         }

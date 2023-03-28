@@ -40,35 +40,35 @@
                                         @if (str_contains(strtolower($pmt->position), 'vice'))
                                             <select style="width: 75%;" name="vice" id="vice" class="form-select" wire:model="ids.{{$pmt->id}}" >
                                                 <option></option>
-                                                @foreach ($vice_users as $user) 
+                                                @foreach ($users as $user) 
                                                     <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'finance'))
                                             <select style="width: 75%;" name="finance" id="finance" class="form-select" wire:model="ids.{{$pmt->id}}" >
                                                 <option></option>
-                                                @foreach ($finance_users as $user) 
+                                                @foreach ($users as $user) 
                                                     <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'planning'))
                                             <select style="width: 75%;" name="planning" id="planning" class="form-select" wire:model="ids.{{$pmt->id}}" >
                                                 <option></option>
-                                                @foreach ($planning_users as $user) 
+                                                @foreach ($users as $user) 
                                                     <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'resource'))
                                             <select style="width: 75%;" name="resource" id="resource" class="form-select" wire:model="ids.{{$pmt->id}}" >
                                                 <option></option>
-                                                @foreach ($resource_users as $user) 
+                                                @foreach ($users as $user) 
                                                     <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif (str_contains(strtolower($pmt->position), 'evaluation'))
                                             <select style="width: 75%;" name="evaluation" id="evaluation" class="form-select" wire:model="ids.{{$pmt->id}}" >
                                                 <option></option>
-                                                @foreach ($evaluation_users as $user) 
+                                                @foreach ($users as $user) 
                                                     <option value="{{ $user['id'] }}" @if ($user['id'] == $pmt->user_id) selected @endif>{{ $user['name'] }}</option>
                                                 @endforeach
                                             </select>
