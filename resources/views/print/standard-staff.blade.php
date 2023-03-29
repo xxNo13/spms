@@ -83,11 +83,6 @@
             text-align: center;
         }
 
-        .comment-section {
-            widows: 100%;
-            height: 250px;
-        }
-
         .iso-table {
             width: 150px;
             border-collapse: collapse;
@@ -204,42 +199,42 @@
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
@@ -333,42 +328,42 @@
                                             @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id)
                                                     <td rowspan="5">{{ $target->target }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                     <tr>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                     </tr>
                                                     @break
@@ -475,42 +470,42 @@
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
@@ -604,42 +599,42 @@
                                             @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id)
                                                     <td rowspan="5">{{ $target->target }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                    <td>5</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                     <tr>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                        <td>4</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                        <td>3</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                        <td>2</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                        <td>1</td>
+                                                        <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                         <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                     </tr>
                                                     @break
@@ -756,42 +751,42 @@
                                     @forelse ($target->standards as $standard)
                                         @if ($standard->user_id == $user->id)
                                             <td rowspan="5">{{ $target->target }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                             <tr>
-                                                <td>4</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                <td>4</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                <td>4</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>3</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                <td>3</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                <td>3</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>2</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                <td>2</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                <td>2</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>1</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                <td>1</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                <td>1</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                             </tr>
                                             @break
@@ -885,42 +880,42 @@
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
@@ -1027,42 +1022,42 @@
                                     @forelse ($target->standards as $standard)
                                         @if ($standard->user_id == $user->id)
                                             <td rowspan="5">{{ $target->target }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                            <td>5</td>
+                                            <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                             <tr>
-                                                <td>4</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                <td>4</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                <td>4</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>3</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                <td>3</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                <td>3</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>2</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                <td>2</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                <td>2</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                             </tr>
                                             <tr>
-                                                <td>1</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                <td>1</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                <td>1</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                 <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                             </tr>
                                             @break
@@ -1156,42 +1151,42 @@
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}</td>
-                                                <td>5</td>
+                                                <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
                                                 <tr>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
-                                                    <td>4</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
-                                                    <td>3</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
-                                                    <td>2</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}</td>
-                                                    <td>1</td>
+                                                    <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '1' : '' }}</td>
                                                     <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}</td>
                                                 </tr>
                                                 @break
@@ -1285,11 +1280,14 @@
                 @endforeach
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9" class="text-start" style="height: 100px; vertical-align: top;">
+                    Comment and recommendation for Development Purposes
+                </td>
+            </tr>
+        </tfoot>
     </table>
-
-    <div class="comment-section bordered" style="margin-top: 20px; padding: 10px;">
-        <h6>Comment:</h6>
-    </div>
 </body>
 
 </html>

@@ -106,7 +106,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.ipcr-faculty', $data)->setPaper('a4','landscape');
-        return $pdf->stream('ipcr-faculty.pdf');
+        return $pdf->stream('ipcr-faculty.pdf', array("Attachment" => false));
     }
     
     public function standardFaculty($id, Request $request) {
@@ -169,7 +169,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.standard-faculty', $data)->setPaper('a4','landscape');
-        return $pdf->stream('standard-faculty.pdf');
+        return $pdf->stream('standard-faculty.pdf', array("Attachment" => false));
     }
     
     public function ipcrStaff($id, Request $request) {
@@ -262,7 +262,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.ipcr-staff', $data)->setPaper('a4','landscape');
-        return $pdf->stream('ipcr-staff.pdf');
+        return $pdf->stream('ipcr-staff.pdf', array("Attachment" => false));
     }
     
     public function standardStaff($id, Request $request) {
@@ -326,7 +326,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.standard-staff', $data)->setPaper('a4','landscape');
-        return $pdf->stream('standard-staff.pdf');
+        return $pdf->stream('standard-staff.pdf', array("Attachment" => false));
     }
 
     public function opcr($id, Request $request) {
@@ -411,7 +411,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.opcr', $data)->setPaper('a4','landscape');
-        return $pdf->stream('opcr.pdf');
+        return $pdf->stream('opcr.pdf', array("Attachment" => false));
     }
     
     public function standardOpcr($id, Request $request) {
@@ -467,7 +467,7 @@ class PdfController extends Controller
         ];
 
         $pdf = PDF::loadView('print.standard-opcr', $data)->setPaper('a4','landscape');
-        return $pdf->stream('standard-opcr.pdf');
+        return $pdf->stream('standard-opcr.pdf', array("Attachment" => false));
     }
 
     public function ttma() {
@@ -494,7 +494,7 @@ class PdfController extends Controller
 
         
         $pdf = PDF::loadView('print.ttma', $data)->setPaper('a4');
-        return $pdf->stream('ttma.pdf');
+        return $pdf->stream('ttma.pdf', array("Attachment" => false));
     }
 
     public function rankingPerOffice($office_id) {
@@ -542,7 +542,7 @@ class PdfController extends Controller
 
         
         $pdf = PDF::loadView('print.rankings', $data)->setPaper('a4');
-        return $pdf->stream('rankings.pdf');
+        return $pdf->stream('rankings.pdf', array("Attachment" => false));
     }
 
     public function rankingFaculty() {
@@ -584,7 +584,7 @@ class PdfController extends Controller
 
         
         $pdf = PDF::loadView('print.rankings', $data)->setPaper('a4');
-        return $pdf->stream('rankings.pdf');
+        return $pdf->stream('rankings.pdf', array("Attachment" => false));
     }
 
     public function rankingStaff() {
@@ -626,7 +626,7 @@ class PdfController extends Controller
 
         
         $pdf = PDF::loadView('print.rankings', $data)->setPaper('a4');
-        return $pdf->stream('rankings.pdf');
+        return $pdf->stream('rankings.pdf', array("Attachment" => false));
     }
 
     public function rankingOpcr() {
@@ -668,6 +668,6 @@ class PdfController extends Controller
 
         
         $pdf = PDF::loadView('print.rankings-opcr', $data)->setPaper('a4');
-        return $pdf->stream('rankings.pdf');
+        return $pdf->stream('rankings.pdf', array("Attachment" => false));
     }
 }
