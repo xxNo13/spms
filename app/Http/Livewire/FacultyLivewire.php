@@ -273,15 +273,19 @@ class FacultyLivewire extends Component
                     $eff_2 = strtok($standard->eff_2, '%');
                 }
     
-                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                if (str_contains($standard->eff_5, '%')) {
+                    $output_percentage = $this->output_finished/$this->targetOutput * 100;
+                } else {
+                    $output_percentage = $this->output_finished;
+                }
                 
-                if ($output_pecentage >= $eff_5) {
+                if (isset($eff_5) && $output_percentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= $eff_4) {
+                } elseif (isset($eff_4) && $output_percentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= $eff_3) {
+                } elseif (isset($eff_3) && $output_percentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= $eff_2) {
+                } elseif (isset($eff_2) && $output_percentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -358,15 +362,19 @@ class FacultyLivewire extends Component
                     $eff_2 = strtok($standard->eff_2, '%');
                 }
     
-                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                if (str_contains($standard->eff_5, '%')) {
+                    $output_percentage = $this->output_finished/$this->targetOutput * 100;
+                } else {
+                    $output_percentage = $this->output_finished;
+                }
                 
-                if ($output_pecentage >= (float)$eff_5) {
+                if (isset($eff_5) && $output_percentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= (float)$eff_4) {
+                } elseif (isset($eff_4) && $output_percentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= (float)$eff_3) {
+                } elseif (isset($eff_3) && $output_percentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= (float)$eff_2) {
+                } elseif (isset($eff_2) && $output_percentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -457,13 +465,7 @@ class FacultyLivewire extends Component
             $numberOfTarget = [];
             $x = 0;
             foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
-                $targets = 0;
-                foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output) {
-                    foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target) {
-                        $targets++;
-                    }
-                }
-                $numberOfTarget[$x] = $targets;
+                $numberOfTarget[$x] = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first();
                 $x++;
             }
 
@@ -899,9 +901,9 @@ class FacultyLivewire extends Component
     public function sub_percentage() {
         $this->selected = 'deloading';
         
-        $core_sub_funct_id = auth()->user()->sub_functs()->where('funct_id', 1)->pluck('id')->first();
+        $core_sub_funct_id = auth()->user()->sub_functs()->where('duration_id', $this->duration->id)->where('funct_id', 1)->pluck('id')->first();
         
-        $sub_percentage = SubPercentage::find($core_sub_funct_id);
+        $sub_percentage = auth()->user()->sub_percentages()->where('sub_funct_id', $core_sub_funct_id)->first();
 
         $deloading = ($sub_percentage->value / 100) * 18;
 

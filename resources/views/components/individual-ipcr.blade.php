@@ -275,7 +275,7 @@
                                                                             <td></td>
                                                                         @endif
                                                                         
-                                                                        @if ($approval->name == 'assess')
+                                                                        @if ($url != 'for-approval' || $approval->name == 'assess')
                                                                             @foreach ($target->ratings as $rating)
                                                                                 @if ($rating->user_id == $user->id) 
                                                                                     <td>{{ $rating->accomplishment }}
@@ -378,7 +378,7 @@
                                                                             <td></td>
                                                                         @endif
                                                                         
-                                                                        @if ($approval->name == 'assess')
+                                                                        @if ($url != 'for-approval' || $approval->name == 'assess')
                                                                             @foreach ($target->ratings as $rating)
                                                                                 @if ($rating->user_id == $user->id) 
                                                                                     <td>{{ $rating->accomplishment }}
@@ -503,7 +503,7 @@
                                                                 <td></td>
                                                             @endif
                 
-                                                            @if ($approval->name == 'assess')
+                                                            @if ($url != 'for-approval' || $approval->name == 'assess')
                                                                 @foreach ($target->ratings as $rating)
                                                                     @if ($rating->user_id == $user->id) 
                                                                         <td>{{ $rating->accomplishment }}
@@ -603,7 +603,7 @@
                                                                 <td></td>
                                                             @endif
                 
-                                                            @if ($approval->name == 'assess')
+                                                            @if ($url != 'for-approval' || $approval->name == 'assess')
                                                                 @foreach ($target->ratings as $rating)
                                                                     @if ($rating->user_id == $user->id) 
                                                                         <td>{{ $rating->accomplishment }}

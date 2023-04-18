@@ -57,6 +57,7 @@
         @foreach ($functs as $funct)
             @php
                 $number = 1;
+                $non_designated = false;
             @endphp
             <div class="">
                 <div class="hstack mb-3 gap-2">
@@ -83,6 +84,9 @@
                                 @if (auth()->user()->outputs()->where('user_type', 'faculty')->first())
                                     @foreach (auth()->user()->account_types as $account_type)
                                         @if (str_contains(strtolower($account_type->account_type), 'no'))
+                                            @php
+                                                $non_designated = true;
+                                            @endphp
                                             @break;
                                         @elseif ($loop->last)
                                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
@@ -322,7 +326,7 @@
                                                                                             data-bs-toggle="modal"
                                                                                             data-bs-target="#AddRatingModal"
                                                                                             wire:click="rating({{ $target->id }})"
-                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                            title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                             <i class="bi bi-plus"></i>
                                                                                         </button>
                                                                                     @endif
@@ -337,7 +341,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -496,7 +500,7 @@
                                                                                             data-bs-toggle="modal"
                                                                                             data-bs-target="#AddRatingModal"
                                                                                             wire:click="rating({{ $target->id }})"
-                                                                                            title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                            title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                             <i class="bi bi-plus"></i>
                                                                                         </button>
                                                                                     @endif
@@ -511,7 +515,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -707,7 +711,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -722,7 +726,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif
@@ -881,7 +885,7 @@
                                                                                         data-bs-toggle="modal"
                                                                                         data-bs-target="#AddRatingModal"
                                                                                         wire:click="rating({{ $target->id }})"
-                                                                                        title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                        title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                         <i class="bi bi-plus"></i>
                                                                                     </button>
                                                                                 @endif
@@ -896,7 +900,7 @@
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#AddRatingModal"
                                                                                     wire:click="rating({{ $target->id }})"
-                                                                                    title="Add Rating" {{ isset($approvalStandard) ? "" : "disabled" }}>
+                                                                                    title="Add Rating" {{ (isset($approvalStandard) || $non_designated) ? "" : "disabled" }}>
                                                                                     <i class="bi bi-plus"></i>
                                                                                 </button>
                                                                             @endif

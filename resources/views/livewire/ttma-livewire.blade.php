@@ -164,7 +164,7 @@
         @elseif ($filter == 'receive')
             <div wire:ignore.self class="card collapse-icon accordion-icon-rotate">
                 <div class="card-header">
-                <h4 class="card-title pl-1">Revieved Assignments</h4>
+                <h4 class="card-title pl-1">Received Assignments</h4>
                 </div>
                 <div class="card-body">
                     @foreach ($assignments as $ttma) 

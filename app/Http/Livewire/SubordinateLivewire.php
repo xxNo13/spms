@@ -51,7 +51,7 @@ class SubordinateLivewire extends Component
             foreach ($user->account_types as $account_type) {
                 if (str_contains(strtolower($account_type->account_type), 'faculty')){
 
-                    $this->percentage = Percentage::where('user_id', $this->user_id)
+                    $this->percentage = Percentage::where('user_id', null)
                         ->where('type', 'ipcr')
                         ->where('user_type', $this->user_type)
                         ->where('duration_id', $this->durationF->id)

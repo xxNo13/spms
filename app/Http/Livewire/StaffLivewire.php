@@ -243,16 +243,20 @@ class StaffLivewire extends Component
                 if ($standard->eff_2) {
                     $eff_2 = strtok($standard->eff_2, '%');
                 }
-    
-                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
                 
-                if ($output_pecentage >= (float)$eff_5) {
+                if (str_contains($standard->eff_5, '%')) {
+                    $output_percentage = $this->output_finished/$this->targetOutput * 100;
+                } else {
+                    $output_percentage = $this->output_finished;
+                }
+                
+                if (isset($eff_5) && $output_percentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= (float)$eff_4) {
+                } elseif (isset($eff_4) && $output_percentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= (float)$eff_3) {
+                } elseif (isset($eff_3) && $output_percentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= (float)$eff_2) {
+                } elseif (isset($eff_2) && $output_percentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;
@@ -328,15 +332,19 @@ class StaffLivewire extends Component
                     $eff_2 = strtok($standard->eff_2, '%');
                 }
     
-                $output_pecentage = $this->output_finished/$this->targetOutput * 100;
+                if (str_contains($standard->eff_5, '%')) {
+                    $output_percentage = $this->output_finished/$this->targetOutput * 100;
+                } else {
+                    $output_percentage = $this->output_finished;
+                }
                 
-                if ($output_pecentage >= (float)$eff_5) {
+                if (isset($eff_5) && $output_percentage >= (float)$eff_5) {
                     $efficiency = 5;
-                } elseif ($output_pecentage >= (float)$eff_4) {
+                } elseif (isset($eff_4) && $output_percentage >= (float)$eff_4) {
                     $efficiency = 4;
-                } elseif ($output_pecentage >= (float)$eff_3) {
+                } elseif (isset($eff_3) && $output_percentage >= (float)$eff_3) {
                     $efficiency = 3;
-                } elseif ($output_pecentage >= (float)$eff_2) {
+                } elseif (isset($eff_2) && $output_percentage >= (float)$eff_2) {
                     $efficiency = 2;
                 } else {
                     $efficiency = 1;

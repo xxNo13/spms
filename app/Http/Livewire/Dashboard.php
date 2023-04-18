@@ -121,14 +121,16 @@ class Dashboard extends Component
                         
         $this->ratings = Auth::user()->ratings()->whereHas('target', function (\Illuminate\Database\Eloquent\Builder $query) {
                             return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
-                                return $query->where('user_type', 'staff')->where('type', 'ipcr');
+                                return $query->where('type', 'ipcr');
                             })->orwhereHas('suboutput', function (\Illuminate\Database\Eloquent\Builder $query) {
                                 return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
-                                    return $query->where('user_type', 'staff')->where('type', 'ipcr');
+                                    return $query->where('type', 'ipcr');
                                 });
                             });
-                        })->where('duration_id', $this->durationS->id)
-                        ->orWhere('duration_id', $this->durationF->id)
+                        })->where(function ($query) {
+                            return $query->where('duration_id', $this->durationS->id)
+                                ->orWhere('duration_id', $this->durationF->id);
+                        })
                         ->get();
 
         $this->assignments = auth()->user()->ttmas()

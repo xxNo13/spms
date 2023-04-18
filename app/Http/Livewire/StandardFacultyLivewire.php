@@ -180,15 +180,19 @@ class StandardFacultyLivewire extends Component
             $numberOfTarget = [];
             $x = 0;
             foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
-                $targets = 0;
-                foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output) {
-                    foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target) {
-                        $targets++;
-                    }
-                }
-                $numberOfTarget[$x] = $targets;
+                $numberOfTarget[$x] = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first();
                 $x++;
             }
+            // foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
+            //     $targets = 0;
+            //     foreach (auth()->user()->outputs()->where('sub_funct_id', $sub_funct->id)->get() as $output) {
+            //         foreach (auth()->user()->targets()->where('output_id', $output->id)->get() as $target) {
+            //             $targets++;
+            //         }
+            //     }
+            //     $numberOfTarget[$x] = $targets;
+            //     $x++;
+            // }
 
             if ((isset($numberOfTarget[0]) && !isset($numberOfTarget[1])) || ($numberOfTarget[0] > $numberOfTarget[1])) {
                 foreach ($this->highestOffice as $id => $value) {
