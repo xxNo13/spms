@@ -105,7 +105,7 @@
                 </div>
             </div>
             @if (in_array($approval->id, auth()->user()->user_approvals()->pluck('approval_id')->toArray()) && $approval->approve_id == auth()->user()->id)
-                @if ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status == 1 && $approval->approve_status != 1)
+                @if ($approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status == 1 && $approval->approve_status != 1)
                     <div class="hstack mb-2 fixed-bottom mx-5 px-4">
                         <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                             <button type="button" class="btn icon btn-info"
@@ -120,7 +120,7 @@
                             </button>
                         </div>
                     </div>
-                @elseif ($approval->reviewers->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
+                @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
                     <div class="hstack mb-2 fixed-bottom mx-5 px-4">
                         <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                             <button type="button" class="btn icon btn-info"
@@ -169,6 +169,18 @@
                     </div>
                 @endif
             @endif
+        @elseif ($url == 'reviewing')
+            @if (!$ipcr_review->status)
+                <div class="hstack mb-2 fixed-bottom mx-5 px-4">
+                    <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
+                        <button type="button" class="btn icon btn-info"
+                            wire:click="approved({{ $ipcr_review->id }})">
+                            <i class="bi bi-check"></i>
+                            Approved
+                        </button>
+                    </div>
+                </div>  
+            @endif  
         @endif
 
         @foreach ($functs as $funct)
@@ -262,7 +274,9 @@
                                                                             Accomplishment</td>
                                                                         <td colspan="4">Rating</td>
                                                                         <td rowspan="2">Remarks</td>
-                                                                        <td rowspan="2">Action</td>
+                                                                        @if ($url != 'officemates')
+                                                                            <td rowspan="2">Action</td>
+                                                                        @endif
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Q</td>
@@ -311,28 +325,33 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
-                                                                                        <div class="hstack gap-2">
-                                                                                            @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
-                                                                                                <button type="button"
-                                                                                                    class="btn icon btn-success"
-                                                                                                    data-bs-toggle="modal"
-                                                                                                    data-bs-target="#EditRatingModal"
-                                                                                                    wire:click="editRating({{ $rating->id }})"
-                                                                                                    title="Edit Rating">
-                                                                                                    <i class="bi bi-pencil-square"></i>
-                                                                                                </button>
-                                                                                            @endif
-                                                                                            <button type="button"
-                                                                                                class="btn icon btn-primary"
-                                                                                                data-bs-toggle="modal"
-                                                                                                data-bs-target="#CommentModal"
-                                                                                                wire:click="comment({{ $target->id }})"
-                                                                                                title="Add Comment">
-                                                                                                <i class="bi bi-chat-dots"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </td>
+                                                                                    @if ($url != 'officemates')
+                                                                                        <td>
+                                                                                            <div class="hstack gap-2">
+                                                                                                @if ($url == 'reviewing')
+                                                                                                    @if (!$ipcr_review->status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @endif
+                                                                                                @else
+                                                                                                    <button type="button"
+                                                                                                        class="btn icon btn-primary"
+                                                                                                        data-bs-toggle="modal"
+                                                                                                        data-bs-target="#CommentModal"
+                                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                                        title="Add Comment">
+                                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                                    </button>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    @endif
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
@@ -388,7 +407,9 @@
                                                                             Accomplishment</td>
                                                                         <td colspan="4">Rating</td>
                                                                         <td rowspan="2">Remarks</td>
-                                                                        <td rowspan="2">Action</td>
+                                                                        @if ($url != 'officemates')
+                                                                            <td rowspan="2">Action</td>
+                                                                        @endif
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Q</td>
@@ -438,28 +459,33 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
-                                                                                        <div class="hstack gap-2">
-                                                                                            @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
-                                                                                                <button type="button"
-                                                                                                    class="btn icon btn-success"
-                                                                                                    data-bs-toggle="modal"
-                                                                                                    data-bs-target="#EditRatingModal"
-                                                                                                    wire:click="editRating({{ $rating->id }})"
-                                                                                                    title="Edit Rating">
-                                                                                                    <i class="bi bi-pencil-square"></i>
-                                                                                                </button>
-                                                                                            @endif
-                                                                                            <button type="button"
-                                                                                                class="btn icon btn-primary"
-                                                                                                data-bs-toggle="modal"
-                                                                                                data-bs-target="#CommentModal"
-                                                                                                wire:click="comment({{ $target->id }})"
-                                                                                                title="Add Comment">
-                                                                                                <i class="bi bi-chat-dots"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </td>
+                                                                                    @if ($url != 'officemates')
+                                                                                        <td>
+                                                                                            <div class="hstack gap-2">
+                                                                                                @if ($url == 'reviewing')
+                                                                                                    @if (!$ipcr_review->status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @endif
+                                                                                                @else
+                                                                                                    <button type="button"
+                                                                                                        class="btn icon btn-primary"
+                                                                                                        data-bs-toggle="modal"
+                                                                                                        data-bs-target="#CommentModal"
+                                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                                        title="Add Comment">
+                                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                                    </button>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    @endif
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
@@ -537,7 +563,9 @@
                                                             <td rowspan="2">Actual Accomplishment</td>
                                                             <td colspan="4">Rating</td>
                                                             <td rowspan="2">Remarks</td>
-                                                            <td rowspan="2">Action</td>
+                                                            @if ($url != 'officemates')
+                                                                <td rowspan="2">Action</td>
+                                                            @endif
                                                         </tr>
                                                         <tr>
                                                             <td>Q</td>
@@ -586,28 +614,33 @@
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
-                                                                        <td>
-                                                                            <div class="hstack gap-2">
-                                                                                @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
-                                                                                    <button type="button"
-                                                                                        class="btn icon btn-success"
-                                                                                        data-bs-toggle="modal"
-                                                                                        data-bs-target="#EditRatingModal"
-                                                                                        wire:click="editRating({{ $rating->id }})"
-                                                                                        title="Edit Rating">
-                                                                                        <i class="bi bi-pencil-square"></i>
-                                                                                    </button>
-                                                                                @endif
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-primary"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#CommentModal"
-                                                                                    wire:click="comment({{ $target->id }})"
-                                                                                    title="Add Comment">
-                                                                                    <i class="bi bi-chat-dots"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
+                                                                        @if ($url != 'officemates')
+                                                                            <td>
+                                                                                <div class="hstack gap-2">
+                                                                                    @if ($url == 'reviewing')
+                                                                                        @if (!$ipcr_review->status)
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    @else
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#CommentModal"
+                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                            title="Add Comment">
+                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </td>
+                                                                        @endif
                                                                         @break
                                                                     @endif
                                                                 @endforeach
@@ -660,7 +693,9 @@
                                                             <td rowspan="2">Actual Accomplishment</td>
                                                             <td colspan="4">Rating</td>
                                                             <td rowspan="2">Remarks</td>
-                                                            <td rowspan="2">Action</td>
+                                                            @if ($url != 'officemates')
+                                                                <td rowspan="2">Action</td>
+                                                            @endif
                                                         </tr>
                                                         <tr>
                                                             <td>Q</td>
@@ -709,28 +744,33 @@
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
-                                                                        <td>
-                                                                            <div class="hstack gap-2">
-                                                                                @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
-                                                                                    <button type="button"
-                                                                                        class="btn icon btn-success"
-                                                                                        data-bs-toggle="modal"
-                                                                                        data-bs-target="#EditRatingModal"
-                                                                                        wire:click="editRating({{ $rating->id }})"
-                                                                                        title="Edit Rating">
-                                                                                        <i class="bi bi-pencil-square"></i>
-                                                                                    </button>
-                                                                                @endif
-                                                                                <button type="button"
-                                                                                    class="btn icon btn-primary"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#CommentModal"
-                                                                                    wire:click="comment({{ $target->id }})"
-                                                                                    title="Add Comment">
-                                                                                    <i class="bi bi-chat-dots"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
+                                                                        @if ($url != 'officemates')
+                                                                            <td>
+                                                                                <div class="hstack gap-2">
+                                                                                    @if ($url == 'reviewing')
+                                                                                        @if (!$ipcr_review->status)
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    @else
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#CommentModal"
+                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                            title="Add Comment">
+                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                        </button>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </td>
+                                                                        @endif
                                                                         @break
                                                                     @endif
                                                                 @endforeach

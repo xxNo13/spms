@@ -39,8 +39,8 @@ class TrainingLivewire extends Component
 
         if ($searches) {
             foreach ($searches as $search) {
-                $trainings->orWhere('training_name', 'LIKE', '%' . $search . '%')
-                ->orWhere('keywords', 'LIKE', '%' . $search . '%');
+                $trainings->orWhere('training_name', 'LIKE', "%{$search}%")
+                ->orWhere('keywords', 'LIKE', "%{$search}%");
             }
         }
         

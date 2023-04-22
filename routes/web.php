@@ -12,6 +12,7 @@ use App\Http\Livewire\FacultyLivewire;
 use App\Http\Controllers\PdfController;
 use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\AssignPmtLivewire;
+use App\Http\Livewire\AssignReviewCommittee;
 use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\ListingOpcrLivewire;
@@ -24,6 +25,7 @@ use App\Http\Livewire\RecommendationListLivewire;
 use App\Http\Livewire\ListingStandardOpcrLivewire;
 use App\Http\Livewire\ListingStandardFacultyLivewire;
 use App\Http\Livewire\RecommendedForTrainingLivewire;
+use App\Http\Livewire\ReviewingIpcr;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
 /*
@@ -56,10 +58,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/for-approval', ForApprovalLivewire::class)->name('for.approval');
         Route::get('/subordinates', SubordinateLivewire::class)->name('subordinates');
     });
+
+    Route::middleware(['reviewcommittee'])->group(function () {
+        Route::get('/reviewing-ipcr', ReviewingIpcr::class)->name('reviewing');
+    });
     
     Route::middleware(['pmo'])->group(function () {
         Route::get('/configure', ConfigureLivewire::class)->name('configure');
         Route::get('/assign-pmt', AssignPmtLivewire::class)->name('assign.pmt');
+        Route::get('/assign-review-committee', AssignReviewCommittee::class)->name('assign.rc');
     });
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {

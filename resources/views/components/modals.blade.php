@@ -1916,6 +1916,132 @@
                 </div>
             </div>
         </div>
+        
+        {{-- Add Review Committee Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddReviewCommitteeModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Add Review Committee</h4>
+                    </div>
+                    
+                        <form wire:submit.prevent="save('add')">
+                            <div class="modal-body">
+                                <label>Committee Name: </label>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Committee Name" class="form-control" wire:model.defer="name">
+                                    @error('name')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <label>User: </label>
+                                <div class="form-group" wire:ignore>
+                                    <select style="width: 100%;" name="user_id" id="user_id" class="form-select" wire:loading="disabled" wire:model="user_id">
+                                        <option></option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                @push ('script')
+                                    <script>
+                                        $('#user_id').on('change', function () {
+                                            var data = $('#user_id').select2("val");
+                                            @this.set('user_id', data);
+                                        });
+
+                                        document.addEventListener("livewire:load", function (event) {
+                                            Livewire.hook('message.processed', function (message, component){
+                                                $("#user_id").select2({
+                                                    placeholder: "Select a User.",
+                                                    dropdownParent: $("#AddReviewCommitteeModal")
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                @endpush
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                    <i class="bx bx-x d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Close</span>
+                                </button>
+                                <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                    <i class="bx bx-check d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Save</span>
+                                </button>
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
+        
+        {{-- Edit Review Committee Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditReviewCommitteeModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Edit Review Committee</h4>
+                    </div>
+                    
+                        <form wire:submit.prevent="save('edit')">
+                            <div class="modal-body">
+                                <label>Committee Name: </label>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Committee Name" class="form-control" wire:model.defer="name">
+                                    @error('name')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <label>User: </label>
+                                <div class="form-group" wire:ignore>
+                                    <select style="width: 100%;" name="euser_id" id="euser_id" class="form-select" wire:loading="disabled" wire:model="user_id">
+                                        <option></option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                @push ('script')
+                                    <script>
+                                        $('#euser_id').on('change', function () {
+                                            var data = $('#euser_id').select2("val");
+                                            @this.set('user_id', data);
+                                        });
+
+                                        document.addEventListener("livewire:load", function (event) {
+                                            Livewire.hook('message.processed', function (message, component){
+                                                $("#euser_id").select2({
+                                                    placeholder: "Select a User.",
+                                                    dropdownParent: $("#EditReviewCommitteeModal")
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                @endpush
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                    <i class="bx bx-x d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Close</span>
+                                </button>
+                                <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                    <i class="bx bx-check d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Save</span>
+                                </button>
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
     @endif
 
     {{-- Comment Modal --}}

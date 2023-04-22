@@ -95,7 +95,7 @@ class StandardFacultyLivewire extends Component
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             if ($this->approval) {
                 $x = 0;
-                foreach ($this->assess->reviewers as $reviewer) {
+                foreach ($this->approval->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
                         $this->review_user[$x]['name'] = $reviewer->name;
                         $this->review_user[$x]['message'] = $reviewer->pivot->review_message;

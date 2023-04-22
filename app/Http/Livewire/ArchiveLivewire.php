@@ -47,7 +47,7 @@ class ArchiveLivewire extends Component
 
             foreach ($results as $result) {
                 $durations->where(function ($query) use ($result) {
-                    return $query->where('type', 'LIKE', '%'.$result.'%')->orwhere('duration_name', 'LIKE', '%'.$result.'%');
+                    return $query->where('type', 'LIKE', "%{$result}%")->orwhere('duration_name', 'LIKE', "%{$result}%");
                 });
             }
 

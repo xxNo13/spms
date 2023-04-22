@@ -168,16 +168,16 @@ class ForApprovalLivewire extends Component
                 $search = $this->search;
                 $approvals->where(function ($query) use ($search) {
                     return $query->whereHas('user', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                        return $query->where('name', 'LIKE','%'.$search.'%')
-                            ->orWhere('email','LIKE','%'.$search.'%')
+                        return $query->where('name', 'LIKE',"%{$search}%")
+                            ->orWhere('email','LIKE',"%{$search}%")
                             ->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                                return $query->where('office_abbr', 'LIKE','%'.$search.'%');
+                                return $query->where('office_abbr', 'LIKE',"%{$search}%");
                             })->orWhereHas('account_types', function(\Illuminate\Database\Eloquent\Builder $query) use ($search){
-                                return $query->where('account_type', 'LIKE','%'.$search.'%');
+                                return $query->where('account_type', 'LIKE',"%{$search}%");
                             });
-                    })->orWhere('type','LIKE','%'.$search.'%')
-                    ->orWhere('user_type','LIKE','%'.$search.'%')
-                    ->orWhere('name','LIKE','%'.$search.'%');
+                    })->orWhere('type','LIKE',"%{$search}%")
+                    ->orWhere('user_type','LIKE',"%{$search}%")
+                    ->orWhere('name','LIKE',"%{$search}%");
                 })->where(function ($query) {
                     return $query->where('duration_id', $this->durationS->id)
                             ->where('duration_id', $this->durationF->id)
@@ -208,131 +208,6 @@ class ForApprovalLivewire extends Component
             ]);
 
         }
-    }
-
-    public function rating($target_id = null, $rating_id = null){
-        $user = User::find($this->user_id);
-
-        $this->selected = 'rating';
-        $this->rating_id = $rating_id;
-        $this->target_id = $target_id;
-        if ($target_id) {
-            $this->selectedTarget = $user->targets()->where('id', $target_id)->first();
-            $this->targetOutput = $this->selectedTarget->pivot->target_output;
-        }
-    }
-
-    public function editRating($rating_id){
-        $user = User::find($this->user_id);
-        
-        $this->selected = 'rating';
-        $this->rating_id = $rating_id;
-
-        $rating = $user->ratings()->where('id', $rating_id)->first();
-
-        $this->selectedTarget = $user->targets()->where('id', $rating->target_id)->first();
-        $this->targetOutput = $this->selectedTarget->pivot->target_output;
-        
-        $this->output_finished = $rating->output_finished;
-        $this->accomplishment = $rating->accomplishment;
-        $this->quality = $rating->quality;
-        $this->timeliness = $rating->timeliness;
-    }
-
-    public function saveRating($category){
-
-        
-        $divisor = 0;
-        
-        $standard = $this->selectedTarget->standards()->first();
-
-        if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) {
-            if ($standard->eff_5) {
-                $eff_5 = strtok($standard->eff_5, '%');
-            }
-            if ($standard->eff_4) {
-                $eff_4 = strtok($standard->eff_4, '%');
-            }
-            if ($standard->eff_3) {
-                $eff_3 = strtok($standard->eff_3, '%');
-            }
-            if ($standard->eff_2) {
-                $eff_2 = strtok($standard->eff_2, '%');
-            }
-
-            if (str_contains($standard->eff_5, '%')) {
-                $output_percentage = $this->output_finished/$this->targetOutput * 100;
-            } else {
-                $output_percentage = $this->output_finished;
-            }
-            
-            if (isset($eff_5) && $output_percentage >= (float)$eff_5) {
-                $efficiency = 5;
-            } elseif (isset($eff_4) && $output_percentage >= (float)$eff_4) {
-                $efficiency = 4;
-            } elseif (isset($eff_3) && $output_percentage >= (float)$eff_3) {
-                $efficiency = 3;
-            } elseif (isset($eff_2) && $output_percentage >= (float)$eff_2) {
-                $efficiency = 2;
-            } else {
-                $efficiency = 1;
-            }
-        }
-
-        if ($this->quality == '') {
-            if ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1){
-                $error = \Illuminate\Validation\ValidationException::withMessages([
-                    'quality' => ['Quality cannot be null.'],
-                    ]);
-                    throw $error;
-            } else {
-                $this->quality = null;
-            }
-        }
-        if ($this->timeliness == '') {
-            if ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1){
-                $error = \Illuminate\Validation\ValidationException::withMessages([
-                    'timeliness' => ['Timeliness cannot be null.'],
-                    ]);
-                    throw $error;
-            } else {
-                $this->timeliness = null;
-            }
-        }
-
-        if(!$efficiency){
-            $divisor++;
-        }
-        if(!$this->quality){
-            $divisor++;
-        }
-        if(!$this->timeliness){
-            $divisor++;
-        }
-        $number = ((int)$efficiency + (int)$this->quality + (int)$this->timeliness) / (3 - $divisor);
-        $average = number_format((float)$number, 2, '.', '');
-
-        Rating::where('id', $this->rating_id)->update([
-            'output_finished' => $this->output_finished,
-            'accomplishment' => $this->accomplishment,
-            'efficiency' => $efficiency,
-            'quality' => $this->quality,
-            'timeliness' => $this->timeliness,
-            'average' => $average,
-        ]);
-
-        $this->dispatchBrowserEvent('toastify', [
-            'message' => "Updated Successfully",
-            'color' => "#28ab55",
-        ]);
-        
-
-        $this->output_finished = '';
-        $this->efficiency = '';
-        $this->quality = '';
-        $this->timeliness = '';
-        $this->accomplishment = '';
-        $this->dispatchBrowserEvent('close-modal');
     }
         
     public function approved($id, $type, $bool = false){

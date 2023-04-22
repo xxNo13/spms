@@ -13,9 +13,11 @@ use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
 use App\Models\Suboutput;
+use App\Models\IpcrReview;
 use App\Models\Percentage;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
+use App\Models\ReviewCommittee;
 use App\Notifications\ApprovalNotification;
 
 class StaffLivewire extends Component
@@ -144,7 +146,7 @@ class StaffLivewire extends Component
             }
         }
 
-        $depths;
+        $depths = [];
 
         foreach(auth()->user()->offices as $office) {
             $depths[$office->id] = $office->getDepthAttribute();
@@ -419,64 +421,108 @@ class StaffLivewire extends Component
 
         $this->selected = 'submition';
 
-        foreach ($this->highestOffice as $id => $value) {
+        if ($type == 'approval') {
+            foreach ($this->highestOffice as $id => $value) {
 
-            $office = Office::find($id);
-
-            if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
-                $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
-                }
-            } else {
-                $office = Office::where('id', $office->parent_id)->first();
-                $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-            
-                $parent_office = Office::where('id', $office->parent_id)->first();
-                if ($parent_office) {
-                    $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                }else {
-                    $this->approve_id = $this->review_id;
-                }
-            }
-
-            if (!$this->review_id || !$this->approve_id) {
-                return $this->dispatchBrowserEvent('toastify', [
-                    'message' => "No Head Found!",
-                    'color' => "#f3616d",
-                ]);
-            }
-
-            $approval = Approval::create([
-                'name' => $type,
-                'user_id' => auth()->user()->id,
-                'approve_id' => $this->approve_id,
-                'type' => 'ipcr',
-                'user_type' => 'staff',
-                'duration_id' => $this->duration->id
-            ]);
-        
-            $approve = $approval;
-            
-            $approve->reviewers()->attach([$this->review_id]);
-            
-            $reviewer = User::where('id', $this->review_id)->first();
-            $approver = User::where('id', $this->approve_id)->first();
+                $office = Office::find($id);
     
-            $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
-            $approver->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
+                if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
+                    $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                    
+                    $parent_office = Office::where('id', $office->parent_id)->first();
+                    if ($parent_office) {
+                        $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                    }else {
+                        $this->approve_id = $this->review_id;
+                    }
+                } else {
+                    $office = Office::where('id', $office->parent_id)->first();
+                    $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                
+                    $parent_office = Office::where('id', $office->parent_id)->first();
+                    if ($parent_office) {
+                        $this->approve_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                    }else {
+                        $this->approve_id = $this->review_id;
+                    }
+                }
+    
+                if (!$this->review_id || !$this->approve_id) {
+                    return $this->dispatchBrowserEvent('toastify', [
+                        'message' => "No Head Found!",
+                        'color' => "#f3616d",
+                    ]);
+                }
+    
+                $approval = Approval::create([
+                    'name' => $type,
+                    'user_id' => auth()->user()->id,
+                    'approve_id' => $this->approve_id,
+                    'type' => 'ipcr',
+                    'user_type' => 'staff',
+                    'duration_id' => $this->duration->id
+                ]);
+            
+                $approve = $approval;
+                
+                $approve->reviewers()->attach([$this->review_id]);
+                
+                $reviewer = User::where('id', $this->review_id)->first();
+                $approver = User::where('id', $this->approve_id)->first();
+        
+                $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
+                $approver->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting'));
+    
+                $this->dispatchBrowserEvent('toastify', [
+                    'message' => "Submitted Successfully",
+                    'color' => "#435ebe",
+                ]);
+    
+                $this->mount();
+                return;
+            }
+        } elseif ($type == 'assess') {
+            foreach ($this->highestOffice as $id => $value) {
 
-            $this->dispatchBrowserEvent('toastify', [
-                'message' => "Submitted Successfully",
-                'color' => "#435ebe",
-            ]);
+                $office = Office::find($id);
+    
+                if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
+                    $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                } else {
+                    $office = Office::where('id', $office->parent_id)->first();
+                    $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                }
+    
+                
+                $review_committees = ReviewCommittee::where('type', 'staff')->get();
 
-            $this->mount();
-            return;
+                foreach ($review_committees as $committee) {
+                    IpcrReview::create([
+                        'reviewer_id' => $committee->user->id,
+                        'type' => 'staff',
+                        'duration_id' => $this->duration->id,
+                        'user_id' => auth()->user()->id,
+                    ]);
+                }
+
+                if ($review_committees->where('user_id', $this->review_id)->first()) {
+                    IpcrReview::create([
+                        'reviewer_id' => $this->review_id,
+                        'type' => 'staff',
+                        'duration_id' => $this->duration->id,
+                        'user_id' => auth()->user()->id,
+                    ]);
+                }
+
+
+                $this->dispatchBrowserEvent('toastify', [
+                    'message' => "Submitted Successfully",
+                    'color' => "#435ebe",
+                ]);
+
+                $this->mount();
+                return;
+            }
         }
     }
 

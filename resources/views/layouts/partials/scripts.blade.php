@@ -74,6 +74,8 @@
         $('#FacultyCorePercentageModal').modal('hide');
 
         $('#PrintModal').modal('hide');
+        $('#AddReviewCommitteeModal').modal('hide');        
+        $('#EditReviewCommitteeModal').modal('hide');
     });
 </script>
 

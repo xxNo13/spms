@@ -9,12 +9,18 @@
         $hrmo = false;
         $bool = true;
         $president = false;
+        $reviewcommittee = false;
     @endphp
     @if (auth()->user()->id == 1)
         @php
             $head = true;
             $hrmo = true;
             $pmo = true;
+        @endphp
+    @endif
+    @if (auth()->user()->committee)
+        @php
+            $reviewcommittee = true;
         @endphp
     @endif
     @foreach (Auth::user()->offices as $office)
@@ -59,10 +65,15 @@
     @if ($pmo) 
         <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
         <x-maz-sidebar-item alias="assign.pmt" name="Assigned PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="assign.rc" name="Assigned Review Committee" :link="route('assign.rc')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
     @endif
 
     @if ($head)
-    <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+    @endif
+
+    @if ($reviewcommittee)
+        <x-maz-sidebar-item alias="reviewing" name="Reviewing Ipcr" :link="route('reviewing')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
     @endif
 
     <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>

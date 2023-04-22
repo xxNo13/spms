@@ -54,7 +54,19 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function ipcr_reviews () {
+        return $this->hasMany(IpcrReview::class);
+    }
+
+    public function reviewing_ipcrs() {
+        return $this->hasMany(IpcrReview::class, 'reviewer_id');
+    }
     
+    public function committee() {
+        return $this->hasOne(ReviewCommittee::class);
+    }
+
     public function pmt() {
         return $this->hasOne(Pmt::class);
     }
