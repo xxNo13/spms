@@ -43,7 +43,7 @@ class OpcrLivewire extends Component
     public $approval;
     public $approvalStandard;
     public $assess;
-    public $review_user;
+    public $review_user = [];
     public $approve_user;
 
     public $target_id;
@@ -140,20 +140,24 @@ class OpcrLivewire extends Component
             $this->approvalStandard = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'office')->where('approve_status', 1)->first();
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'opcr')->where('duration_id', $this->duration->id)->where('user_type', 'office')->first();
             if ($this->assess) {
+                $x = 0;
                 foreach ($this->assess->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
-                        $this->review_user['name'] = $reviewer->name;
-                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                        $this->review_user[$x]['name'] = $reviewer->name;
+                        $this->review_user[$x]['message'] = $reviewer->pivot->review_message;
+                        $x++;
                     }
                 }
 
                 $this->approve_user['name'] = User::where('id', $this->assess->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->assess->approve_message;
             } elseif ($this->approval) {
+                $x = 0;
                 foreach ($this->approval->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
-                        $this->review_user['name'] = $reviewer->name;
-                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                        $this->review_user[$x]['name'] = $reviewer->name;
+                        $this->review_user[$x]['message'] = $reviewer->pivot->review_message;
+                        $x++;
                     }
                 }
 

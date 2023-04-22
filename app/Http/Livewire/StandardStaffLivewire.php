@@ -47,7 +47,7 @@ class StandardStaffLivewire extends Component
     public $review_id;
     public $approve_id;
     public $highestOffice;
-    public $review_user;
+    public $review_user = [];
     public $approve_user;
 
     public $hasStandard = false;
@@ -95,10 +95,12 @@ class StandardStaffLivewire extends Component
             
             $this->approval = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'standard')->where('duration_id', $this->duration->id)->where('user_type', 'staff')->first();
             if ($this->approval) {
-                foreach ($this->approval->reviewers as $reviewer) {
+                $x = 0;
+                foreach ($this->assess->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
-                        $this->review_user['name'] = $reviewer->name;
-                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                        $this->review_user[$x]['name'] = $reviewer->name;
+                        $this->review_user[$x]['message'] = $reviewer->pivot->review_message;
+                        $x++;
                     }
                 }
 

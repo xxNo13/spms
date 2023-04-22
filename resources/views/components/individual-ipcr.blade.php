@@ -29,22 +29,27 @@
             @if (isset($prevApproval) && !isset($approval->approve_status))
                 @foreach ($prevApproval->reviewers as $reviewer)
                     @if ($reviewer->pivot->review_message)
-                        <div id="reviewToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                        <div id="reviewToast{{ $reviewer->id }}" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
                             <div class="toast-header">
-                                <strong class="me-auto">{{ $reviewer->name }}'s <br/> Declining Message in Pervious Submission:</strong>
+                                <strong class="me-auto">{{ $reviewer->name }}'s <br/> Comment/s in Pervious Submission:</strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                             <div class="toast-body">
                                 <strong class="me-auto"><?php echo nl2br($reviewer->pivot->review_message) ?></strong>
                             </div>
                         </div>
-                        @break
+                        @push ('script')
+                            <script>
+                                var data = "reviewToast" + "<?php echo $reviewer->id ?>";
+                                new bootstrap.Toast(document.getElementById(data)).show();
+                            </script>
+                        @endpush
                     @endif
                 @endforeach
-                @if (isset($prevApproval->approve_message)) 
+                @if (isset($prevApproval->approve_message) && $prevApproval->approve_message != '') 
                     <div id="approveToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
                         <div class="toast-header">
-                            <strong class="me-auto">{{ $prevApprover->name }}'s <br/> Declining Message in Pervious Submission:</strong>
+                            <strong class="me-auto">{{ $prevApprover->name }}'s <br/> Comment/s in Pervious Submission:</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
                         <div class="toast-body">
@@ -109,7 +114,7 @@
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="declined({{ $approval->id }}, true)">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>
@@ -124,7 +129,7 @@
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="declined({{ $approval->id }}, true)">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>
@@ -140,7 +145,7 @@
                             Approved
                         </button>
                         <button type="button" class="btn icon btn-danger"
-                            wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                            wire:click="declined({{ $approval->id }}, true)">
                             <i class="bi bi-x"></i>
                             Decline
                         </button>
@@ -156,7 +161,7 @@
                                 Approved
                             </button>
                             <button type="button" class="btn icon btn-danger"
-                                wire:click="clickdeclined({{ $approval->id }}, true)"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                wire:click="declined({{ $approval->id }}, true)">
                                 <i class="bi bi-x"></i>
                                 Decline
                             </button>
@@ -257,10 +262,11 @@
                                                                             Accomplishment</td>
                                                                         <td colspan="4">Rating</td>
                                                                         <td rowspan="2">Remarks</td>
+                                                                        <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>E</td>
                                                                         <td>Q</td>
+                                                                        <td>E</td>
                                                                         <td>T</td>
                                                                         <td>A</td>
                                                                     </tr>
@@ -281,15 +287,15 @@
                                                                                     <td>{{ $rating->accomplishment }}
                                                                                     </td>
                                                                                     <td>
-                                                                                        @if ($rating->efficiency)
-                                                                                            {{ $rating->efficiency }}
+                                                                                        @if ($rating->quality)
+                                                                                        {{ $rating->quality }}
                                                                                         @else
-                                                                                            NR
+                                                                                        NR
                                                                                         @endif
                                                                                     </td>
                                                                                     <td>
-                                                                                        @if ($rating->quality)
-                                                                                            {{ $rating->quality }}
+                                                                                        @if ($rating->efficiency)
+                                                                                            {{ $rating->efficiency }}
                                                                                         @else
                                                                                             NR
                                                                                         @endif
@@ -304,6 +310,28 @@
                                                                                     <td>{{ $rating->average }}
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="hstack gap-2">
+                                                                                            @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-primary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#CommentModal"
+                                                                                                wire:click="comment({{ $target->id }})"
+                                                                                                title="Add Comment">
+                                                                                                <i class="bi bi-chat-dots"></i>
+                                                                                            </button>
+                                                                                        </div>
                                                                                     </td>
                                                                                     @break
                                                                                 @endif
@@ -360,13 +388,15 @@
                                                                             Accomplishment</td>
                                                                         <td colspan="4">Rating</td>
                                                                         <td rowspan="2">Remarks</td>
+                                                                        <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>E</td>
                                                                         <td>Q</td>
+                                                                        <td>E</td>
                                                                         <td>T</td>
                                                                         <td>A</td>
                                                                     </tr>
+                                                                    
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
@@ -384,15 +414,15 @@
                                                                                     <td>{{ $rating->accomplishment }}
                                                                                     </td>
                                                                                     <td>
-                                                                                        @if ($rating->efficiency)
-                                                                                            {{ $rating->efficiency }}
+                                                                                        @if ($rating->quality)
+                                                                                        {{ $rating->quality }}
                                                                                         @else
-                                                                                            NR
+                                                                                        NR
                                                                                         @endif
                                                                                     </td>
                                                                                     <td>
-                                                                                        @if ($rating->quality)
-                                                                                            {{ $rating->quality }}
+                                                                                        @if ($rating->efficiency)
+                                                                                            {{ $rating->efficiency }}
                                                                                         @else
                                                                                             NR
                                                                                         @endif
@@ -407,6 +437,28 @@
                                                                                     <td>{{ $rating->average }}
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="hstack gap-2">
+                                                                                            @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-primary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#CommentModal"
+                                                                                                wire:click="comment({{ $target->id }})"
+                                                                                                title="Add Comment">
+                                                                                                <i class="bi bi-chat-dots"></i>
+                                                                                            </button>
+                                                                                        </div>
                                                                                     </td>
                                                                                     @break
                                                                                 @endif
@@ -485,10 +537,11 @@
                                                             <td rowspan="2">Actual Accomplishment</td>
                                                             <td colspan="4">Rating</td>
                                                             <td rowspan="2">Remarks</td>
+                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>E</td>
                                                             <td>Q</td>
+                                                            <td>E</td>
                                                             <td>T</td>
                                                             <td>A</td>
                                                         </tr>
@@ -509,15 +562,15 @@
                                                                         <td>{{ $rating->accomplishment }}
                                                                         </td>
                                                                         <td>
-                                                                            @if ($rating->efficiency)
-                                                                                {{ $rating->efficiency }}
+                                                                            @if ($rating->quality)
+                                                                            {{ $rating->quality }}
                                                                             @else
-                                                                                NR
+                                                                            NR
                                                                             @endif
                                                                         </td>
                                                                         <td>
-                                                                            @if ($rating->quality)
-                                                                                {{ $rating->quality }}
+                                                                            @if ($rating->efficiency)
+                                                                                {{ $rating->efficiency }}
                                                                             @else
                                                                                 NR
                                                                             @endif
@@ -532,6 +585,28 @@
                                                                         <td>{{ $rating->average }}
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="hstack gap-2">
+                                                                                @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-success"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#EditRatingModal"
+                                                                                        wire:click="editRating({{ $rating->id }})"
+                                                                                        title="Edit Rating">
+                                                                                        <i class="bi bi-pencil-square"></i>
+                                                                                    </button>
+                                                                                @endif
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-primary"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#CommentModal"
+                                                                                    wire:click="comment({{ $target->id }})"
+                                                                                    title="Add Comment">
+                                                                                    <i class="bi bi-chat-dots"></i>
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         @break
                                                                     @endif
@@ -585,10 +660,11 @@
                                                             <td rowspan="2">Actual Accomplishment</td>
                                                             <td colspan="4">Rating</td>
                                                             <td rowspan="2">Remarks</td>
+                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>E</td>
                                                             <td>Q</td>
+                                                            <td>E</td>
                                                             <td>T</td>
                                                             <td>A</td>
                                                         </tr>
@@ -609,15 +685,15 @@
                                                                         <td>{{ $rating->accomplishment }}
                                                                         </td>
                                                                         <td>
-                                                                            @if ($rating->efficiency)
-                                                                                {{ $rating->efficiency }}
+                                                                            @if ($rating->quality)
+                                                                            {{ $rating->quality }}
                                                                             @else
-                                                                                NR
+                                                                            NR
                                                                             @endif
                                                                         </td>
                                                                         <td>
-                                                                            @if ($rating->quality)
-                                                                                {{ $rating->quality }}
+                                                                            @if ($rating->efficiency)
+                                                                                {{ $rating->efficiency }}
                                                                             @else
                                                                                 NR
                                                                             @endif
@@ -632,6 +708,28 @@
                                                                         <td>{{ $rating->average }}
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="hstack gap-2">
+                                                                                @if ($url == 'for-approval' && $approval->name == 'assess' && $approval->approve_status != 1)
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-success"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#EditRatingModal"
+                                                                                        wire:click="editRating({{ $rating->id }})"
+                                                                                        title="Edit Rating">
+                                                                                        <i class="bi bi-pencil-square"></i>
+                                                                                    </button>
+                                                                                @endif
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-primary"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#CommentModal"
+                                                                                    wire:click="comment({{ $target->id }})"
+                                                                                    title="Add Comment">
+                                                                                    <i class="bi bi-chat-dots"></i>
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                         @break
                                                                     @endif
@@ -651,5 +749,5 @@
             @endforeach
         @endforeach
     </section>
-    <x-modals />
+    <x-modals :selectedTargetId="$selectedTargetId" :targetOutput="$targetOutput" :selectedTarget="$selectedTarget" />
 </div>

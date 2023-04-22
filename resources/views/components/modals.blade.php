@@ -614,9 +614,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="w-100 text-center">Efficiency: </div>
-                            <div class="vr"></div>
                             <div class="w-100 text-center">Quality: </div>
+                            <div class="vr"></div>
+                            <div class="w-100 text-center">Efficiency: </div>
                             <div class="vr"></div>
                             <div class="w-100 text-center">Timeliness: </div>
                         </div>
@@ -635,7 +635,42 @@
                             asort($times);
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" id="qua_5" wire:loading="disabled" wire:model="qua_5" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_5')
+                                <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                            <script>
+
+                                $('#qua_5').on('change', function () {
+                                        var data = $('#qua_5').select2("val");
+                                        @this.set('qua_5', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_5").select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
+                                    });
+                                    </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
                                     <select type="text" class="form-control" id="eff_5" wire:loading="disabled" wire:model="eff_5" style="width: 100%">
@@ -659,6 +694,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#eff_5').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -669,41 +705,7 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="qua_5" wire:loading="disabled" wire:model="qua_5" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($quas as $qua)
-                                            <option value="{{ $qua }}">{{ $qua }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('qua_5')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-
-                                    $('#qua_5').on('change', function () {
-                                        var data = $('#qua_5').select2("val");
-                                        @this.set('qua_5', data);
-                                    });
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $("#qua_5").select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#AddStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_5" id="time_5" style="width: 100%">
@@ -727,6 +729,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#time_5").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -738,7 +741,42 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_4" id="qua_4" style="width:100%">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_4')
+                                <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                            <script>
+
+                                    $('#qua_4').on('change', function () {
+                                        var data = $('#qua_4').select2("val");
+                                        @this.set('qua_4', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_4").select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_4" id="eff_4" style="width: 100%">
@@ -762,6 +800,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#eff_4").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -772,41 +811,7 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_4" id="qua_4" style="width:100%">
-                                        <option value=""></option>
-                                        @foreach ($quas as $qua)
-                                            <option value="{{ $qua }}">{{ $qua }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('qua_4')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-
-                                    $('#qua_4').on('change', function () {
-                                        var data = $('#qua_4').select2("val");
-                                        @this.set('qua_4', data);
-                                    });
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $("#qua_4").select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#AddStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_4" id="time_4" style="width: 100%">
@@ -830,6 +835,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#time_4").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -841,7 +847,42 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_3" id="qua_3" style="width:100%">
+                                        <option value=""></option>
+                                        @foreach ($quas as $qua)
+                                            <option value="{{ $qua }}">{{ $qua }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('qua_3')
+                                <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                            <script>
+
+                                    $('#qua_3').on('change', function () {
+                                        var data = $('#qua_3').select2("val");
+                                        @this.set('qua_3', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#qua_3").select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_3" id="eff_3" style="width: 100%">
@@ -865,6 +906,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#eff_3").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -875,41 +917,7 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_3" id="qua_3" style="width:100%">
-                                        <option value=""></option>
-                                        @foreach ($quas as $qua)
-                                            <option value="{{ $qua }}">{{ $qua }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('qua_3')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-
-                                    $('#qua_3').on('change', function () {
-                                        var data = $('#qua_3').select2("val");
-                                        @this.set('qua_3', data);
-                                    });
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $("#qua_3").select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#AddStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_3" id="time_3" style="width: 100%">
@@ -933,6 +941,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#time_3").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -944,41 +953,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_2" id="eff_2" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_2')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-
-                                    $('#eff_2').on('change', function () {
-                                        var data = $('#eff_2').select2("val");
-                                        @this.set('eff_2', data);
-                                    });
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $("#eff_2").select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#AddStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_2" id="qua_2" style="width:100%">
@@ -1002,6 +977,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#qua_2").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1012,7 +988,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_2" id="eff_2" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+
+                                    $('#eff_2').on('change', function () {
+                                        var data = $('#eff_2').select2("val");
+                                        @this.set('eff_2', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_2").select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_2" id="time_2" style="width: 100%">
@@ -1036,6 +1047,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#time_2").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1047,41 +1059,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_1" id="eff_1" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_1')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-
-                                    $('#eff_1').on('change', function () {
-                                        var data = $('#eff_1').select2("val");
-                                        @this.set('eff_1', data);
-                                    });
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $("#eff_1").select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#AddStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="qua_1" id="qua_1" style="width:100%">
@@ -1105,6 +1083,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#qua_1").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1115,7 +1094,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" wire:loading="disabled" wire:model="eff_1" id="eff_1" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+
+                                    $('#eff_1').on('change', function () {
+                                        var data = $('#eff_1').select2("val");
+                                        @this.set('eff_1', data);
+                                    });
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#eff_1").select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#AddStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_1" id="time_1" style="width: 100%">
@@ -1139,6 +1153,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $("#time_1").select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1177,9 +1192,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="w-100 text-center">Efficiency: </div>
-                            <div class="vr"></div>
                             <div class="w-100 text-center">Quality: </div>
+                            <div class="vr"></div>
+                            <div class="w-100 text-center">Efficiency: </div>
                             <div class="vr"></div>
                             <div class="w-100 text-center">Timeliness: </div>
                         </div>
@@ -1198,41 +1213,7 @@
                             asort($times);
                         @endphp
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">5:</h5>
-                                    <select type="text" class="form-control" id="eeff_5" wire:loading="disabled" wire:model="eff_5" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_5')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-                                    $('#eeff_5').on('change', function () {
-                                        var data = $('#eeff_5').select2("val");
-                                        @this.set('eff_5', data);
-                                    });
-
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $('#eeff_5').select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#EditStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
                                     <select type="text" class="form-control" id="equa_5" wire:loading="disabled" wire:model="qua_5" style="width: 100%">
@@ -1256,6 +1237,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#equa_5').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1266,7 +1248,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">5:</h5>
+                                    <select type="text" class="form-control" id="eeff_5" wire:loading="disabled" wire:model="eff_5" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_5')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eeff_5').on('change', function () {
+                                        var data = $('#eeff_5').select2("val");
+                                        @this.set('eff_5', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eeff_5').select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">5:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_5" id="etime_5" style="width: 100%">
@@ -1290,6 +1307,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#etime_5').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1301,41 +1319,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">4:</h5>
-                                    <select type="text" class="form-control" id="eeff_4" wire:loading="disabled" wire:model="eff_4" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_4')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-                                    $('#eeff_4').on('change', function () {
-                                        var data = $('#eeff_4').select2("val");
-                                        @this.set('eff_4', data);
-                                    });
-
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $('#eeff_4').select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#EditStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
                                     <select type="text" class="form-control" id="equa_4" wire:loading="disabled" wire:model="qua_4" style="width: 100%">
@@ -1359,6 +1343,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#equa_4').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1369,7 +1354,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">4:</h5>
+                                    <select type="text" class="form-control" id="eeff_4" wire:loading="disabled" wire:model="eff_4" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_4')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eeff_4').on('change', function () {
+                                        var data = $('#eeff_4').select2("val");
+                                        @this.set('eff_4', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eeff_4').select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">4:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_4" id="etime_4" style="width: 100%">
@@ -1393,6 +1413,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#etime_4').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1404,41 +1425,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">3:</h5>
-                                    <select type="text" class="form-control" id="eeff_3" wire:loading="disabled" wire:model="eff_3" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_3')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-                                    $('#eeff_3').on('change', function () {
-                                        var data = $('#eeff_3').select2("val");
-                                        @this.set('eff_3', data);
-                                    });
-
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $('#eeff_3').select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#EditStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
                                     <select type="text" class="form-control" id="equa_3" wire:loading="disabled" wire:model="qua_3" style="width: 100%">
@@ -1462,6 +1449,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#equa_3').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1472,7 +1460,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">3:</h5>
+                                    <select type="text" class="form-control" id="eeff_3" wire:loading="disabled" wire:model="eff_3" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_3')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eeff_3').on('change', function () {
+                                        var data = $('#eeff_3').select2("val");
+                                        @this.set('eff_3', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eeff_3').select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">3:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_3" id="etime_3" style="width: 100%">
@@ -1496,6 +1519,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#etime_3').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1507,41 +1531,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">2:</h5>
-                                    <select type="text" class="form-control" id="eeff_2" wire:loading="disabled" wire:model="eff_2" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_2')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-                                    $('#eeff_2').on('change', function () {
-                                        var data = $('#eeff_2').select2("val");
-                                        @this.set('eff_2', data);
-                                    });
-
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $('#eeff_2').select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#EditStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
                                     <select type="text" class="form-control" id="equa_2" wire:loading="disabled" wire:model="qua_2" style="width: 100%">
@@ -1565,6 +1555,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#equa_2').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1575,7 +1566,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">2:</h5>
+                                    <select type="text" class="form-control" id="eeff_2" wire:loading="disabled" wire:model="eff_2" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_2')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eeff_2').on('change', function () {
+                                        var data = $('#eeff_2').select2("val");
+                                        @this.set('eff_2', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eeff_2').select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">2:</h5>
                                     <select type="text" class="form-control" wire:loading="disabled" wire:model="time_2" id="etime_2" style="width: 100%">
@@ -1599,6 +1625,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#etime_2').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1610,41 +1637,7 @@
                             @endpush
                         </div>
                         <div class="d-flex justify-content-around gap-2">
-                            <div class=" w-100" wire:ignore>
-                                <div class="hstack gap-4">
-                                    <h5 class="my-auto">1:</h5>
-                                    <select type="text" class="form-control" id="eeff_1" wire:loading="disabled" wire:model="eff_1" style="width: 100%">
-                                        <option value=""></option>
-                                        @foreach ($effs as $eff)
-                                            <option value="{{ $eff }}">{{ $eff }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('eff_1')
-                                    <p class="text-danger text-center">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            @push ('script')
-                                <script>
-                                    $('#eeff_1').on('change', function () {
-                                        var data = $('#eeff_1').select2("val");
-                                        @this.set('eff_1', data);
-                                    });
-
-                                    document.addEventListener("livewire:load", function (event) {
-                                        Livewire.hook('message.processed', function (message, component){
-                                            $('#eeff_1').select2({
-                                                placeholder: "",
-                                                allowClear: true,
-                                                tags: true,
-                                                dropdownParent: $("#EditStandardModal")
-                                            });
-                                        });
-                                    });
-                                </script>
-                            @endpush
-                            <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
                                     <select type="text" class="form-control" id="equa_1" wire:loading="disabled" wire:model="qua_1" style="width: 100%">
@@ -1668,6 +1661,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#equa_1').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1678,7 +1672,42 @@
                                 </script>
                             @endpush
                             <div class="vr"></div>
-                            <div class=" w-100" wire:ignore>
+                            <div class="max-w-33 w-100" wire:ignore>
+                                <div class="hstack gap-4">
+                                    <h5 class="my-auto">1:</h5>
+                                    <select type="text" class="form-control" id="eeff_1" wire:loading="disabled" wire:model="eff_1" style="width: 100%">
+                                        <option value=""></option>
+                                        @foreach ($effs as $eff)
+                                            <option value="{{ $eff }}">{{ $eff }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('eff_1')
+                                    <p class="text-danger text-center">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @push ('script')
+                                <script>
+                                    $('#eeff_1').on('change', function () {
+                                        var data = $('#eeff_1').select2("val");
+                                        @this.set('eff_1', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $('#eeff_1').select2({
+                                                width: 'resolve',
+                                                placeholder: "",
+                                                allowClear: true,
+                                                tags: true,
+                                                dropdownParent: $("#EditStandardModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                            <div class="vr"></div>
+                            <div class="max-w-33 w-100" wire:ignore>
                                 <div class="hstack gap-4">
                                     <h5 class="my-auto">1:</h5>
                                     <select type="text" class="form-control"  wire:loading="disabled" wire:model="time_1" id="etime_1" style="width: 100%">
@@ -1702,6 +1731,7 @@
                                     document.addEventListener("livewire:load", function (event) {
                                         Livewire.hook('message.processed', function (message, component){
                                             $('#etime_1').select2({
+                                                width: 'resolve',
                                                 placeholder: "",
                                                 allowClear: true,
                                                 tags: true,
@@ -1888,8 +1918,8 @@
         </div>
     @endif
 
-    {{-- Decline Modal --}}
-    <div wire:ignore.self  class="modal fade text-left" id="DeclineModal" tabindex="-1" role="dialog"
+    {{-- Comment Modal --}}
+    <div wire:ignore.self  class="modal fade text-left" id="CommentModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel33" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -1902,22 +1932,17 @@
                     <div class="modal-body">
                         <label>Comment: </label>
                         <div class="form-group">
-                            <textarea placeholder="Comment" class="form-control"
-                                wire:model="comment" style="height: 100px;">
-                            </textarea>
-                            @error('comment')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
+                            @if (isset($selectedTargetId))
+                                <textarea placeholder="Comment" class="form-control"
+                                    wire:model="comment.{{ $selectedTargetId }}" style="height: 100px;">
+                                </textarea>
+                            @endif
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Close</span>
-                        </button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
-                            <i class="bx bx-check d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Save</span>
                         </button>
                     </div>
                 </form>
@@ -2736,9 +2761,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="d-flex justify-content-around gap-2">
-                            <div class="w-100 text-center">Efficiency: </div>
-                            <div class="vr"></div>
                             <div class="w-100 text-center">Quality: </div>
+                            <div class="vr"></div>
+                            <div class="w-100 text-center">Efficiency: </div>
                             <div class="vr"></div>
                             <div class="w-100 text-center">Timeliness: </div>
                         </div>
@@ -2746,15 +2771,15 @@
 
                         <div class="d-flex justify-content-around gap-2">
                             <div class="gap-4 w-100 form-group">
-                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="efficiency"></textarea>
-                                @error('efficiency')
-                                    <p class="text-danger">{{ $message }}</p>
+                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="quality"></textarea>
+                                @error('quality')
+                                <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="vr my-2"></div>
                             <div class="gap-4 w-100 form-group">
-                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="quality"></textarea>
-                                @error('quality')
+                                <textarea type="text" class="form-control" style="height: 150px" wire:model.defer="efficiency"></textarea>
+                                @error('efficiency')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>

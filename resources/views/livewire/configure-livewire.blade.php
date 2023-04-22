@@ -187,16 +187,16 @@
                                 <table class="table table-lg text-center">
                                     <thead>
                                         <tr>
-                                            <th>Efficiency</th>
                                             <th>Quality</th>
+                                            <th>Efficiency</th>
                                             <th>Timeliness</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><?php echo nl2br($standardValue->efficiency) ?></td>
-                                            <td><?php echo nl2br($standardValue->quality) ?></td>
-                                            <td><?php echo nl2br($standardValue->timeliness) ?></td>
+                                            <td class="align-top"><?php echo nl2br($standardValue->quality) ?></td>
+                                            <td class="align-top"><?php echo nl2br($standardValue->efficiency) ?></td>
+                                            <td class="align-top"><?php echo nl2br($standardValue->timeliness) ?></td>
                                         </tr>
                                     </tbody>
                                 </table>

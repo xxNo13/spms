@@ -98,8 +98,8 @@
                                                                         <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="2">E</td>
                                                                         <td colspan="2">Q</td>
+                                                                        <td colspan="2">E</td>
                                                                         <td colspan="2">T</td>
                                                                     </tr>
                                                                 </thead>
@@ -108,13 +108,13 @@
                                                                         @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->eff_5 }}
+                                                                                <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->qua_5 }}
+                                                                                <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->time_5 }}
+                                                                                <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
                                                                                     @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
@@ -141,46 +141,46 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->eff_4 }}
+                                                                                <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}
                                                                                 </td>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->qua_4 }}
+                                                                                <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}
                                                                                 </td>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->time_4 }}
+                                                                                <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->eff_3 }}
+                                                                                <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}
                                                                                 </td>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->qua_3 }}
+                                                                                <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}
                                                                                 </td>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->time_3 }}
+                                                                                <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->eff_2 }}
+                                                                                <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}
                                                                                 </td>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->qua_2 }}
+                                                                                <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}
                                                                                 </td>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->time_2 }}
+                                                                                <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->eff_1 }}
+                                                                                <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}
                                                                                 </td>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->qua_1 }}
+                                                                                <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}
                                                                                 </td>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->time_1 }}
+                                                                                <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             @break
@@ -269,8 +269,8 @@
                                                                         <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="2">E</td>
                                                                         <td colspan="2">Q</td>
+                                                                        <td colspan="2">E</td>
                                                                         <td colspan="2">T</td>
                                                                     </tr>
                                                                 </thead>
@@ -279,13 +279,13 @@
                                                                         @if ($standard->user_id == null) 
                                                                             <tr>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->eff_5 }}
+                                                                                <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->qua_5 }}
+                                                                                <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td>5</td>
-                                                                                <td>{{ $standard->time_5 }}
+                                                                                <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
                                                                                     @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
@@ -312,46 +312,46 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->eff_4 }}
+                                                                                <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}
                                                                                 </td>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->qua_4 }}
+                                                                                <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}
                                                                                 </td>
                                                                                 <td>4</td>
-                                                                                <td>{{ $standard->time_4 }}
+                                                                                <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->eff_3 }}
+                                                                                <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}
                                                                                 </td>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->qua_3 }}
+                                                                                <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}
                                                                                 </td>
                                                                                 <td>3</td>
-                                                                                <td>{{ $standard->time_3 }}
+                                                                                <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->eff_2 }}
+                                                                                <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}
                                                                                 </td>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->qua_2 }}
+                                                                                <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}
                                                                                 </td>
                                                                                 <td>2</td>
-                                                                                <td>{{ $standard->time_2 }}
+                                                                                <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->eff_1 }}
+                                                                                <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}
                                                                                 </td>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->qua_1 }}
+                                                                                <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}
                                                                                 </td>
                                                                                 <td>1</td>
-                                                                                <td>{{ $standard->time_1 }}
+                                                                                <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}
                                                                                 </td>
                                                                             </tr>
                                                                             @break
@@ -455,8 +455,8 @@
                                                             <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="2">E</td>
                                                             <td colspan="2">Q</td>
+                                                            <td colspan="2">E</td>
                                                             <td colspan="2">T</td>
                                                         </tr>
                                                     </thead>
@@ -465,13 +465,13 @@
                                                             @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->eff_5 }}
+                                                                    <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}
                                                                     </td>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->qua_5 }}
+                                                                    <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}
                                                                     </td>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->time_5 }}
+                                                                    <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
@@ -498,46 +498,46 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->eff_4 }}
+                                                                    <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}
                                                                     </td>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->qua_4 }}
+                                                                    <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}
                                                                     </td>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->time_4 }}
+                                                                    <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->eff_3 }}
+                                                                    <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}
                                                                     </td>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->qua_3 }}
+                                                                    <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}
                                                                     </td>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->time_3 }}
+                                                                    <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->eff_2 }}
+                                                                    <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}
                                                                     </td>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->qua_2 }}
+                                                                    <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}
                                                                     </td>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->time_2 }}
+                                                                    <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->eff_1 }}
+                                                                    <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}
                                                                     </td>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->qua_1 }}
+                                                                    <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}
                                                                     </td>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->time_1 }}
+                                                                    <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 @break
@@ -626,8 +626,8 @@
                                                             <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="2">E</td>
                                                             <td colspan="2">Q</td>
+                                                            <td colspan="2">E</td>
                                                             <td colspan="2">T</td>
                                                         </tr>
                                                     </thead>
@@ -636,13 +636,13 @@
                                                             @if ($standard->user_id == null) 
                                                                 <tr>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->eff_5 }}
+                                                                    <td>{{ $standard->qua_5 ? $standard->qua_5 : 'NR' }}
                                                                     </td>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->qua_5 }}
+                                                                    <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}
                                                                     </td>
                                                                     <td>5</td>
-                                                                    <td>{{ $standard->time_5 }}
+                                                                    <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == auth()->user()->id)
@@ -669,46 +669,46 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->eff_4 }}
+                                                                    <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}
                                                                     </td>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->qua_4 }}
+                                                                    <td>{{ $standard->eff_4 ? $standard->eff_4 : 'NR' }}
                                                                     </td>
                                                                     <td>4</td>
-                                                                    <td>{{ $standard->time_4 }}
+                                                                    <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->eff_3 }}
+                                                                    <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}
                                                                     </td>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->qua_3 }}
+                                                                    <td>{{ $standard->eff_3 ? $standard->eff_3 : 'NR' }}
                                                                     </td>
                                                                     <td>3</td>
-                                                                    <td>{{ $standard->time_3 }}
+                                                                    <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->eff_2 }}
+                                                                    <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}
                                                                     </td>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->qua_2 }}
+                                                                    <td>{{ $standard->eff_2 ? $standard->eff_2 : 'NR' }}
                                                                     </td>
                                                                     <td>2</td>
-                                                                    <td>{{ $standard->time_2 }}
+                                                                    <td>{{ $standard->time_2 ? $standard->time_2 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->eff_1 }}
+                                                                    <td>{{ $standard->qua_1 ? $standard->qua_1 : 'NR' }}
                                                                     </td>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->qua_1 }}
+                                                                    <td>{{ $standard->eff_1 ? $standard->eff_1 : 'NR' }}
                                                                     </td>
                                                                     <td>1</td>
-                                                                    <td>{{ $standard->time_1 }}
+                                                                    <td>{{ $standard->time_1 ? $standard->time_1 : 'NR' }}
                                                                     </td>
                                                                 </tr>
                                                                 @break

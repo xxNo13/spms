@@ -58,7 +58,7 @@
     <x-maz-sidebar-item alias="archives" name="Archives" :link="route('archives')" icon="bi bi-archive-fill"></x-maz-sidebar-item>
     @if ($pmo) 
         <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
-        <x-maz-sidebar-item alias="assign.pmt" name="Assign PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="assign.pmt" name="Assigned PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
     @endif
 
     @if ($head)

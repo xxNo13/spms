@@ -1,7 +1,7 @@
 <x-app-layout>
     <div id="auth-left">
-        <h1 class="auth-title">Sign Up</h1>
-        <p class="auth-subtitle mb-5">Input data to register.</p>
+        <h1 class="auth-title">Register Account</h1>
+        <p class="auth-subtitle mb-5">Fill up form to register account.</p>
         
         @if (session('message'))
             <div x-data="{show: true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="alert alert-success" role="alert">
@@ -86,7 +86,7 @@
                     </x-jet-label>
                 </div>
             @endif
-            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Sign Up</button>
+            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Register</button>
         </form>
     </div>
 </x-app-layout>

@@ -8,7 +8,7 @@
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">PMT</li>
+                        <li class="breadcrumb-item active" aria-current="page">Assigned PMT</li>
                     </ol>
                 </nav>
             </div>

@@ -75,3 +75,13 @@
         </div>
     </div>
 </div>
+
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('input.border-gray-300.rounded-md.shadow-sm.mt-1.block').removeClass().addClass('form-control');
+            $('button.inline-flex.items-center.px-4.py-2.bg-white.border.border-gray-300.rounded-md.font-semibold.text-xs.text-gray-700.uppercase.tracking-widest.shadow-sm.transition').removeClass().addClass('btn btn-outline-secondary');
+            $('button.inline-flex.items-center.px-4.py-2.bg-gray-800.border.border-transparent.rounded-md.font-semibold.text-xs.text-white.uppercase.tracking-widest.transition.ml-3').removeClass().addClass('btn btn-primary');
+        })
+    </script>
+@endpush

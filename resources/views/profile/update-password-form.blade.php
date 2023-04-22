@@ -2,6 +2,12 @@
     <div class="card-header">
         <h4 class="card-title">{{ __('Update Password') }}</h4>
         <p class="card-description">{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
+        <ul>
+            <li>8 characters minimum</li>
+            <li>at least 1 special characters</li>
+            <li>at least 1 number</li>
+            <li>at least 1 upper case character</li>
+        </ul>
     </div>
     <div class="card-body">
     

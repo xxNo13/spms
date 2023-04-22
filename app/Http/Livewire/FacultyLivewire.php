@@ -35,7 +35,7 @@ class FacultyLivewire extends Component
     public $approval;
     public $approvalStandard;
     public $assess;
-    public $review_user;
+    public $review_user = [];
     public $approve_user;
 
     public $target_id;
@@ -134,20 +134,24 @@ class FacultyLivewire extends Component
             
             $this->assess = auth()->user()->approvals()->orderBy('id', 'DESC')->where('name', 'assess')->where('type', 'ipcr')->where('duration_id', $this->duration->id)->where('user_type', 'faculty')->first();
             if ($this->assess) {
+                $x = 0;
                 foreach ($this->assess->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
-                        $this->review_user['name'] = $reviewer->name;
-                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                        $this->review_user[$x]['name'] = $reviewer->name;
+                        $this->review_user[$x]['message'] = $reviewer->pivot->review_message;
+                        $x++;
                     }
                 }
 
                 $this->approve_user['name'] = User::where('id', $this->assess->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->assess->approve_message;
             } elseif ($this->approval) {
+                $x = 0;
                 foreach ($this->approval->reviewers as $reviewer) {
                     if ($reviewer->pivot->review_message) {
-                        $this->review_user['name'] = $reviewer->name;
-                        $this->review_user['message'] = $reviewer->pivot->review_message;
+                        $this->review_user[$x]['name'] = $reviewer->name;
+                        $this->review_user[$x]['message'] = $reviewer->pivot->review_message;
+                        $x++;
                     }
                 }
 
@@ -465,7 +469,7 @@ class FacultyLivewire extends Component
             $numberOfTarget = [];
             $x = 0;
             foreach (auth()->user()->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
-                $numberOfTarget[$x] = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->first();
+                $numberOfTarget[$x] = auth()->user()->sub_percentages()->where('sub_funct_id', $sub_funct->id)->pluck('value')->first();
                 $x++;
             }
 
@@ -474,7 +478,7 @@ class FacultyLivewire extends Component
 
                     $office = Office::find($id);
 
-                    if (str_contains(strtolower($office->parent->office_name), 'academic')) {
+                    if (str_contains(strtolower($office->office_name), 'dean')) {
                         if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
                             
                             $parent_office = Office::where('id', $office->parent_id)->first();
@@ -500,7 +504,7 @@ class FacultyLivewire extends Component
 
                     $office = Office::find($id);
 
-                    if (!str_contains(strtolower($office->parent->office_name), 'academic')) {
+                    if (!str_contains(strtolower($office->office_name), 'dean')) {
                         if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
                             
                             $parent_office = Office::where('id', $office->parent_id)->first();

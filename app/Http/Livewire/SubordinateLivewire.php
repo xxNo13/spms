@@ -93,19 +93,21 @@ class SubordinateLivewire extends Component
 
             foreach (Auth::user()->offices()->get() as $office) {
             
-                $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
-                    return $query->where('id', $office->id);
-                });
-    
-                foreach ($office->child as $office) {
+                if ($office->pivot->isHead) {
                     $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
                         return $query->where('id', $office->id);
                     });
-    
+        
                     foreach ($office->child as $office) {
                         $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
                             return $query->where('id', $office->id);
                         });
+        
+                        foreach ($office->child as $office) {
+                            $users->orwhereHas('offices', function(\Illuminate\Database\Eloquent\Builder $query) use ($office) {
+                                return $query->where('id', $office->id);
+                            });
+                        }
                     }
                 }
             }

@@ -142,11 +142,13 @@ class Dashboard extends Component
                         ->where('remarks', 'Done')
                         ->get();
 
-        $this->recentTargets = Auth::user()->targets()->orderBy('id', 'DESC')->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
-                            return $query->where('type', 'ipcr');
-                        })->orwhereHas('suboutput', function (\Illuminate\Database\Eloquent\Builder $query) {
+        $this->recentTargets = auth()->user()->targets()->orderBy('id', 'DESC')->where(function ($query) {
                             return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
                                 return $query->where('type', 'ipcr');
+                            })->orwhereHas('suboutput', function (\Illuminate\Database\Eloquent\Builder $query) {
+                                return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
+                                    return $query->where('type', 'ipcr');
+                                });
                             });
                         })->where('duration_id', $this->durationS->id)
                         ->orWhere('duration_id', $this->durationF->id)

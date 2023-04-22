@@ -20,26 +20,29 @@
             
         {{-- Message for declining --}}
         <div wire:ignore class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
-            @if ($review_user && $review_user['message'])
-                <div id="reviewToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                    <div class="toast-header">
-                        <strong class="me-auto">{{ $review_user['name'] }} Declining Message:</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            @if (isset($review_user[0]) && $review_user[0]['message'])
+                @foreach ($review_user as $id => $user)
+                    <div id="reviewToast{{$id}}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                        <div class="toast-header">
+                            <strong class="me-auto">{{ $user['name'] }} Comment/s:</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            <strong class="me-auto"><?php echo nl2br($user['message']) ?></strong>
+                        </div>
                     </div>
-                    <div class="toast-body">
-                        <strong class="me-auto"><?php echo nl2br($review_user['message']) ?></strong>
-                    </div>
-                </div>
-                @push ('script')
-                    <script>
-                        new bootstrap.Toast(document.getElementById('reviewToast')).show();
-                    </script>
-                @endpush
+                    @push ('script')
+                        <script>
+                            var data = "reviewToast" + "<?php echo $id ?>";
+                            new bootstrap.Toast(document.getElementById(data)).show();
+                        </script>
+                    @endpush
+                @endforeach
             @endif
             @if ($approve_user && $approve_user['message']) 
                 <div id="approveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
                     <div class="toast-header">
-                        <strong class="me-auto">{{ $approve_user['name'] }} Declining Message:</strong>
+                        <strong class="me-auto">{{ $approve_user['name'] }} Comment/s:</strong>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
@@ -220,8 +223,8 @@
                                                                         <td rowspan="2">Actions</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>E</td>
                                                                         <td>Q</td>
+                                                                        <td>E</td>
                                                                         <td>T</td>
                                                                         <td>A</td>
                                                                     </tr>
@@ -265,15 +268,15 @@
                                                                                 <td>{{ $rating->accomplishment }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if ($rating->efficiency)
-                                                                                        {{ $rating->efficiency }}
+                                                                                    @if ($rating->quality)
+                                                                                    {{ $rating->quality }}
                                                                                     @else
-                                                                                        NR
+                                                                                    NR
                                                                                     @endif
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if ($rating->quality)
-                                                                                        {{ $rating->quality }}
+                                                                                    @if ($rating->efficiency)
+                                                                                        {{ $rating->efficiency }}
                                                                                     @else
                                                                                         NR
                                                                                     @endif
@@ -404,8 +407,8 @@
                                                                         <td rowspan="2">Actions</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>E</td>
                                                                         <td>Q</td>
+                                                                        <td>E</td>
                                                                         <td>T</td>
                                                                         <td>A</td>
                                                                     </tr>
@@ -449,15 +452,15 @@
                                                                                 <td>{{ $rating->accomplishment }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if ($rating->efficiency)
-                                                                                        {{ $rating->efficiency }}
+                                                                                    @if ($rating->quality)
+                                                                                    {{ $rating->quality }}
                                                                                     @else
-                                                                                        NR
+                                                                                    NR
                                                                                     @endif
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if ($rating->quality)
-                                                                                        {{ $rating->quality }}
+                                                                                    @if ($rating->efficiency)
+                                                                                        {{ $rating->efficiency }}
                                                                                     @else
                                                                                         NR
                                                                                     @endif
@@ -624,8 +627,8 @@
                                                                     <td rowspan="2">Actions</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>E</td>
                                                                     <td>Q</td>
+                                                                    <td>E</td>
                                                                     <td>T</td>
                                                                     <td>A</td>
                                                                 </tr>
@@ -669,15 +672,15 @@
                                                                             <td>{{ $rating->accomplishment }}
                                                                             </td>
                                                                             <td>
-                                                                                @if ($rating->efficiency)
-                                                                                    {{ $rating->efficiency }}
+                                                                                @if ($rating->quality)
+                                                                                {{ $rating->quality }}
                                                                                 @else
-                                                                                    NR
+                                                                                NR
                                                                                 @endif
                                                                             </td>
                                                                             <td>
-                                                                                @if ($rating->quality)
-                                                                                    {{ $rating->quality }}
+                                                                                @if ($rating->efficiency)
+                                                                                    {{ $rating->efficiency }}
                                                                                 @else
                                                                                     NR
                                                                                 @endif
@@ -808,8 +811,8 @@
                                                                     <td rowspan="2">Actions</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>E</td>
                                                                     <td>Q</td>
+                                                                    <td>E</td>
                                                                     <td>T</td>
                                                                     <td>A</td>
                                                                 </tr>
@@ -853,15 +856,15 @@
                                                                             <td>{{ $rating->accomplishment }}
                                                                             </td>
                                                                             <td>
-                                                                                @if ($rating->efficiency)
-                                                                                    {{ $rating->efficiency }}
+                                                                                @if ($rating->quality)
+                                                                                {{ $rating->quality }}
                                                                                 @else
-                                                                                    NR
+                                                                                NR
                                                                                 @endif
                                                                             </td>
                                                                             <td>
-                                                                                @if ($rating->quality)
-                                                                                    {{ $rating->quality }}
+                                                                                @if ($rating->efficiency)
+                                                                                    {{ $rating->efficiency }}
                                                                                 @else
                                                                                     NR
                                                                                 @endif

@@ -271,8 +271,8 @@
                     <th rowspan="2">Remarks</th>
                 </tr>
                 <tr>
-                    <th style="width: 50px;">E</th>
                     <th style="width: 50px;">Q</th>
+                    <th style="width: 50px;">E</th>
                     <th style="width: 50px;">T</th>
                     <th style="width: 50px;">A</th>
                 </tr>
@@ -326,15 +326,15 @@
                                                 @if ($rating->user_id == $user->id)
                                                     <td colspan="2">{{ $rating->accomplishment }}</td>
                                                     <td>
-                                                        @if ($rating->efficiency)
-                                                            {{ $rating->efficiency }}
+                                                        @if ($rating->quality)
+                                                        {{ $rating->quality }}
                                                         @else
-                                                            NR
+                                                        NR
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if ($rating->quality)
-                                                            {{ $rating->quality }}
+                                                        @if ($rating->efficiency)
+                                                            {{ $rating->efficiency }}
                                                         @else
                                                             NR
                                                         @endif
@@ -398,15 +398,15 @@
                                                     @if ($rating->user_id == $user->id)
                                                         <td colspan="2">{{ $rating->accomplishment }}</td>
                                                         <td>
-                                                            @if ($rating->efficiency)
-                                                                {{ $rating->efficiency }}
+                                                            @if ($rating->quality)
+                                                            {{ $rating->quality }}
                                                             @else
-                                                                NR
+                                                            NR
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($rating->quality)
-                                                                {{ $rating->quality }}
+                                                            @if ($rating->efficiency)
+                                                                {{ $rating->efficiency }}
                                                             @else
                                                                 NR
                                                             @endif
@@ -483,15 +483,15 @@
                                                 @if ($rating->user_id == $user->id)
                                                     <td colspan="2">{{ $rating->accomplishment }}</td>
                                                     <td>
-                                                        @if ($rating->efficiency)
-                                                            {{ $rating->efficiency }}
+                                                        @if ($rating->quality)
+                                                        {{ $rating->quality }}
                                                         @else
-                                                            NR
+                                                        NR
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if ($rating->quality)
-                                                            {{ $rating->quality }}
+                                                        @if ($rating->efficiency)
+                                                            {{ $rating->efficiency }}
                                                         @else
                                                             NR
                                                         @endif
@@ -555,15 +555,15 @@
                                                     @if ($rating->user_id == $user->id)
                                                         <td colspan="2">{{ $rating->accomplishment }}</td>
                                                         <td>
-                                                            @if ($rating->efficiency)
-                                                                {{ $rating->efficiency }}
+                                                            @if ($rating->quality)
+                                                            {{ $rating->quality }}
                                                             @else
-                                                                NR
+                                                            NR
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($rating->quality)
-                                                                {{ $rating->quality }}
+                                                            @if ($rating->efficiency)
+                                                                {{ $rating->efficiency }}
                                                             @else
                                                                 NR
                                                             @endif
@@ -807,15 +807,15 @@
                                         @if ($rating->user_id == $user->id)
                                             <td colspan="2">{{ $rating->accomplishment }}</td>
                                             <td>
-                                                @if ($rating->efficiency)
-                                                    {{ $rating->efficiency }}
+                                                @if ($rating->quality)
+                                                {{ $rating->quality }}
                                                 @else
-                                                    NR
+                                                NR
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($rating->quality)
-                                                    {{ $rating->quality }}
+                                                @if ($rating->efficiency)
+                                                    {{ $rating->efficiency }}
                                                 @else
                                                     NR
                                                 @endif
@@ -879,15 +879,15 @@
                                             @if ($rating->user_id == $user->id)
                                                 <td colspan="2">{{ $rating->accomplishment }}</td>
                                                 <td>
-                                                    @if ($rating->efficiency)
-                                                        {{ $rating->efficiency }}
+                                                    @if ($rating->quality)
+                                                    {{ $rating->quality }}
                                                     @else
-                                                        NR
+                                                    NR
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($rating->quality)
-                                                        {{ $rating->quality }}
+                                                    @if ($rating->efficiency)
+                                                        {{ $rating->efficiency }}
                                                     @else
                                                         NR
                                                     @endif
@@ -964,15 +964,15 @@
                                         @if ($rating->user_id == $user->id)
                                             <td colspan="2">{{ $rating->accomplishment }}</td>
                                             <td>
-                                                @if ($rating->efficiency)
-                                                    {{ $rating->efficiency }}
+                                                @if ($rating->quality)
+                                                {{ $rating->quality }}
                                                 @else
-                                                    NR
+                                                NR
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($rating->quality)
-                                                    {{ $rating->quality }}
+                                                @if ($rating->efficiency)
+                                                    {{ $rating->efficiency }}
                                                 @else
                                                     NR
                                                 @endif
@@ -1036,15 +1036,15 @@
                                             @if ($rating->user_id == $user->id)
                                                 <td colspan="2">{{ $rating->accomplishment }}</td>
                                                 <td>
-                                                    @if ($rating->efficiency)
-                                                        {{ $rating->efficiency }}
+                                                    @if ($rating->quality)
+                                                    {{ $rating->quality }}
                                                     @else
-                                                        NR
+                                                    NR
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($rating->quality)
-                                                        {{ $rating->quality }}
+                                                    @if ($rating->efficiency)
+                                                        {{ $rating->efficiency }}
                                                     @else
                                                         NR
                                                     @endif

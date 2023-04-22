@@ -15,9 +15,10 @@
         <link rel="stylesheet" href="{{ asset('vendors/bootstrap-icons/bootstrap-icons.css') }}">
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link rel="stylesheet" href="{{ mix('css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link rel="stylesheet" href="{{ mix('css/pages/auth.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
         <link rel="icon" href="{{ asset('images/logo/icon.png') }}">
 
 
@@ -27,10 +28,12 @@
     <body>
         <div id="auth">
             <div class="row h-100">
-                <div class="col-lg-5 col-12">
-                    {{ $slot }}
+                <div class="center-form col-12 position-absolute top-50 start-50 translate-middle">
+                    <div class="position-relative">
+                        {{ $slot }}
+                    </div>
                 </div>
-                <div class="col-lg-7 d-none d-lg-block">
+                <div class="col-lg-12 d-none d-lg-block">
                     <div id="auth-right">
 
                     </div>

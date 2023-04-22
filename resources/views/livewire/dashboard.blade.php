@@ -28,7 +28,7 @@
                                     </div>
                                     <div
                                         class="col-md-9 col-lg-12 col-xl-12 col-xxl-8 text-md-start text-lg-center text-xxl-start">
-                                        <h6 class="text-muted font-semibold">Rated Targets</h6>
+                                        <h6 class="text-muted font-semibold">Rated Success Indicators</h6>
                                         <h6 class="font-extrabold mb-0">
                                             @if ((isset($approvalIPCRS) && $approvalIPCRS->approve_status == 1) && (isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1))
                                                 {{ count($ratings) }} / {{ (count($targetsS) + count($targetsF)) }}
@@ -70,7 +70,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Target Finish/Day Chart</h4>
+                                <h4>Success Indicator Finish/Day Chart</h4>
                             </div>
                             <div class="card-body">
                                 <livewire:targetchart />
