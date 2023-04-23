@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div id="auth-left">
         <div class="auth-logo">
-            <a href="/"><img src="{{ asset('/images/logo/logo.png') }}" alt="Logo"></a>
+            <a href="/"><img src="{{ asset('/images/logo/logo-green.png') }}" alt="Logo"></a>
         </div>
         <h1 class="auth-title">Reset Password</h1>
         <p class="auth-subtitle mb-5">Input your new password.</p>

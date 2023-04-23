@@ -2,7 +2,7 @@
 
     <div id="auth-left" class="bg-white rounded-3">
         <div class="auth-logo">
-            <a href="/"><img src="{{ asset('/images/logo/logo.png') }}" alt="Logo"></a>
+            <a href="/"><img src="{{ asset('/images/logo/logo-green.png') }}" alt="Logo"></a>
         </div>
         <h1 class="auth-title">Login.</h1>
         <p class="auth-subtitle mb-3 lh-sm">Log in with your DNSC email and password.</p>

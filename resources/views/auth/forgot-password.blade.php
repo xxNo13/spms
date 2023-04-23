@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div id="auth-left" class="position-absolute top-50 start-50 translate-middle w-100">
         <div class="auth-logo">
-            <a href="/"><img src="{{ asset('/images/logo/logo.png') }}" alt="Logo"></a>
+            <a href="/"><img src="{{ asset('/images/logo/logo-green.png') }}" alt="Logo"></a>
         </div>
         <h1 class="auth-title">Forgot Password</h1>
         <p class="auth-subtitle mb-3 lh-sm">Input your email and we will send you reset password link.</p>

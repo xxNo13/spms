@@ -22,7 +22,7 @@
                             <div class="card-body px-4 py-4-5">
                                 <div class="row">
                                     <div class="col-md-3 col-lg-12 col-xl-12 col-xxl-4 d-flex justify-content-start">
-                                        <div class="stats-icon purple mb-2 mx-auto">
+                                        <div class="stats-icon green mb-2 mx-auto">
                                             <i class="iconly-boldDocument"></i>
                                         </div>
                                     </div>
