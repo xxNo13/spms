@@ -77,6 +77,23 @@
         $('#AddReviewCommitteeModal').modal('hide');        
         $('#EditReviewCommitteeModal').modal('hide');
     });
+
+    $('a.dropdown-notification').on('click', function (event) {
+        $(this).toggleClass('show');
+
+        $('ul.notification-dropdown').toggleClass('show');
+    });
+    $('body').on('click', function (e) {
+        if (!$('div.notification-dropdown-group').is(e.target) 
+            && $('a.dropdown-notification').has(e.target).length === 0 
+            && $('.show').has(e.target).length === 0
+            && $('ul.notification-dropdown').has(e.target).length === 0 
+            && $('.show').has(e.target).length === 0
+        ) {
+            $('a.dropdown-notification').removeClass('show');
+            $('ul.notification-dropdown').removeClass('show');
+        }
+    });
 </script>
 
 {{ $script ?? ''}}

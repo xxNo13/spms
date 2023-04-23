@@ -208,7 +208,17 @@ class ReviewingIpcr extends Component
 
         $ipcr_review = IpcrReview::where('id', $id)->first();
 
-        $reviews = IpcrReview::where('user_id', $ipcr_review->user_id)->where('duration_id', $ipcr_review->duration_id)->get();
+        $reviews = IpcrReview::where('user_id', $ipcr_review->user_id)->where('type', $ipcr_review->type)->where('duration_id', $ipcr_review->duration_id)->get();
+
+        $user = User::where('id', $ipcr_review->user_id)->first();
+
+        $approval = collect([
+            'id' => $ipcr_review->id,
+            'type' => 'ipcr',
+            'user_type' => $ipcr_review->type,
+        ]);
+
+        $user->notify(new ApprovalNotification($approval, auth()->user(), 'Reviewed'));
 
         foreach ($reviews as $review) {
             if (!$review->status) {

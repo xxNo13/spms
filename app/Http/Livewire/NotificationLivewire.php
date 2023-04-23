@@ -12,28 +12,30 @@ use App\Notifications\RecommendedNotification;
 
 class NotificationLivewire extends Component
 {    
+    public $amount = 10;
+
     public function render()
     {
 
-        foreach (Auth::user()->unreadNotifications as $notification) {
-            if(str_replace(url('/'), '', url()->current()) == '/ttma' && isset($notification->data['ttma_id'])){
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'staff')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'faculty')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'staff')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'faculty')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/opcr' && isset($notification->data['type']) && ($notification->data['type'] == 'opcr' && $notification->data['userType'] == 'office')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/standard/opcr' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'office')) {
-                $notification->markAsRead();
-            } elseif (str_replace(url('/'), '', url()->current()) == '/for-approval' && isset($notification->data['status']) && $notification->data['status'] == 'Submitting'){
-                $notification->markAsRead();
-            }
-        }
+        // foreach (Auth::user()->unreadNotifications as $notification) {
+        //     if(str_replace(url('/'), '', url()->current()) == '/ttma' && isset($notification->data['ttma_id'])){
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'staff')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'faculty')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/staff' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'staff')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/ipcr/standard/faculty' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'faculty')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/opcr' && isset($notification->data['type']) && ($notification->data['type'] == 'opcr' && $notification->data['userType'] == 'office')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/standard/opcr' && isset($notification->data['type']) && ($notification->data['type'] == 'standard' && $notification->data['userType'] == 'office')) {
+        //         $notification->markAsRead();
+        //     } elseif (str_replace(url('/'), '', url()->current()) == '/for-approval' && isset($notification->data['status']) && $notification->data['status'] == 'Submitting'){
+        //         $notification->markAsRead();
+        //     }
+        // }
 
         $durationS = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
         $durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
@@ -153,6 +155,14 @@ class NotificationLivewire extends Component
         return view('livewire.notification-livewire',[
             'unreads' => 0
         ]);
+    }
+
+    public function load() {
+        $this->amount += 10;
+    }
+
+    public function readAll() {
+        auth()->user()->unreadNotifications->markAsRead();
     }
 
     public function read($id, $url) {

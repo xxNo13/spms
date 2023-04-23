@@ -14,16 +14,18 @@ class ApprovalNotification extends Notification
     private $approval;
     private $status;
     private $user;
+    private $purpose;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($approval, $user, $status = null)
+    public function __construct($approval, $user, $status = null, $purpose = null)
     {
         $this->approval = $approval;
         $this->user = $user;
         $this->status = $status;
+        $this->purpose = $purpose;
     }
 
     /**
@@ -60,11 +62,12 @@ class ApprovalNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'approval_id' => $this->approval->id,
-            'type' => $this->approval->type,
-            'userType' => $this->approval->user_type,
+            'approval_id' => $this->approval['id'],
+            'type' => $this->approval['type'],
+            'userType' => $this->approval['user_type'],
             'user' => $this->user->name,
             'status' => $this->status,
+            'purpose' => $this->purpose
         ];
     }
 

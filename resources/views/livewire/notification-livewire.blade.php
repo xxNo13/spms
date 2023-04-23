@@ -1,5 +1,5 @@
-<div>
-    <a class="d-flex align-items-center nav-link active " href="" data-bs-toggle="dropdown"
+<div class="notifaction-dropdown-group">
+    <a class="dropdown-notification d-flex align-items-center nav-link " href="#"
         aria-expanded="false">
         <div class="">
             @foreach (Auth::user()->unreadNotifications as $notif)
@@ -20,12 +20,15 @@
             <i class='bi bi-bell bi-sub fs-4 text-gray-600'></i>
         </div>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end overflow-auto" aria-labelledby="dropdownMenuButton"
+    <ul wire:ignore.self class="notification-dropdown dropdown-menu dropdown-menu-end overflow-auto" aria-labelledby="dropdownMenuButton"
         style="max-height: 88vh; width: 425px; border-radius: 20px; ">
         <li>
-            <h6 class="dropdown-header">Notifications</h6>
+            <div class="hstack">
+                <h6 class="dropdown-header">Notifications</h6>
+                <a href="#" wire:click="readAll" class="ms-auto dropdown-header">Mark all as read.</a>
+            </div>
         </li>
-        @forelse (Auth::user()->notifications as $notification)
+        @forelse (Auth::user()->notifications->take($amount) as $notification)
             @if (isset($notification->data['ttma_id']))
                 @if (isset($notification->data['remarks']))
                     <li>
@@ -134,7 +137,9 @@
                 @endif
             @elseif (isset($notification->data['approval_id']))
                 @php
-                    if ($notification->data['status'] == 'Submitting') {
+                    if (isset($notification->data['purpose']) && $notification->data['purpose'] == 'score-review') {
+                        $url = 'reviewing-ipcr';
+                    }elseif ($notification->data['status'] == 'Submitting') {
                         $url = 'for-approval';
                     } else {
                         if ($notification->data['type'] == 'ipcr' && $notification->data['userType'] == 'staff') {
@@ -207,5 +212,13 @@
         @empty
             <li><a class="dropdown-item">No notification available</a></li>
         @endforelse
+        <li>
+            <div class="my-2 text-center" wire:loading.remove>
+                <a href="#" wire:click="load">Load More</a>
+            </div>
+            <div class="my-2 text-center" wire:loading.block>
+                <a href="#" class="disabled">Loading..</a>
+            </div>
+        </li>
     </ul>
 </div>

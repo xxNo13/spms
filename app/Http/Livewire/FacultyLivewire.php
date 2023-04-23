@@ -616,22 +616,40 @@ class FacultyLivewire extends Component
             $review_committees = ReviewCommittee::where('type', 'faculty')->get();
 
             foreach ($review_committees as $committee) {
-                IpcrReview::create([
+                $ipcr_review = IpcrReview::create([
                     'reviewer_id' => $committee->user->id,
-                    'type' => 'staff',
+                    'type' => 'faculty',
                     'duration_id' => $this->duration->id,
                     'user_id' => auth()->user()->id,
                 ]);
+
+                $approval = collect([
+                    'id' => $ipcr_review->id,
+                    'type' => 'ipcr',
+                    'user_type' => 'faculty'
+                ]);
+
+                $reviewer = User::where('id', $committee->user->id)->first();
+                $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
             }
 
             foreach ($review_ids as $review_id) {
-                if ($review_committees->where('user_id', $review_id)->first()) {
-                    IpcrReview::create([
+                if (!$review_committees->where('user_id', $review_id)->first()) {
+                    $ipcr_review = IpcrReview::create([
                         'reviewer_id' => $review_id,
-                        'type' => 'staff',
+                        'type' => 'faculty',
                         'duration_id' => $this->duration->id,
                         'user_id' => auth()->user()->id,
                     ]);
+
+                    $approval = collect([
+                        'id' => $ipcr_review->id,
+                        'type' => 'ipcr',
+                        'user_type' => 'faculty'
+                    ]);
+
+                    $reviewer = User::where('id', $this->review_id)->first();
+                    $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
                 }
             }
 
