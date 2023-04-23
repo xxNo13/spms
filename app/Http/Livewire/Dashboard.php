@@ -142,7 +142,8 @@ class Dashboard extends Component
                         ->where('remarks', 'Done')
                         ->get();
 
-        $this->recentTargets = auth()->user()->targets()->orderBy('id', 'DESC')->where(function ($query) {
+        $this->recentTargets = auth()->user()->targets()->orderBy('id', 'DESC')
+                        ->where(function ($query) {
                             return $query->whereHas('output', function (\Illuminate\Database\Eloquent\Builder $query) {
                                 return $query->where('type', 'ipcr');
                             })->orwhereHas('suboutput', function (\Illuminate\Database\Eloquent\Builder $query) {
@@ -150,9 +151,10 @@ class Dashboard extends Component
                                     return $query->where('type', 'ipcr');
                                 });
                             });
-                        })->where('duration_id', $this->durationS->id)
-                        ->orWhere('duration_id', $this->durationF->id)
-                        ->take(7)
+                        })->where(function ($query) {
+                           return $query->where('duration_id', $this->durationS->id)
+                            ->orWhere('duration_id', $this->durationF->id);
+                        })->take(7)
                         ->get();
                         
         $this->recentAssignments = auth()->user()->ttmas()->orderBy('id', 'desc')

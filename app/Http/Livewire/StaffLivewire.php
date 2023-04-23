@@ -18,6 +18,8 @@ use App\Models\Percentage;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
 use App\Models\ReviewCommittee;
+use App\Models\ScoreEquivalent;
+use Illuminate\Support\Facades\Auth;
 use App\Notifications\ApprovalNotification;
 
 class StaffLivewire extends Component
@@ -111,6 +113,8 @@ class StaffLivewire extends Component
 
 
     public function mount() {
+        $this->auth = Auth::user()->load('approvals', 'offices');
+        $this->scoreEquivalent = ScoreEquivalent::first();
         $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
         if ($this->duration) {
             $this->percentage = Percentage::where('type', 'ipcr')->where('user_type', 'staff')->where('user_id', auth()->user()->id)->where('duration_id', $this->duration->id)->first();

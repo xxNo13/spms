@@ -12,7 +12,8 @@ class Message extends Model
     protected $fillable = [
         'user_id',
         'ttma_id',
-        'message'
+        'message',
+        'file_default_name'
     ];
 
     public function user() {

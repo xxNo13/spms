@@ -21,7 +21,7 @@ body.theme-dark .select2-container--default .select2-results__option[aria-select
 
 body.theme-dark .bg-white,
 body.theme-dark .bg-light {
-    background-color: transparent !important;
+    background-color: #1e1e2d !important;
 }
 
 .select2-container--default {
@@ -50,6 +50,21 @@ body.theme-dark .bg-light {
 }
 .table-responsive .table tbody tr td {
     max-width: 0;
+}
+
+.file-accordion.accordion-button {
+    width: fit-content !important;
+}
+
+.file-accordion.accordion-button::after {
+    content: none !important;
+}
+
+.file-accordion.accordion-button i.bi::before {
+    vertical-align: baseline !important;
+}
+.file-accordion.accordion-button:not(.collapsed) {
+    box-shadow: none !important;
 }
 
 @media (max-width: 991px) {

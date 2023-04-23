@@ -16,6 +16,19 @@
         </div>
     </x-slot>
 
+    <div class="row">
+        <div class="hstack gap-3 justify-content-center">
+            @foreach (auth()->user()->account_types as $account_type)
+               @if (str_contains(strtolower($account_type), 'faculty'))
+                    <a href="{{ route('print.rankings.faculty') }}" target="_blank" class="btn icon btn-primary" title="Print List of Faculty IPCR">
+                        <i class="bi bi-printer"></i>
+                        List of Faculty IPCR
+                    </a>
+               @endif 
+            @endforeach
+        </div>
+    </div>
+
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
             @if (Laravel\Fortify\Features::canUpdateProfileInformation())

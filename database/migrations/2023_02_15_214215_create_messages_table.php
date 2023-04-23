@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('ttma_id')->constrained()->onDelete('cascade');
             $table->longText('message');
+            $table->string('file_default_name')->nullable();
             $table->timestamps();
         });
     }

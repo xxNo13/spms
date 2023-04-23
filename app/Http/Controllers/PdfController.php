@@ -546,19 +546,6 @@ class PdfController extends Controller
     }
 
     public function rankingFaculty() {
-        $pmo = false;
-        foreach (auth()->user()->offices as $office) {
-            if (str_contains(strtolower($office->office_name), 'planning')) {
-                $pmo = true;
-            }
-        }
-
-        if ($pmo) {
-        } else {
-            abort(403);
-        }
-
-
         $durationF = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
         $percentage = Percentage::where('type', 'ipcr')->where('user_type', 'faculty')->where('user_id', null)->where('duration_id', $durationF->id)->first();
 

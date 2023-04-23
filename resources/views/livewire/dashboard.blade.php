@@ -117,34 +117,40 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h4>Recent Targets</h4>
+                        <h4>Recent Success Indicators</h4>
                     </div>
                     <div class="card-body">
                         @if (isset($recentTargets))
                             @forelse ($recentTargets as $target)
                                 @if ((isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1) && (isset($approvalIPCRS) && $approvalIPCRS->approve_status == 1))
                                     <h6 class="text-muted mb-2">
-                                        @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
-                                            <i class="bi bi-check"></i>
-                                        @endif
-                                        {{ $target->target }}
-                                    </h6>
-                                @elseif (isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1)
-                                    @if ($target->user_type == 'faculty')
-                                        <h6 class="text-muted mb-2">
+                                        <a href="{{ ($target->output->user_type == 'faculty' || $target->suboutput->output->user_type == 'faculty') ? route('ipcr.faculty') : route('ipcr.staff') }}">
                                             @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
                                                 <i class="bi bi-check"></i>
                                             @endif
                                             {{ $target->target }}
+                                        </a>
+                                    </h6>
+                                @elseif (isset($approvalIPCRF) && $approvalIPCRF->approve_status == 1)
+                                    @if ($target->output->user_type == 'faculty' || $target->suboutput->output->user_type == 'faculty')
+                                        <h6 class="text-muted mb-2">
+                                            <a href="{{ route('ipcr.faculty') }}">
+                                                @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
+                                                    <i class="bi bi-check"></i>
+                                                @endif
+                                                {{ $target->target }}
+                                            </a>
                                         </h6>
                                     @endif
                                 @elseif (isset($approvalIPCRS) && $approvalIPCRS->approve_status == 1)
-                                    @if ($target->user_type == 'staff')
+                                    @if ($target->output->user_type == 'staff' || $target->suboutput->output->user_type == 'staff')
                                         <h6 class="text-muted mb-2">
-                                            @if ($target->rating)
-                                                <i class="bi bi-check"></i>
-                                            @endif
-                                            {{ $target->target }}
+                                            <a href="{{ route('ipcr.staff') }}">
+                                                @if ($target->ratings()->where('user_id', auth()->user()->id)->first())
+                                                    <i class="bi bi-check"></i>
+                                                @endif
+                                                {{ $target->target }}
+                                            </a>
                                         </h6>
                                     @endif
                                 @elseif($loop->last)
@@ -167,8 +173,7 @@
                                     @endphp
                                 @endif
                             @endforeach
-                            <a
-                                href="#">
+                            <a href="{{ $faculty ? route('ipcr.faculty') : route('ipcr.staff') }}">
                                 View all <i class="bi bi-arrow-right"></i>
                             </a>
                         </h6>

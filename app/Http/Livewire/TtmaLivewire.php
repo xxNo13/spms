@@ -10,10 +10,12 @@ use App\Models\Duration;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\AssignmentNotification;
+use Livewire\WithFileUploads;
 
 class TtmaLivewire extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $users = [];
     public $subject;
@@ -29,13 +31,16 @@ class TtmaLivewire extends Component
     public $month_filter = '';
     public $filter = 'receive';
 
+    public $file;
+    public $itteration = 1;
+
     protected $rules = [
         'subject' => ['nullable', 'required_if:selected,assign'],
         'users_id' => ['nullable', 'required_if:selected,assign'],
         'output' => ['nullable', 'required_if:selected,assign'],
         'deadline' => ['nullable', 'required_if:selected,assign'],
         
-        'message' => ['nullable', 'required_if:selected,message'],
+        'message' => ['nullable', 'required_without_all:file'],
     ];
 
     protected $messages = [
@@ -44,7 +49,7 @@ class TtmaLivewire extends Component
         'output.required_if' => 'The Output cannot be empty.',
         'deadline.required_if' => 'The Deadline cannot be empty.',
 
-        'message.required_if' => 'Input message cannot be empty.',
+        'message.required_without_all' => 'Input message cannot be empty.',
     ];
 
     protected  $queryString = ['search'];
@@ -186,6 +191,13 @@ class TtmaLivewire extends Component
         return redirect(request()->header('Referer'));
     }
 
+    public function updatedPhoto()
+    {
+        $this->validate([
+            'file' => 'mimes:pdf,docx,doc,xml,application/msword',
+        ]);
+    }
+
     public function message() {
 
         $this->validate();
@@ -205,11 +217,24 @@ class TtmaLivewire extends Component
             $user->notify(new AssignmentNotification($ttma, 'Message'));
         }
 
-        Message::create([
-            'user_id' => auth()->user()->id,
-            'ttma_id' => $ttma->id,
-            'message' => $this->message
-        ]);
+        $url = $this->file->store('document');
+
+        if ($url) {
+            Message::create([
+                'user_id' => auth()->user()->id,
+                'ttma_id' => $ttma->id,
+                'message' => $url,
+                'file_default_name' => $this->file->getClientOriginalName()
+            ]);
+        }
+
+        if ($this->message) {
+            Message::create([
+                'user_id' => auth()->user()->id,
+                'ttma_id' => $ttma->id,
+                'message' => $this->message
+            ]);
+        }
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Sent Successfully",
@@ -289,6 +314,8 @@ class TtmaLivewire extends Component
         $this->ttma_id = '';
         $this->message = '';
         $this->deadline = '';
+        $this->file = null;
+        $this->itteration++;
     }
 
     public function closeModal()

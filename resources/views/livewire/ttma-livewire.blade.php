@@ -146,9 +146,23 @@
                                                         <hr>
                                                             <livewire:message-ttma-livewire wire:key="given{{$ttma->id}}" :ttma="$ttma" />
                                                         <hr>
-                                                        <form wire:submit.prevent="message" class="col-12 hstack gap-2">
-                                                            <input type="text" class="form-control" wire:model="message" {{ $ttma->remarks ? 'disabled' : '' }}>
-                                                            <button class="btn btn-primary" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                        <form wire:submit.prevent="message">
+                                                            <div class="accordion accordion-flush">
+                                                                <div class="row">
+                                                                    <div class="col-12 hstack align-items-center gap-2">
+                                                                        <input type="text" class="form-control" wire:model.defer="message" {{ $ttma->remarks ? 'disabled' : '' }}>
+                                                                        <button class="file-accordion h-100 rounded bg-primary text-white p-2 accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fileAccordion" aria-expanded="true" aria-controls="fileAccordion">
+                                                                            <i class="bi bi-paperclip"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-primary" wire:loading.attr="disabled" wire:target="file" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                                    </div>
+                                                                </div>
+                                                                <div wire:ignore.self id="fileAccordion" class="accordion-collapse collapse" aria-labelledby="fileAccordionHeading">
+                                                                    <div class="accordion-body">
+                                                                        <input id="itteration.{{ $itteration }}" class="form-control" type="file" wire:model="file" accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -224,9 +238,23 @@
                                                         <hr>
                                                             <livewire:message-ttma-livewire wire:key="assign{{$ttma->id}}" wire:key="assign{{$ttma->id}}" :ttma="$ttma" />
                                                         <hr>
-                                                        <form wire:submit.prevent="message" class="col-12 hstack gap-2">
-                                                            <input type="text" class="form-control" wire:model.defer="message" {{ $ttma->remarks ? 'disabled' : '' }}>
-                                                            <button class="btn btn-primary" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                        <form wire:submit.prevent="message">
+                                                            <div class="accordion accordion-flush">
+                                                                <div class="row">
+                                                                    <div class="col-12 hstack align-items-center gap-2">
+                                                                        <input type="text" class="form-control" wire:model.defer="message" {{ $ttma->remarks ? 'disabled' : '' }}>
+                                                                        <button class="file-accordion h-100 rounded bg-primary text-white p-2 accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fileAccordion" aria-expanded="true" aria-controls="fileAccordion">
+                                                                            <i class="bi bi-paperclip"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-primary" wire:loading.attr="disabled" wire:target="file" wire:click="select('message', {{ $ttma->id }})"  {{ $ttma->remarks ? 'disabled' : '' }}>Send</button>
+                                                                    </div>
+                                                                </div>
+                                                                <div wire:ignore.self id="fileAccordion" class="accordion-collapse collapse" aria-labelledby="fileAccordionHeading">
+                                                                    <div class="accordion-body">
+                                                                        <input id="itteration.{{ $itteration }}" class="form-control" type="file" wire:model="file" accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </form>
                                                     </div>
                                                 </div>

@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="{{ mix('css/bootstrap.css') }}">
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link rel="stylesheet" href="{{ mix('css/pages/auth.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/custom.css?v=').time() }}">
         <link rel="icon" href="{{ asset('images/logo/icon.png') }}">
 
 

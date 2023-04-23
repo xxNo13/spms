@@ -12,4 +12,8 @@ class MessageTtmaLivewire extends Component
     {
         return view('livewire.message-ttma-livewire');
     }
+
+    public function exports($file_path, $default_name) {
+        return response()->download(storage_path('app/'.$file_path), $default_name);
+    }
 }

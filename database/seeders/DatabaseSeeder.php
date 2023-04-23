@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         AccountType::factory()->create([
-            'account_type' => 'Not Designated Faculty'
+            'account_type' => 'Non Designated Faculty'
         ]);
 
         AccountType::factory()->create([
