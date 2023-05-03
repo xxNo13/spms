@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ipcr_reviews', function (Blueprint $table) {
+        Schema::create('committees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reviewer_id')->references('id')->on('users')->onDelete('cascade');
-            $table->smallInteger('status')->nullable();
+            $table->string('name');
             $table->string('type');
-            $table->foreignId('duration_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('committee_type');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ipcr_reviews');
+        Schema::dropIfExists('committees');
     }
 };

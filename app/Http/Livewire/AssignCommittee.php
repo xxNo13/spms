@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\ReviewCommittee;
+use App\Models\Committee;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class AssignReviewCommittee extends Component
+class AssignCommittee extends Component
 {
     use WithPagination;
 
@@ -17,6 +17,7 @@ class AssignReviewCommittee extends Component
     public $rc_id;
     public $type;
     public $name;
+    public $committee_type;
     public $user_id;
 
     protected  $queryString = ['search'];
@@ -34,7 +35,7 @@ class AssignReviewCommittee extends Component
 
     public function render()
     {
-        $committees = ReviewCommittee::query();
+        $committees = Committee::query();
 
         if ($this->search) {
             $search = $this->search;
@@ -48,7 +49,7 @@ class AssignReviewCommittee extends Component
         }
         $committees->distinct();
 
-        return view('livewire.assign-review-committee', [
+        return view('livewire.assign-committee', [
             'committees' => $committees->get(),
         ]);
     }
@@ -57,19 +58,21 @@ class AssignReviewCommittee extends Component
         $this->type = $type;
         if ($id) {
             $this->rc_id = $id;
-            $rc = ReviewCommittee::find($id);
+            $rc = Committee::find($id);
 
             $this->name = $rc->name;
             $this->user_id = $rc->user_id;
+            $this->committee_type = $rc->committee_type;
         }
     }
 
     public function save($category) {
         if ($category == 'add') {
-            ReviewCommittee::create([
+            Committee::create([
                 'name' => $this->name,
                 'type' => $this->type,
-                'user_id' => $this->user_id
+                'user_id' => $this->user_id,
+                'committee_type' => $this->committee_type,
             ]);
 
             $this->dispatchBrowserEvent('toastify', [
@@ -78,9 +81,10 @@ class AssignReviewCommittee extends Component
             ]);
         }
         if ($category == 'edit') {
-            ReviewCommittee::where('id', $this->rc_id)->update([
+            Committee::where('id', $this->rc_id)->update([
                 'name' => $this->name,
                 'user_id' => $this->user_id,
+                'committee_type' => $this->committee_type
             ]);
 
             $this->dispatchBrowserEvent('toastify', [
@@ -93,7 +97,7 @@ class AssignReviewCommittee extends Component
     }
 
     public function delete() {
-        ReviewCommittee::where('id', $this->rc_id)->delete();
+        Committee::where('id', $this->rc_id)->delete();
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Deleted Successfully",

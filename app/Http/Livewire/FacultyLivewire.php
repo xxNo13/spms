@@ -13,11 +13,11 @@ use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
 use App\Models\Suboutput;
-use App\Models\IpcrReview;
 use App\Models\Percentage;
+use App\Models\ScoreReview;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
-use App\Models\ReviewCommittee;
+use App\Models\Committee;
 use App\Notifications\ApprovalNotification;
 
 class FacultyLivewire extends Component
@@ -595,62 +595,72 @@ class FacultyLivewire extends Component
 
             $this->mount();
         } elseif ($type == 'assess') {
-            
-            $review_ids = [];
 
-            foreach (auth()->user()->offices()->pluck('id')->toArray() as $id) {
-                $office = Office::find($id);
+            $office = auth()->user()->offices()->where('office_name', 'LIKE', '%dean%')->first();
 
-                if (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead == 0) {
-                    if ($office->users()->wherePivot('isHead', 1)->pluck('id')->first()) {
-                        array_push($review_ids, $office->users()->wherePivot('isHead', 1)->pluck('id')->first());
-                    }
-                } elseif (auth()->user()->offices()->where('id', $id)->first()->pivot->isHead) {
-                    $parent_office = Office::where('id', $office->parent_id)->first();
-                    if ($parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first()) {
-                        array_push($review_ids, $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first());
-                    }
+            $non_designated = auth()->user()->account_types()->where('account_type', 'LIKE', '%no%')->first();
+
+            if ($non_designated) {
+                $prog_chair_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+
+                if ($office->pivot->isHead) {
+                    $parent_office = Office::find($office->parent_id);
+                    $prog_chair_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                 }
-            }
 
-            $review_committees = ReviewCommittee::where('type', 'faculty')->get();
-
-            foreach ($review_committees as $committee) {
-                $ipcr_review = IpcrReview::create([
-                    'reviewer_id' => $committee->user->id,
+                $score_review = ScoreReview::create([
                     'type' => 'faculty',
-                    'duration_id' => $this->duration->id,
                     'user_id' => auth()->user()->id,
+                    'prog_chair_id' => $prog_chair_id,
+                    'duration_id' => $this->duration->id
                 ]);
 
                 $approval = collect([
-                    'id' => $ipcr_review->id,
+                    'id' => $score_review->id,
                     'type' => 'ipcr',
                     'user_type' => 'faculty'
                 ]);
-
-                $reviewer = User::where('id', $committee->user->id)->first();
+                
+                $reviewer = User::where('id', $prog_chair_id)->first();
                 $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
-            }
-
-            foreach ($review_ids as $review_id) {
-                if (!$review_committees->where('user_id', $review_id)->first()) {
-                    $ipcr_review = IpcrReview::create([
-                        'reviewer_id' => $review_id,
-                        'type' => 'faculty',
-                        'duration_id' => $this->duration->id,
-                        'user_id' => auth()->user()->id,
-                    ]);
-
-                    $approval = collect([
-                        'id' => $ipcr_review->id,
-                        'type' => 'ipcr',
-                        'user_type' => 'faculty'
-                    ]);
-
-                    $reviewer = User::where('id', $this->review_id)->first();
-                    $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
+            } else {
+                if (count(auth()->user()->offices) > 1) {
+                    $designated_office = auth()->user()->offices()->where('office_name', 'NOT LIKE', '%dean%')->first();
                 }
+
+                if (!isset($designated_office)) {
+                    $designated_office = auth()->user()->offices()->where('office_name', 'LIKE', '%dean%')->first();
+                }
+
+                $prog_chair_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                $designated_id = $designated_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+
+                if ($office->pivot->isHead) {
+                    $parent_office = Office::find($office->parent_id);
+                    $prog_chair_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                }
+
+                if ($designated_office->pivot->isHead) {
+                    $parent_office = Office::find($designated_office->parent_id);
+                    $designated_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                }
+
+                $score_review = ScoreReview::create([
+                    'type' => 'faculty',
+                    'user_id' => auth()->user()->id,
+                    'prog_chair_id' => $prog_chair_id,
+                    'designated_id' => $designated_id,
+                    'duration_id' => $this->duration->id
+                ]);
+
+                $approval = collect([
+                    'id' => $score_review->id,
+                    'type' => 'ipcr',
+                    'user_type' => 'faculty'
+                ]);
+                
+                $reviewer = User::where('id', $prog_chair_id)->first();
+                $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
             }
 
             $this->dispatchBrowserEvent('toastify', [

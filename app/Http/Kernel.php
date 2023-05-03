@@ -10,7 +10,7 @@ use App\Http\Middleware\Faculty;
 use App\Http\Middleware\PmoOrHrmo;
 use App\Http\Middleware\PmoOrHrmoOrHead;
 use App\Http\Middleware\HeadNotPresident;
-use App\Http\Middleware\ReviewCommittee;
+use App\Http\Middleware\Committee;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -80,6 +80,6 @@ class Kernel extends HttpKernel
         'staff' => Staff::class,
         'faculty' => Faculty::class,
         'head' => Head::class,
-        'reviewcommittee' => ReviewCommittee::class,
+        'committee' => Committee::class,
     ];
 }

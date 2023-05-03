@@ -214,16 +214,19 @@ class ForApprovalLivewire extends Component
         $approval = Approval::find($id);
 
         if ($approval->approve_id == Auth::user()->id && $type == 'Approved'){
+
             foreach ($this->comment as $id => $value) {
                 $target = Target::find($id);
 
                 $this->comment[$id] = $target->target . ": " . $value;
             }
-            Approval::where('id', $id)->update([
+
+            Approval::where('id', $approval->id)->update([
                 'approve_status' => 1,
                 'approve_date' => Carbon::now(),
                 'approve_message' => implode("\n", $this->comment)
             ]);
+
             $head = User::where('id', $approval->approve_id)->first();
 
         } elseif (auth()->user()->user_approvals()->where('approval_id', $approval->id)->first() && $type == 'Reviewed'){

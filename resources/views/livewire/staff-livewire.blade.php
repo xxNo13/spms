@@ -107,7 +107,7 @@
                                     Submit
                                 </button>
                             @endif
-                            @if ((!auth()->user()->ipcr_reviews()->first()) && $hasRating && ($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
+                            @if ((!auth()->user()->score_review) && $hasRating && ($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
                                 <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('assess')">
                                     Submit
                                 </button>

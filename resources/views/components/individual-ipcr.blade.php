@@ -15,6 +15,9 @@
                         @elseif ($url == 'for-approval')
                             <li class="breadcrumb-item active" aria-current="page"><a
                                     href="{{ route('for.approval') }}">For Approval</a></li>
+                        @elseif ($url == 'reviewing')
+                            <li class="breadcrumb-item active" aria-current="page"><a
+                                    href="{{ route('reviewing') }}">Reviewing Ipcr</a></li>
                         @endif
                         <li class="breadcrumb-item active" aria-current="page">{{ $user->name }}</li>
                     </ol>
@@ -170,11 +173,11 @@
                 @endif
             @endif
         @elseif ($url == 'reviewing')
-            @if (!$ipcr_review->status)
+            @if (!$committee_status)
                 <div class="hstack mb-2 fixed-bottom mx-5 px-4">
                     <div class="ms-auto hstack gap-3 bg-secondary rounded p-3">
                         <button type="button" class="btn icon btn-info"
-                            wire:click="approved({{ $ipcr_review->id }})">
+                            wire:click="approved({{ $score_review->id }})">
                             <i class="bi bi-check"></i>
                             Approved
                         </button>
@@ -206,7 +209,7 @@
                 </h4>
             </div>
             @if ($funct->sub_functs)
-                @foreach ($user->sub_functs()->where('funct_id', $funct->id)->get() as $sub_funct)
+                @foreach ($user->sub_functs()->where('funct_id', $funct->id)->where('type', 'ipcr')->where('user_type', $user_type)->get() as $sub_funct)
                     <div>
                         <h5>
                             {{ $sub_funct->sub_funct }}
@@ -327,9 +330,36 @@
                                                                                     </td>
                                                                                     @if ($url != 'officemates')
                                                                                         <td>
-                                                                                            <div class="hstack gap-2">
+                                                                                            <div class="hstack justify-content-center gap-2">
                                                                                                 @if ($url == 'reviewing')
-                                                                                                    @if (!$ipcr_review->status)
+                                                                                                    @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && $funct->id == 1 && $score_review->designated_id == auth()->user()->id && $sub_funct->id == $non_teaching_sub_funct->id && $score_review->prog_chair_status && !$score_review->designated_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
                                                                                                         <button type="button"
                                                                                                             class="btn icon btn-success"
                                                                                                             data-bs-toggle="modal"
@@ -355,6 +385,20 @@
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
+                                                                        @else
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#CommentModal"
+                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                        title="Add Comment">
+                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
                                                                         @endif
                                                                     </tr>
                                                                 </tbody>
@@ -461,9 +505,36 @@
                                                                                     </td>
                                                                                     @if ($url != 'officemates')
                                                                                         <td>
-                                                                                            <div class="hstack gap-2">
+                                                                                            <div class="hstack justify-content-center gap-2">
                                                                                                 @if ($url == 'reviewing')
-                                                                                                    @if (!$ipcr_review->status)
+                                                                                                    @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && $funct->id == 1 && $score_review->designated_id == auth()->user()->id && $sub_funct->id == $non_teaching_sub_funct->id && $score_review->prog_chair_status && !$score_review->designated_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-success"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#EditRatingModal"
+                                                                                                            wire:click="editRating({{ $rating->id }})"
+                                                                                                            title="Edit Rating">
+                                                                                                            <i class="bi bi-pencil-square"></i>
+                                                                                                        </button>
+                                                                                                    @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
                                                                                                         <button type="button"
                                                                                                             class="btn icon btn-success"
                                                                                                             data-bs-toggle="modal"
@@ -489,6 +560,20 @@
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
+                                                                        @else
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#CommentModal"
+                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                        title="Add Comment">
+                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
                                                                         @endif
                                                                     </tr>
                                                                 </tbody>
@@ -616,9 +701,27 @@
                                                                         </td>
                                                                         @if ($url != 'officemates')
                                                                             <td>
-                                                                                <div class="hstack gap-2">
+                                                                                <div class="hstack justify-content-center gap-2">
                                                                                     @if ($url == 'reviewing')
-                                                                                        @if (!$ipcr_review->status)
+                                                                                        @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
                                                                                             <button type="button"
                                                                                                 class="btn icon btn-success"
                                                                                                 data-bs-toggle="modal"
@@ -644,6 +747,20 @@
                                                                         @break
                                                                     @endif
                                                                 @endforeach
+                                                            @else
+                                                                <td colspan="6"></td>
+                                                                <td>
+                                                                    <div class="hstack justify-content-center gap-2">
+                                                                        <button type="button"
+                                                                            class="btn icon btn-primary"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#CommentModal"
+                                                                            wire:click="comment({{ $target->id }})"
+                                                                            title="Add Comment">
+                                                                            <i class="bi bi-chat-dots"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
                                                             @endif
                                                         </tr>
                                                     </tbody>
@@ -746,9 +863,27 @@
                                                                         </td>
                                                                         @if ($url != 'officemates')
                                                                             <td>
-                                                                                <div class="hstack gap-2">
+                                                                                <div class="hstack justify-content-center gap-2">
                                                                                     @if ($url == 'reviewing')
-                                                                                        @if (!$ipcr_review->status)
+                                                                                        @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                title="Edit Rating">
+                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                        @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
                                                                                             <button type="button"
                                                                                                 class="btn icon btn-success"
                                                                                                 data-bs-toggle="modal"
@@ -774,6 +909,20 @@
                                                                         @break
                                                                     @endif
                                                                 @endforeach
+                                                            @else
+                                                                <td colspan="6"></td>
+                                                                <td>
+                                                                    <div class="hstack justify-content-center gap-2">
+                                                                        <button type="button"
+                                                                            class="btn icon btn-primary"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#CommentModal"
+                                                                            wire:click="comment({{ $target->id }})"
+                                                                            title="Add Comment">
+                                                                            <i class="bi bi-chat-dots"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
                                                             @endif
                                                         </tr>
                                                     </tbody>

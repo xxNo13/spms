@@ -74,8 +74,8 @@
         $('#FacultyCorePercentageModal').modal('hide');
 
         $('#PrintModal').modal('hide');
-        $('#AddReviewCommitteeModal').modal('hide');        
-        $('#EditReviewCommitteeModal').modal('hide');
+        $('#AddCommitteeModal').modal('hide');        
+        $('#EditCommitteeModal').modal('hide');
     });
 
     $('a.dropdown-notification').on('click', function (event) {

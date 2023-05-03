@@ -2,13 +2,13 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>List of Review Committees</h3>
+                <h3>List of Committees</h3>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Review Committees</li>
+                        <li class="breadcrumb-item active" aria-current="page">Committees</li>
                     </ol>
                 </nav>
             </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="card">
             <div class="card-header hstack">
-                <h4 class="card-title my-auto">Review Committee - Faculty</h4>
+                <h4 class="card-title my-auto">Committee - Faculty</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -37,6 +37,7 @@
                             <tr>
                                 <th>COMMITTEE NAME</th>
                                 <th>NAME</th>
+                                <th>COMMITTEE TYPE</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
@@ -46,9 +47,10 @@
                                     <tr>
                                         <td>{{ $committee->name }}</td>
                                         <td>{{ $committee->user->name }}</td>
+                                        <td>{{ ($committee->committee_type == 'eval_committee') ? 'Evaluation Committee' : 'Review Committee' }}</td>
                                         <td>
                                             <div class="d-flex gap-3 justify-content-center align-items-center">
-                                                <button type="button" class="btn icon btn-success" wire:click="select('faculty', {{ $committee->id }})" data-bs-toggle="modal" data-bs-target="#EditReviewCommitteeModal">
+                                                <button type="button" class="btn icon btn-success" wire:click="select('faculty', {{ $committee->id }})" data-bs-toggle="modal" data-bs-target="#EditCommitteeModal">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
                                                 <button type="button" class="btn icon btn-danger" wire:click="select('faculty', {{ $committee->id }})"  data-bs-toggle="modal" data-bs-target="#DeleteModal">
@@ -64,9 +66,9 @@
                                 </tr>
                             @endforelse
                             <tr>
-                                <td colspan="2"></td>
+                                <td colspan="3"></td>
                                 <td>
-                                    <button type="button" class="btn icon btn-primary" wire:click="select('faculty')" data-bs-toggle="modal" data-bs-target="#AddReviewCommitteeModal">
+                                    <button type="button" class="btn icon btn-primary" wire:click="select('faculty')" data-bs-toggle="modal" data-bs-target="#AddCommitteeModal">
                                         <i class="bi bi-plus"></i>
                                     </button>
                                 </td>
@@ -78,7 +80,7 @@
         </div>
         <div class="card">
             <div class="card-header hstack">
-                <h4 class="card-title my-auto">Review Committee - Staff</h4>
+                <h4 class="card-title my-auto">Committee - Staff</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -87,6 +89,7 @@
                             <tr>
                                 <th>COMMITTEE NAME</th>
                                 <th>NAME</th>
+                                <th>COMMITEE TYPE</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
@@ -96,9 +99,10 @@
                                     <tr>
                                         <td>{{ $committee->name }}</td>
                                         <td>{{ $committee->user->name }}</td>
+                                        <td>{{ ($committee->committee_type == 'eval_committee') ? 'Evaluation Committee' : 'Review Committee' }}</td>
                                         <td>
                                             <div class="d-flex gap-3 justify-content-center align-items-center">
-                                                <button type="button" class="btn icon btn-success" wire:click="select('staff', {{ $committee->id }})" data-bs-toggle="modal" data-bs-target="#EditReviewCommitteeModal">
+                                                <button type="button" class="btn icon btn-success" wire:click="select('staff', {{ $committee->id }})" data-bs-toggle="modal" data-bs-target="#EditCommitteeModal">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
                                                 <button type="button" class="btn icon btn-danger" wire:click="select('staff', {{ $committee->id }})"  data-bs-toggle="modal" data-bs-target="#DeleteModal">
@@ -114,9 +118,9 @@
                                 </tr>
                             @endforelse
                             <tr>
-                                <td colspan="2"></td>
+                                <td colspan="3"></td>
                                 <td>
-                                    <button type="button" class="btn icon btn-primary" wire:click="select('staff')" data-bs-toggle="modal" data-bs-target="#AddReviewCommitteeModal">
+                                    <button type="button" class="btn icon btn-primary" wire:click="select('staff')" data-bs-toggle="modal" data-bs-target="#AddCommitteeModal">
                                         <i class="bi bi-plus"></i>
                                     </button>
                                 </td>

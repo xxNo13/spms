@@ -9,13 +9,14 @@ use App\Models\Rating;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
-use App\Models\IpcrReview;
 use App\Models\Percentage;
+use App\Models\scoreReview;
+use App\Models\Committee;
 use App\Notifications\ApprovalNotification;
 
 class ReviewingIpcr extends Component
 {
-    public $ipcr_review;
+    public $score_review;
     public $user_id;
     public $url;
     public $user_type;
@@ -36,15 +37,26 @@ class ReviewingIpcr extends Component
 
     public $review_id;
     public $approve_id;
+
+    public $committee_status;
+
+    public $teaching_sub_funct;
+    public $non_teaching_sub_funct;
+
+    public $hr = false;
     
-    public function viewed($id, $url){
-        $this->ipcr_review = IpcrReview::find($id);
-        $this->user_id = $this->ipcr_review->user_id;
+    public function viewed($id, $url, $committee_type){
+        $this->score_review = ScoreReview::find($id);
+        $this->user_id = $this->score_review->user_id;
         $this->url = $url;
-        $this->user_type = $this->ipcr_review->type;
+        $this->user_type = $this->score_review->type;
         $this->view = true;
 
-        if ($this->ipcr_review->type == 'staff') {
+        $user = User::find($this->user_id);
+
+        $this->committee_status = ScoreReview::where($committee_type, 1)->first();
+
+        if ($this->score_review->type == 'staff') {
             $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'staff')->where('start_date', '<=', date('Y-m-d'))->first();
             
             $this->percentage = Percentage::where('user_id', $this->user_id)
@@ -52,13 +64,24 @@ class ReviewingIpcr extends Component
                 ->where('user_type', 'staff')
                 ->where('duration_id', $this->duration->id)
                 ->first();
-        } elseif ($this->ipcr_review->type == 'faculty') {
+        } elseif ($this->score_review->type == 'faculty') {
             $this->duration = Duration::orderBy('id', 'DESC')->where('type', 'faculty')->where('start_date', '<=', date('Y-m-d'))->first();
 
             $this->percentage = Percentage::where('type', 'ipcr')
                 ->where('user_type', 'faculty')
                 ->where('duration_id', $this->duration->id)
                 ->first();
+                
+
+            $this->teaching_sub_funct = $user->sub_functs()->where('funct_id', 1)->where('duration_id', $this->duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->first();
+            $this->non_teaching_sub_funct = $user->sub_functs()->where('funct_id', 1)->where('duration_id', $this->duration->id)->where('type', 'ipcr')->where('user_type', 'faculty')->where('id', '!=', $this->teaching_sub_funct->id)->first();
+        }
+        
+        foreach (auth()->user()->offices as $office) {
+            if (str_contains(strtolower($office->office_name), 'hr') || str_contains(strtolower($office->office_name), 'hr')) {
+                $this->hr = true;
+                break;
+            }
         }
     }
 
@@ -73,7 +96,16 @@ class ReviewingIpcr extends Component
                 'number' => 1,
             ]);
         }
-        return view('livewire.reviewing-ipcr');
+
+        $eval_committees = Committee::where('committee_type', 'eval_committee')->pluck('user_id')->toArray();
+        $review_committees = Committee::where('committee_type', 'review_committee')->pluck('user_id')->toArray();
+        $reviewing_scores = ScoreReview::all();
+
+        return view('livewire.reviewing-ipcr', [
+            'reviewing_scores' => $reviewing_scores,
+            'eval_committees' => $eval_committees,
+            'review_committees' => $review_committees,
+        ]);
     }
 
     public function rating($target_id = null, $rating_id = null){
@@ -202,34 +234,108 @@ class ReviewingIpcr extends Component
     }
 
     public function approved($id) {
-        IpcrReview::where('id', $id)->update([
-            'status' => 1,
+        $score_review = ScoreReview::where('id', $id)->first();
+        
+        $approval = collect([
+            'id' => $score_review->id,
+            'type' => 'ipcr',
+            'user_type' => $score_review->type
         ]);
+        $user = User::find($score_review->user_id);
 
-        $ipcr_review = IpcrReview::where('id', $id)->first();
+        if ($score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status) {
+            ScoreReview::where('id', $id)->update([
+                'prog_chair_status' => 1,
+            ]);
 
-        $reviews = IpcrReview::where('user_id', $ipcr_review->user_id)->where('type', $ipcr_review->type)->where('duration_id', $ipcr_review->duration_id)->get();
+            if ($score_review->designated_id) {
+                $reviewer = User::where('id', $score_review->designated_id)->first();
+                $reviewer->notify(new ApprovalNotification($approval, $user, 'Submitting', 'score-review'));
+            } else {
+                
+                $offices = Office::where('office_abbr', 'LIKE', '%hr%')->orwhere('office_name', 'LIKE', '%hr%')->get();
 
-        $user = User::where('id', $ipcr_review->user_id)->first();
+                
+                $users = User::query();
+                foreach ($offices as $office) {
+                    foreach ($office->users as $office_user) {
+                        $users->where('id', $office_user->id);
+                    }
+                }
+    
+                foreach ($users->get() as $user_hr) {
+                    
+                    $user_hr->notify(new ApprovalNotification($approval, $user, 'Submitting', 'score-review'));
+                }
+            }
+
+        } elseif ($score_review->designated_id == auth()->user()->id && !$score_review->designated_status) {
+            ScoreReview::where('id', $id)->update([
+                'designated_status' => 1,
+            ]);
+
+            $offices = Office::where('office_abbr', 'LIKE', '%hr%')->orwhere('office_name', 'LIKE', '%hr%')->get();
+
+            $users = User::query();
+            foreach ($offices as $office) {
+                $users->whereHas('offices', function (\Illuminate\Database\Eloquent\Builder $query) use ($office) {
+                    return $query->where('office_id', $office->id);
+                });
+            }
+
+            foreach ($users->get() as $user_hr) {
+                
+                $user_hr->notify(new ApprovalNotification($approval, $user, 'Submitting', 'score-review'));
+            }
+
+        } elseif (!$score_review->hr_status) {
+            ScoreReview::where('id', $id)->update([
+                'hr_status' => 1,
+            ]);
+
+            $users = User::whereHas('committee', function (\Illuminate\Database\Eloquent\Builder $query) {
+                return $query->where('committee_type', 'eval_committee');
+            });
+
+            foreach ($users->get() as $user_eval) {
+                
+                $user_eval->notify(new ApprovalNotification($approval, $user, 'Submitting', 'score-review'));
+            }
+
+        } elseif (!$score_review->eval_committee_status) {
+            ScoreReview::where('id', $id)->update([
+                'eval_committee_status' => 1,
+            ]);
+
+            $users = User::whereHas('committee', function (\Illuminate\Database\Eloquent\Builder $query) {
+                return $query->where('committee_type', 'review_committee');
+            });
+
+            foreach ($users->get() as $user_review) {
+                
+                $user_review->notify(new ApprovalNotification($approval, $user, 'Submitting', 'score-review'));
+            }
+
+        } elseif (!$score_review->review_committee_status) {
+            ScoreReview::where('id', $id)->update([
+                'review_committee_status' => 1,
+            ]);
+        }
+
+        $score_review = ScoreReview::where('id', $id)->first();
+        
+        $user = User::where('id', $score_review->user_id)->first();
 
         $approval = collect([
-            'id' => $ipcr_review->id,
+            'id' => $score_review->id,
             'type' => 'ipcr',
-            'user_type' => $ipcr_review->type,
+            'user_type' => $score_review->type,
         ]);
 
         $user->notify(new ApprovalNotification($approval, auth()->user(), 'Reviewed'));
 
-        foreach ($reviews as $review) {
-            if (!$review->status) {
-                $finished = false;
-                break;
-            }
-            $finished = true;
-        }
-
-        if ($finished) {
-            $user = User::find($ipcr_review->user_id);
+        if ($score_review->review_committee_status) {
+            $user = User::find($score_review->user_id);
 
             $depths = [];
             $highestOffice = [];
@@ -323,7 +429,7 @@ class ReviewingIpcr extends Component
                     }
                 }
 
-                if (count($this->highestOffice) > 1) {
+                if (count($highestOffice) > 1) {
                     $numberOfTarget = [];
                     $x = 0;
                     foreach ($user->sub_functs()->where('user_type', 'faculty')->where('duration_id', $this->duration->id)->where('funct_id', 1)->get() as $sub_funct) {
@@ -332,7 +438,7 @@ class ReviewingIpcr extends Component
                     }
 
                     if ((isset($numberOfTarget[0]) && !isset($numberOfTarget[1])) || ($numberOfTarget[0] > $numberOfTarget[1])) {
-                        foreach ($this->highestOffice as $id => $value) {
+                        foreach ($highestOffice as $id => $value) {
 
                             $office = Office::find($id);
 
@@ -358,7 +464,7 @@ class ReviewingIpcr extends Component
                             }
                         }
                     } elseif ($numberOfTarget[0] <= $numberOfTarget[1]) {
-                        foreach ($this->highestOffice as $id => $value) {
+                        foreach ($highestOffice as $id => $value) {
 
                             $office = Office::find($id);
 
@@ -385,7 +491,7 @@ class ReviewingIpcr extends Component
                         }
                     }
                 } else {
-                    foreach ($this->highestOffice as $id => $value) {
+                    foreach ($highestOffice as $id => $value) {
 
                         $office = Office::find($id);
             

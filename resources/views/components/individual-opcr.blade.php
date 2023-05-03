@@ -348,6 +348,20 @@
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
+                                                                        @else
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                <div class="hstack gap-2">
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#CommentModal"
+                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                        title="Add Comment">
+                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
                                                                         @endif
                                                                     </tr>
                                                                 </tbody>
@@ -485,6 +499,20 @@
                                                                                     @break
                                                                                 @endif
                                                                             @endforeach
+                                                                        @else
+                                                                            <td colspan="6"></td>
+                                                                            <td>
+                                                                                <div class="hstack gap-2">
+                                                                                    <button type="button"
+                                                                                        class="btn icon btn-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#CommentModal"
+                                                                                        wire:click="comment({{ $target->id }})"
+                                                                                        title="Add Comment">
+                                                                                        <i class="bi bi-chat-dots"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
                                                                         @endif
                                                                     </tr>
                                                                 </tbody>
@@ -645,6 +673,20 @@
                                                                         @break
                                                                     @endif
                                                                 @endforeach
+                                                            @else
+                                                                <td colspan="6"></td>
+                                                                <td>
+                                                                    <div class="hstack gap-2">
+                                                                        <button type="button"
+                                                                            class="btn icon btn-primary"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#CommentModal"
+                                                                            wire:click="comment({{ $target->id }})"
+                                                                            title="Add Comment">
+                                                                            <i class="bi bi-chat-dots"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
                                                             @endif
                                                         </tr>
                                                     </tbody>
@@ -780,6 +822,20 @@
                                                                         @break
                                                                     @endif
                                                                 @endforeach
+                                                            @else
+                                                                <td colspan="6"></td>
+                                                                <td>
+                                                                    <div class="hstack gap-2">
+                                                                        <button type="button"
+                                                                            class="btn icon btn-primary"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#CommentModal"
+                                                                            wire:click="comment({{ $target->id }})"
+                                                                            title="Add Comment">
+                                                                            <i class="bi bi-chat-dots"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
                                                             @endif
                                                         </tr>
                                                     </tbody>

@@ -12,7 +12,7 @@ use App\Http\Livewire\FacultyLivewire;
 use App\Http\Controllers\PdfController;
 use App\Http\Livewire\TrainingLivewire;
 use App\Http\Livewire\AssignPmtLivewire;
-use App\Http\Livewire\AssignReviewCommittee;
+use App\Http\Livewire\AssignCommittee;
 use App\Http\Livewire\ConfigureLivewire;
 use App\Http\Livewire\ForApprovalLivewire;
 use App\Http\Livewire\ListingOpcrLivewire;
@@ -59,14 +59,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/subordinates', SubordinateLivewire::class)->name('subordinates');
     });
 
-    Route::middleware(['reviewcommittee'])->group(function () {
+    Route::middleware(['committee'])->group(function () {
         Route::get('/reviewing-ipcr', ReviewingIpcr::class)->name('reviewing');
     });
     
     Route::middleware(['pmo'])->group(function () {
         Route::get('/configure', ConfigureLivewire::class)->name('configure');
         Route::get('/assign-pmt', AssignPmtLivewire::class)->name('assign.pmt');
-        Route::get('/assign-review-committee', AssignReviewCommittee::class)->name('assign.rc');
+        Route::get('/assign-review-committee', AssignCommittee::class)->name('assign.rc');
     });
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {

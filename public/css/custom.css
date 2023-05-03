@@ -19,6 +19,10 @@ body.theme-dark .select2-container--default .select2-results__option[aria-select
     background-color: #3c3c4e;
 }
 
+body.theme-dark .toast-container .toast-body strong.me-auto {
+    color: #1e1e2d;
+}
+
 body.theme-dark .bg-white,
 body.theme-dark .bg-light {
     background-color: #1e1e2d !important;

@@ -1918,7 +1918,7 @@
         </div>
         
         {{-- Add Review Committee Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddReviewCommitteeModal" tabindex="-1" role="dialog"
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddCommitteeModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -1947,6 +1947,14 @@
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                <label>Committee Type: </label>
+                                <div class="form-group">
+                                    <select class="form-select" wire:model="committee_type">
+                                        <option value="">Select a Commitee Type</option>
+                                        <option value="eval_committee">Evaluation Committee</option>
+                                        <option value="review_committee">Review Committee</option>
+                                    </select>
+                                </div>
                                 @push ('script')
                                     <script>
                                         $('#user_id').on('change', function () {
@@ -1958,7 +1966,7 @@
                                             Livewire.hook('message.processed', function (message, component){
                                                 $("#user_id").select2({
                                                     placeholder: "Select a User.",
-                                                    dropdownParent: $("#AddReviewCommitteeModal")
+                                                    dropdownParent: $("#AddCommitteeModal")
                                                 });
                                             });
                                         });
@@ -1981,7 +1989,7 @@
         </div>
         
         {{-- Edit Review Committee Modal --}}
-        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditReviewCommitteeModal" tabindex="-1" role="dialog"
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditCommitteeModal" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel33" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -2010,6 +2018,14 @@
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                <label>Committee Type: </label>
+                                <div class="form-group">
+                                    <select class="form-select" wire:model="committee_type">
+                                        <option value="">Select a Commitee Type</option>
+                                        <option value="eval_committee">Evaluation Committee</option>
+                                        <option value="review_committee">Review Committee</option>
+                                    </select>
+                                </div>
                                 @push ('script')
                                     <script>
                                         $('#euser_id').on('change', function () {
@@ -2021,7 +2037,7 @@
                                             Livewire.hook('message.processed', function (message, component){
                                                 $("#euser_id").select2({
                                                     placeholder: "Select a User.",
-                                                    dropdownParent: $("#EditReviewCommitteeModal")
+                                                    dropdownParent: $("#EditCommitteeModal")
                                                 });
                                             });
                                         });

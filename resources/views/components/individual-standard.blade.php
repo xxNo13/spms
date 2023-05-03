@@ -245,6 +245,9 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <td colspan="6">Rating</td>
+                                                                        <td rowspan="2">
+                                                                            Action
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2">Q</td>
@@ -264,6 +267,18 @@
                                                                                 </td>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
+                                                                                </td>
+                                                                                <td rowspan="5">
+                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#CommentModal"
+                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                            title="Add Comment">
+                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -359,6 +374,9 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <td colspan="6">Rating</td>
+                                                                        <td rowspan="2">
+                                                                            Action
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2">Q</td>
@@ -378,6 +396,18 @@
                                                                                 </td>
                                                                                 <td>5</td>
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
+                                                                                </td>
+                                                                                <td rowspan="5">
+                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#CommentModal"
+                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                            title="Add Comment">
+                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -491,6 +521,9 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
+                                                            <td rowspan="2">
+                                                                Action
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">Q</td>
@@ -510,6 +543,18 @@
                                                                     </td>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
+                                                                    </td>
+                                                                    <td rowspan="5">
+                                                                        <div class="hstack justify-content-center gap-2">
+                                                                            <button type="button"
+                                                                                class="btn icon btn-primary"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#CommentModal"
+                                                                                wire:click="comment({{ $target->id }})"
+                                                                                title="Add Comment">
+                                                                                <i class="bi bi-chat-dots"></i>
+                                                                            </button>
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -605,6 +650,9 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
+                                                            <td rowspan="2">
+                                                                Action
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">Q</td>
@@ -624,6 +672,18 @@
                                                                     </td>
                                                                     <td>5</td>
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
+                                                                    </td>
+                                                                    <td rowspan="5">
+                                                                        <div class="hstack justify-content-center gap-2">
+                                                                            <button type="button"
+                                                                                class="btn icon btn-primary"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#CommentModal"
+                                                                                wire:click="comment({{ $target->id }})"
+                                                                                title="Add Comment">
+                                                                                <i class="bi bi-chat-dots"></i>
+                                                                            </button>
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -686,5 +746,5 @@
             @endforeach
         @endforeach
     </section>
-    <x-modals />
+    <x-modals  :selectedTargetId="$selectedTargetId" />
 </div>

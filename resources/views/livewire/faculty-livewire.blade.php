@@ -112,7 +112,7 @@
                                     Submit
                                 </button>
                             @endif
-                            @if ($hasRating && ($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
+                            @if ((!auth()->user()->score_review) && $hasRating && ($approval && (isset($approval->approve_status) && $approval->approve_status == 1)) && (!$assess || (isset($assess->approve_status) && $assess->approve_status != 1)))
                                 <button type="button" class="btn btn-outline-info" title="Save IPCR" wire:click="submit('assess')">
                                     Submit
                                 </button>
@@ -132,7 +132,7 @@
                     @foreach (auth()->user()->account_types as $account_type)
                         @if (str_contains(strtolower($account_type->account_type), 'no'))
                             @break;
-                        @elseif ($loop->last && $funct->id == 1 && count($core_sub_funct_id) > 1)
+                        @elseif ($assess->approve_status != 1 && $loop->last && $funct->id == 1 && count($core_sub_funct_id) > 1)
                             <button type="button" class="mb-2 btn btn-outline-secondary" title="Configure Sub Percentage"  data-bs-toggle="modal"
                             data-bs-target="#FacultyCorePercentageModal" wire:click="sub_percentage">
                                 Sub-percentages
@@ -300,7 +300,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -474,7 +474,7 @@
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                    @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
                                                                                             class="btn icon btn-success"
                                                                                             data-bs-toggle="modal"
@@ -685,7 +685,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"
@@ -859,7 +859,7 @@
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
                                                                             <td>
-                                                                                @if (($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
+                                                                                @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
                                                                                         data-bs-toggle="modal"

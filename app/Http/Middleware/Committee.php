@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class ReviewCommittee
+class Committee
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,16 @@ class ReviewCommittee
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->committee) {
+        $head = false;
+        foreach (auth()->user()->offices as $office) {
+            if ($office->pivot->isHead) {
+                $head = true;
+                break;
+            }
+        }
+        if (auth()->user()->committee
+         || auth()->user()->offices()->where('office_abbr', "LIKE", '%hr%')->first()
+         || $head) {
             return $next($request);
         }
         abort(403);

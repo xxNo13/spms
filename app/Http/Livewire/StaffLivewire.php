@@ -12,12 +12,13 @@ use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
+use App\Models\Committee;
 use App\Models\Suboutput;
 use App\Models\IpcrReview;
 use App\Models\Percentage;
+use App\Models\ScoreReview;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
-use App\Models\ReviewCommittee;
 use App\Models\ScoreEquivalent;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ApprovalNotification;
@@ -496,45 +497,29 @@ class StaffLivewire extends Component
                     $office = Office::where('id', $office->parent_id)->first();
                     $this->review_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                 }
-    
                 
-                $review_committees = ReviewCommittee::where('type', 'staff')->get();
-
-                foreach ($review_committees as $committee) {
-                    $ipcr_review = IpcrReview::create([
-                        'reviewer_id' => $committee->user->id,
-                        'type' => 'staff',
-                        'duration_id' => $this->duration->id,
-                        'user_id' => auth()->user()->id,
-                    ]);
-
-                    $approval = collect([
-                        'id' => $ipcr_review->id,
-                        'type' => 'ipcr',
-                        'user_type' => 'staff'
-                    ]);
-
-                    $reviewer = User::where('id', $committee->user->id)->first();
-                    $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
+                $prog_chair_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                
+                if (auth()->user()->id == $prog_chair_id) {
+                    $parent_office = Office::find($office->parent_id);
+                    $prog_chair_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
                 }
 
-                if (!$review_committees->where('user_id', $this->review_id)->first()) {
-                    $ipcr_review = IpcrReview::create([
-                        'reviewer_id' => $this->review_id,
-                        'type' => 'staff',
-                        'duration_id' => $this->duration->id,
-                        'user_id' => auth()->user()->id,
-                    ]);
+                $score_review = ScoreReview::create([
+                    'type' => 'staff',
+                    'user_id' => auth()->user()->id,
+                    'prog_chair_id' => $prog_chair_id,
+                    'duration_id' => $this->duration->id
+                ]);
 
-                    $approval = collect([
-                        'id' => $ipcr_review->id,
-                        'type' => 'ipcr',
-                        'user_type' => 'staff'
-                    ]);
-
-                    $reviewer = User::where('id', $this->review_id)->first();
-                    $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
-                }
+                $approval = collect([
+                    'id' => $score_review->id,
+                    'type' => 'ipcr',
+                    'user_type' => 'staff'
+                ]);
+                
+                $reviewer = User::where('id', $prog_chair_id)->first();
+                $reviewer->notify(new ApprovalNotification($approval, auth()->user(), 'Submitting', 'score-review'));
 
 
                 $this->dispatchBrowserEvent('toastify', [

@@ -9,7 +9,7 @@
         $hrmo = false;
         $bool = true;
         $president = false;
-        $reviewcommittee = false;
+        $committee = false;
     @endphp
     @if (auth()->user()->id == 1)
         @php
@@ -20,7 +20,7 @@
     @endif
     @if (auth()->user()->committee)
         @php
-            $reviewcommittee = true;
+            $committee = true;
         @endphp
     @endif
     @foreach (Auth::user()->offices as $office)
@@ -65,14 +65,14 @@
     @if ($pmo) 
         <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
         <x-maz-sidebar-item alias="assign.pmt" name="Assigned PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
-        <x-maz-sidebar-item alias="assign.rc" name="Assigned Review Committee" :link="route('assign.rc')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="assign.rc" name="Assigned Committee" :link="route('assign.rc')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
     @endif
 
     @if ($head)
         <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
     @endif
 
-    @if ($reviewcommittee)
+    @if ($committee || $hrmo || $head)
         <x-maz-sidebar-item alias="reviewing" name="Reviewing Ipcr" :link="route('reviewing')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
     @endif
 
