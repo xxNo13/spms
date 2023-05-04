@@ -22,6 +22,10 @@ class Rating extends Model
         'output_finished'
     ];
 
+    public function score_logs() {
+        return $this->hasMany(ScoreLog::class);
+    }
+    
     public function target(){
         return $this->belongsTo(Target::class);
     }

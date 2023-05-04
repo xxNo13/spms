@@ -180,7 +180,7 @@
                                                                                     NR
                                                                                 @endif
                                                                             </td>
-                                                                            <td>{{ $rating->average }}
+                                                                            <td class="text-nowrap">{{ $rating->average }}
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
@@ -293,7 +293,7 @@
                                                                                     NR
                                                                                 @endif
                                                                             </td>
-                                                                            <td>{{ $rating->average }}
+                                                                            <td class="text-nowrap">{{ $rating->average }}
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
@@ -424,7 +424,7 @@
                                                                         NR
                                                                     @endif
                                                                 </td>
-                                                                <td>{{ $rating->average }}
+                                                                <td class="text-nowrap">{{ $rating->average }}
                                                                 </td>
                                                                 <td>{{ $rating->remarks }}
                                                                 </td>
@@ -534,7 +534,7 @@
                                                                         NR
                                                                     @endif
                                                                 </td>
-                                                                <td>{{ $rating->average }}
+                                                                <td class="text-nowrap">{{ $rating->average }}
                                                                 </td>
                                                                 <td>{{ $rating->remarks }}
                                                                 </td>

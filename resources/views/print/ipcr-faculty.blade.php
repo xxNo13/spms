@@ -340,7 +340,7 @@
                                                             NR
                                                         @endif
                                                     </td>
-                                                    <td>{{ $rating->average }}</td>
+                                                    <td class="text-nowrap">{{ $rating->average }}</td>
                                                     <td>{{ $rating->remarks }}</td>
                                                     @switch($funct->funct)
                                                         @case('Core Function')
@@ -412,7 +412,7 @@
                                                                 NR
                                                             @endif
                                                         </td>
-                                                        <td>{{ $rating->average }}</td>
+                                                        <td class="text-nowrap">{{ $rating->average }}</td>
                                                         <td>{{ $rating->remarks }}</td>
                                                         @switch($funct->funct)
                                                             @case('Core Function')
@@ -497,7 +497,7 @@
                                                             NR
                                                         @endif
                                                     </td>
-                                                    <td>{{ $rating->average }}</td>
+                                                    <td class="text-nowrap">{{ $rating->average }}</td>
                                                     <td>{{ $rating->remarks }}</td>
                                                     @switch($funct->funct)
                                                         @case('Core Function')
@@ -569,7 +569,7 @@
                                                                 NR
                                                             @endif
                                                         </td>
-                                                        <td>{{ $rating->average }}</td>
+                                                        <td class="text-nowrap">{{ $rating->average }}</td>
                                                         <td>{{ $rating->remarks }}</td>
                                                         @switch($funct->funct)
                                                             @case('Core Function')
@@ -812,7 +812,7 @@
                                                     NR
                                                 @endif
                                             </td>
-                                            <td>{{ $rating->average }}</td>
+                                            <td class="text-nowrap">{{ $rating->average }}</td>
                                             <td>{{ $rating->remarks }}</td>
                                             @switch($funct->funct)
                                                 @case('Core Function')
@@ -884,7 +884,7 @@
                                                         NR
                                                     @endif
                                                 </td>
-                                                <td>{{ $rating->average }}</td>
+                                                <td class="text-nowrap">{{ $rating->average }}</td>
                                                 <td>{{ $rating->remarks }}</td>
                                                 @switch($funct->funct)
                                                     @case('Core Function')
@@ -969,7 +969,7 @@
                                                     NR
                                                 @endif
                                             </td>
-                                            <td>{{ $rating->average }}</td>
+                                            <td class="text-nowrap">{{ $rating->average }}</td>
                                             <td>{{ $rating->remarks }}</td>
                                             @switch($funct->funct)
                                                 @case('Core Function')
@@ -1041,7 +1041,7 @@
                                                         NR
                                                     @endif
                                                 </td>
-                                                <td>{{ $rating->average }}</td>
+                                                <td class="text-nowrap">{{ $rating->average }}</td>
                                                 <td>{{ $rating->remarks }}</td>
                                                 @switch($funct->funct)
                                                     @case('Core Function')

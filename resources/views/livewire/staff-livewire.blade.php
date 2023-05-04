@@ -278,7 +278,7 @@
                                                                                         NR
                                                                                     @endif
                                                                                 </td>
-                                                                                <td>{{ $rating->average }}
+                                                                                <td class="text-nowrap">{{ $rating->average }}
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
@@ -301,6 +301,105 @@
                                                                                             <i class="bi bi-trash"></i>
                                                                                         </button>
                                                                                     @endif
+                                                                                    <div class="dropup-center dropup">
+                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                            <i class="bi bi-file-earmark-check"></i>
+                                                                                        </button>
+                                                                                        <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                            <li>
+                                                                                                <div class="row border-bottom">
+                                                                                                    <div class="col-3 border-end">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                <small><strong>Old Score</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>Q</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>E</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>T</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>A</strong></small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 border-end">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                <small><strong>New Score</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>Q</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>E</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>T</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>A</strong></small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 text-center text-nowrap border-end">
+                                                                                                        <small><strong>Updated By</strong></small>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 text-center text-nowrap">
+                                                                                                        <small><strong>Updated At</strong></small>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                                @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                    <li>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-3 border-end">
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_qua }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_eff }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_time }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_ave }}</small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 border-end">
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_qua }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_eff }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_time }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_ave }}</small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </li>
+                                                                                                @endforeach
+                                                                                        </ul>
+                                                                                    </div>
                                                                                 </td>
                                                                                 @break
                                                                             @elseif ($loop->last)
@@ -452,7 +551,7 @@
                                                                                         NR
                                                                                     @endif
                                                                                 </td>
-                                                                                <td>{{ $rating->average }}
+                                                                                <td class="text-nowrap">{{ $rating->average }}
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
@@ -475,6 +574,105 @@
                                                                                             <i class="bi bi-trash"></i>
                                                                                         </button>
                                                                                     @endif
+                                                                                    <div class="dropup-center dropup">
+                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                            <i class="bi bi-file-earmark-check"></i>
+                                                                                        </button>
+                                                                                        <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                            <li>
+                                                                                                <div class="row border-bottom">
+                                                                                                    <div class="col-3 border-end">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                <small><strong>Old Score</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>Q</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>E</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>T</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>A</strong></small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 border-end">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                <small><strong>New Score</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>Q</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>E</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>T</strong></small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small><strong>A</strong></small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 text-center text-nowrap border-end">
+                                                                                                        <small><strong>Updated By</strong></small>
+                                                                                                    </div>
+                                                                                                    <div class="col-3 text-center text-nowrap">
+                                                                                                        <small><strong>Updated At</strong></small>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                                @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                    <li>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-3 border-end">
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_qua }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_eff }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_time }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                        <small>{{ $score_log->old_ave }}</small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 border-end">
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_qua }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_eff }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_time }}</small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                        <small>{{ $score_log->new_ave }}</small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                            </div>
+                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </li>
+                                                                                                @endforeach
+                                                                                        </ul>
+                                                                                    </div>
                                                                                 </td>
                                                                                 @break
                                                                             @elseif ($loop->last)
@@ -663,7 +861,7 @@
                                                                                     NR
                                                                                 @endif
                                                                             </td>
-                                                                            <td>{{ $rating->average }}
+                                                                            <td class="text-nowrap">{{ $rating->average }}
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
@@ -686,6 +884,105 @@
                                                                                         <i class="bi bi-trash"></i>
                                                                                     </button>
                                                                                 @endif
+                                                                                <div class="dropup-center dropup">
+                                                                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <i class="bi bi-file-earmark-check"></i>
+                                                                                    </button>
+                                                                                    <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                        <li>
+                                                                                            <div class="row border-bottom">
+                                                                                                <div class="col-3 border-end">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12 text-center text-nowrap">
+                                                                                                            <small><strong>Old Score</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Q</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>E</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>T</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>A</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-3 border-end">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12 text-center text-nowrap">
+                                                                                                            <small><strong>New Score</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Q</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>E</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>T</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>A</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-3 text-center text-nowrap border-end">
+                                                                                                    <small><strong>Updated By</strong></small>
+                                                                                                </div>
+                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                    <small><strong>Updated At</strong></small>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                            @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                <li>
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_qua }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_eff }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_time }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_ave }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_qua }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_eff }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_time }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_ave }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap border-end">
+                                                                                                            <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                            @endforeach
+                                                                                    </ul>
+                                                                                </div>
                                                                             </td>
                                                                             @break
                                                                         @elseif ($loop->last)
@@ -837,7 +1134,7 @@
                                                                                     NR
                                                                                 @endif
                                                                             </td>
-                                                                            <td>{{ $rating->average }}
+                                                                            <td class="text-nowrap">{{ $rating->average }}
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
@@ -860,6 +1157,105 @@
                                                                                         <i class="bi bi-trash"></i>
                                                                                     </button>
                                                                                 @endif
+                                                                                <div class="dropup-center dropup">
+                                                                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <i class="bi bi-file-earmark-check"></i>
+                                                                                    </button>
+                                                                                    <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                        <li>
+                                                                                            <div class="row border-bottom">
+                                                                                                <div class="col-3 border-end">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12 text-center text-nowrap">
+                                                                                                            <small><strong>Old Score</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Q</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>E</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>T</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>A</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-3 border-end">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12 text-center text-nowrap">
+                                                                                                            <small><strong>New Score</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Q</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>E</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>T</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>A</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-3 text-center text-nowrap border-end">
+                                                                                                    <small><strong>Updated By</strong></small>
+                                                                                                </div>
+                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                    <small><strong>Updated At</strong></small>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                            @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                <li>
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_qua }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_eff }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_time }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                    <small>{{ $score_log->old_ave }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_qua }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_eff }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_time }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                    <small>{{ $score_log->new_ave }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap border-end">
+                                                                                                            <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                            @endforeach
+                                                                                    </ul>
+                                                                                </div>
                                                                             </td>
                                                                             @break
                                                                         @elseif ($loop->last)

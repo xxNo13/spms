@@ -9,9 +9,10 @@ use App\Models\Rating;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
+use App\Models\ScoreLog;
+use App\Models\Committee;
 use App\Models\Percentage;
 use App\Models\scoreReview;
-use App\Models\Committee;
 use App\Notifications\ApprovalNotification;
 
 class ReviewingIpcr extends Component
@@ -144,6 +145,8 @@ class ReviewingIpcr extends Component
         
         $standard = $this->selectedTarget->standards()->first();
 
+        $oldRating = Rating::where('id', $this->rating_id)->first();
+
         if ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) {
             if ($standard->eff_5) {
                 $eff_5 = strtok($standard->eff_5, '%');
@@ -218,6 +221,37 @@ class ReviewingIpcr extends Component
             'timeliness' => $this->timeliness,
             'average' => $average,
         ]);
+
+        $scoreLog = ScoreLog::where('user_id', $this->user_id)
+                        ->where('rating_id', $this->rating_id)
+                        ->where('updated_by', auth()->user()->id)
+                        ->first();
+
+        if ($scoreLog) {
+            ScoreLog::where('user_id', $this->user_id)
+                ->where('rating_id', $this->rating_id)
+                ->where('updated_by', auth()->user()->id)
+                ->update([
+                    'new_eff' => $efficiency,
+                    'new_qua' => $this->quality,
+                    'new_time' => $this->timeliness,
+                    'new_ave' => $average,
+                ]);
+        } else {
+            ScoreLog::create([
+                'old_eff' => $oldRating->efficiency,
+                'old_qua' => $oldRating->quality,
+                'old_time' => $oldRating->timeliness,
+                'old_ave' => $oldRating->average,
+                'new_eff' => $efficiency,
+                'new_qua' => $this->quality,
+                'new_time' => $this->timeliness,
+                'new_ave' => $average,
+                'user_id' => $this->user_id,
+                'rating_id' => $this->rating_id,
+                'updated_by' => auth()->user()->id,
+            ]);
+        }
 
         $this->dispatchBrowserEvent('toastify', [
             'message' => "Updated Successfully",

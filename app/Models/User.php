@@ -54,6 +54,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function score_logs() {
+        return $this->hasMany(ScoreLog::class, 'user_id');
+    }
+    
+    public function updated_score() {
+        return $this->hasMany(ScoreLog::class, 'update_by');
+    }
     
     public function score_review() {
         return $this->hasOne(ScoreReview::class);

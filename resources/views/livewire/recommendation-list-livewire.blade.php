@@ -40,7 +40,7 @@
                                     @php
                                         $rating = auth()->user()->targets()->where('id', $target->id)->first()->ratings()->where('user_id', auth()->user()->id)->first();
                                     @endphp
-                                    <td>{{ $rating->average }}</td>
+                                    <td class="text-nowrap">{{ $rating->average }}</td>
                                     <td>
                                         @if ($rating->average >= $scoreEquivalent->out_from && $rating->average <= $scoreEquivalent->out_to)
                                             Outstanding
