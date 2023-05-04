@@ -213,10 +213,10 @@
             <li><a class="dropdown-item">No notification available</a></li>
         @endforelse
         <li>
-            <div class="my-2 text-center" wire:loading.remove>
+            <div class="my-2 text-center" wire:loading.remove wire:target="load">
                 <a href="#" wire:click="load">Load More</a>
             </div>
-            <div class="my-2 text-center" wire:loading.block>
+            <div class="my-2 text-center" wire:loading.block wire:target="load">
                 <a href="#" class="disabled">Loading..</a>
             </div>
         </li>

@@ -596,16 +596,25 @@ class FacultyLivewire extends Component
             $this->mount();
         } elseif ($type == 'assess') {
 
-            $office = auth()->user()->offices()->where('office_name', 'LIKE', '%dean%')->first();
+            $institute = auth()->user()->institutes->first();
+
+            if (!$institute) {
+                return $this->dispatchBrowserEvent('toastify', [
+                    'message' => "Add an Institute",
+                    'color' => "#f3616d",
+                ]);
+            }
 
             $non_designated = auth()->user()->account_types()->where('account_type', 'LIKE', '%no%')->first();
 
             if ($non_designated) {
-                $prog_chair_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                $prog_chair_id = $institute->users()->wherePivot('isProgramChair', 1)->pluck('id')->first();
 
-                if ($office->pivot->isHead) {
-                    $parent_office = Office::find($office->parent_id);
-                    $prog_chair_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                if (!$prog_chair_id) {
+                    return $this->dispatchBrowserEvent('toastify', [
+                        'message' => "No Program Chair Found",
+                        'color' => "#f3616d",
+                    ]);
                 }
 
                 $score_review = ScoreReview::create([
@@ -632,13 +641,16 @@ class FacultyLivewire extends Component
                     $designated_office = auth()->user()->offices()->where('office_name', 'LIKE', '%dean%')->first();
                 }
 
-                $prog_chair_id = $office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-                $designated_id = $designated_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
-
-                if ($office->pivot->isHead) {
-                    $parent_office = Office::find($office->parent_id);
-                    $prog_chair_id = $parent_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
+                $prog_chair_id = $institute->users()->wherePivot('isProgramChair', 1)->pluck('id')->first();
+                
+                if (!$prog_chair_id) {
+                    return $this->dispatchBrowserEvent('toastify', [
+                        'message' => "No Program Chair Found",
+                        'color' => "#f3616d",
+                    ]);
                 }
+
+                $designated_id = $designated_office->users()->wherePivot('isHead', 1)->pluck('id')->first();
 
                 if ($designated_office->pivot->isHead) {
                     $parent_office = Office::find($designated_office->parent_id);

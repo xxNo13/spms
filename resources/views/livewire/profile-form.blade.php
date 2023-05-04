@@ -11,20 +11,40 @@
             </x-maz-alert>
             <form wire:submit.prevent="updateProfileInformation">
                 
-                @foreach (auth()->user()->offices as $off)
-                    @foreach($off->users as $user)
-                        @if ($user->pivot->isHead == 1 && $user->pivot->user_id != auth()->user()->id)
-                            @break
-                        @elseif ($loop->last)
-                            <!-- is Head -->
-                            <div class="form-group">
-                                <input id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
-                                <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
-                                <x-maz-input-error for="isHead.{{$off->id}}" />
-                            </div>
-                        @endif
-                    @endforeach
-                @endforeach
+                <div class="row">
+                    <div class="col-md-6">
+                        @foreach (auth()->user()->offices as $off)
+                            @foreach($off->users as $user)
+                                @if ($user->pivot->isHead == 1 && $user->pivot->user_id != auth()->user()->id)
+                                    @break
+                                @elseif ($loop->last)
+                                    <!-- is Head -->
+                                    <div class="form-group">
+                                        <input id="isHead.{{$off->id}}" type="checkbox" class="form-check-input" wire:model.defer="isHead.{{$off->id}}" autocomplete="isHead.{{$off->id}}" >
+                                        <label for="isHead.{{$off->id}}">Head of the {{ $off->office_name }}</label>
+                                        <x-maz-input-error for="isHead.{{$off->id}}" />
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </div>
+                    <div class="col-md-6">
+                        @foreach (auth()->user()->institutes as $inst)
+                            @foreach($inst->users as $user)
+                                @if ($user->pivot->isProgramChair == 1 && $user->pivot->user_id != auth()->user()->id)
+                                    @break
+                                @elseif ($loop->last)
+                                    <!-- is Head -->
+                                    <div class="form-group">
+                                        <input id="isProgramChair.{{ $inst->id }}" type="checkbox" class="form-check-input" wire:model.defer="isProgramChair.{{ $inst->id }}" autocomplete="isProgramChair.{{ $inst->id }}" >
+                                        <label for="isProgramChair.{{ $inst->id }}">Program Chair of the {{ $inst->institute_name }}</label>
+                                        <x-maz-input-error for="isProgramChair.{{ $inst->id }}" />
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </div>
+                </div>
 
                 <hr>
 
@@ -44,6 +64,19 @@
 
                 <hr>
 
+                <!-- Account Types -->
+                <div class="form-group" wire:ignore>
+                    <label for="account_type">Account Types</label>
+                    <select name="account_type" id="account_type" class="form-select" wire:model="account_type" multiple="multiple">
+                        <option></option>
+                        @foreach ($account_types as $choices)
+                            <option value="{{$choices->id}}" 
+                                {{ in_array($choices->id, $account_type) ? 'selected' : '' }}
+                                >{{$choices->account_type}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <!-- Offices -->
                 <div class="form-group" wire:ignore>
                     <label for="office">Offices</label>
@@ -55,15 +88,13 @@
                     </select>
                 </div>
 
-                <!-- Account Types -->
-                <div class="form-group" wire:ignore>
-                    <label for="account_type">Account Types</label>
-                    <select name="account_type" id="account_type" class="form-select" wire:model="account_type" multiple="multiple">
+                <!-- Institute -->
+                <div class="form-group">
+                    <label for="institute">Institute</label>
+                    <select name="institute" id="institute" class="form-select" wire:model="institute">
                         <option></option>
-                        @foreach ($account_types as $choices)
-                            <option value="{{$choices->id}}" 
-                                {{ in_array($choices->id, $account_type) ? 'selected' : '' }}
-                                >{{$choices->account_type}}</option>
+                        @foreach ($institutes as $choices)
+                            <option value="{{$choices->id}}" {{ ($choices->id == $institute) ? 'selected' : '' }}>{{$choices->institute_name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -79,6 +110,13 @@
                             @this.office = $(this).val();
                         });
 
+                        $('#institute').select2({
+                            placeholder: "Select an Institute",
+                        });
+
+                        $('#institute').on('change', function () {
+                            @this.institute = $(this).val();
+                        });
                         
                         $('#account_type').select2({
                             placeholder: "Select an Account Type",
@@ -87,6 +125,24 @@
 
                         $('#account_type').on('change', function () {
                             @this.account_type = $(this).val();
+                        });
+
+                        document.addEventListener("livewire:load", function (event) {
+                            Livewire.hook('message.processed', function (message, component){
+                                $('#account_type').select2({
+                                    placeholder: "Select an Account Type",
+                                    multiple: true,
+                                });
+
+                                $('#institute').select2({
+                                    placeholder: "Select an Institute",
+                                });
+
+                                $('#office').select2({
+                                    placeholder: "Select an Office",
+                                    multiple: true,
+                                });
+                            });
                         });
 
                         $(document).ready(function(){

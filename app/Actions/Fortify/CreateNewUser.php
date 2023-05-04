@@ -40,6 +40,7 @@ class CreateNewUser implements CreatesNewUsers
         if (isset($input['account_type'])) {
             $user->account_types()->attach($input['account_type']);
         }
+        $user->institutes()->attach($input['institute']);
 
         session()->flash('message', 'User Successfully Registered!');
         return auth()->user();

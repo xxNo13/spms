@@ -102,6 +102,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Ttma::class, 'ttma_user');
     }
 
+    
+    public function institutes() {
+        return $this->belongsToMany(Institute::class, 'institute_user')->withPivot('isProgramChair');
+    }
+
     public function offices(){
         return $this->belongsToMany(Office::class, 'office_user')->withPivot('isHead');
     }

@@ -30,15 +30,6 @@
 
             <hr>
 
-            <!-- Offices -->
-            <div class="form-group">
-                <label for="office">Offices</label>
-                <select name="office[]" id="office" class="form-select" multiple="multiple">
-                    <option></option>
-                    <livewire:offices-livewire />
-                </select>
-            </div>
-
             <!-- Account Types -->
             <div class="form-group" wire:ignore>
                 <label for="account_type">Account Types</label>
@@ -48,11 +39,13 @@
                 </select>
             </div>
 
+            <!-- Offices -->
+            <livewire:offices-livewire />
+
             @push('script')
                 <script>
-                    $('#office').select2({
-                        placeholder: "Select an Office",
-                        multiple: true,
+                    $('#institute').select2({
+                        placeholder: "Select an Institute",
                     });
                     
                     $('#account_type').select2({

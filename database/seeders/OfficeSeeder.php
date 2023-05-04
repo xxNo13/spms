@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Office;
+use App\Models\Institute;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -97,6 +98,18 @@ class OfficeSeeder extends Seeder
             'office_abbr' => 'OIC',	
             'parent_id' => 11
         ]); // 13
+
+        Institute::factory()->create([
+            'institute_name' => 'Information Technology',
+            'institute_abbr' => 'BSIT',
+            'office_id'      => 13,
+        ]);
+
+        Institute::factory()->create([
+            'institute_name' => 'Information System',
+            'institute_abbr' => 'BSIS',
+            'office_id'      => 13,
+        ]);
         
         Office::factory()->create([
             'office_name' => 'Office of the IHSS Dean',

@@ -16,6 +16,10 @@ class Office extends Model
         'parent_id'
     ];
 
+    public function institutes() {
+        return $this->hasMany(Institute::class);
+    }
+
     public function parent() {
         return $this->belongsTo(Office::class, 'parent_id', 'id');
     }

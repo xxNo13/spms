@@ -39,13 +39,20 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ])->save();
 
             $offices = [];
+            $institutes = [];
 
             foreach ($input['isHead'] as $id => $isHead) {
                 $offices[$id] = ['isHead' => $isHead];
             }
 
+            foreach ($input['isProgramChair'] as $id => $isProgramChair) {
+                $institutes[$id] = ['isProgramChair' => $isProgramChair];
+            }
+
             $user->offices()->sync($offices);
             $user->offices()->sync($input['office']);
+            $user->institutes()->sync($institutes);
+            $user->institutes()->sync($input['institute']);
             $user->account_types()->sync($input['account_type']);
         }
         

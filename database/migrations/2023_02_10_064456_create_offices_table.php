@@ -32,6 +32,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('isHead')->default(false);
         });
+
+        Schema::table('institutes', function (Blueprint $table) {
+            $table->foreign('office_id')->references('id')->on('offices')->onDelete('cascade');
+        });
     }
 
     /**
