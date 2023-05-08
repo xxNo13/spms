@@ -61,24 +61,7 @@
     
 
     <x-maz-sidebar-item alias="dashboard" name="Dashboard" :link="route('dashboard')" icon="bi bi-grid-fill"></x-maz-sidebar-item>
-    <x-maz-sidebar-item alias="archives" name="Archives" :link="route('archives')" icon="bi bi-archive-fill"></x-maz-sidebar-item>
-    @if ($pmo) 
-        <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
-        <x-maz-sidebar-item alias="assign.pmt" name="Assigned PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
-        <x-maz-sidebar-item alias="assign.rc" name="Assigned Committee" :link="route('assign.rc')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
-    @endif
-
-    @if ($head)
-        <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
-    @endif
-
-    @if ($committee || $hrmo || $head)
-        <x-maz-sidebar-item alias="reviewing" name="Reviewing Ipcr" :link="route('reviewing')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
-    @endif
-
-    <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
-    <x-maz-sidebar-item alias="recommendation.list" name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
-    
+   
     @if ($faculty || $staff || $pmo || $hrmo)
         <x-maz-sidebar-item alias="ipcr" link="#" name="IPCR" icon="bi bi-clipboard2-data-fill">
             @if ($faculty)
@@ -98,8 +81,8 @@
         </x-maz-sidebar-item>
     @endif
     
-    {{-- @if (($head && !$president) || $pmo || $hrmo) --}}
-    @if ($head && !$president)
+    @if (($head && !$president) || $pmo || $hrmo)
+    {{-- @if ($head && !$president) --}}
         <x-maz-sidebar-item alias="opcr" link="#" name="OPCR" icon="bi bi-clipboard-data-fill">
             @if ($head && !$president)
                 <x-maz-sidebar-sub-item name="OPCR" :link="route('opcr.opcr')"></x-maz-sidebar-sub-item>
@@ -113,14 +96,34 @@
         </x-maz-sidebar-item>
     @endif
 
+    <x-maz-sidebar-item alias="ttma" name="Tracking Tool for Monitoring Assignment" :link="route('ttma')" icon="bi bi-clipboard2-fill"></x-maz-sidebar-item>
+
+    @if ($head)
+        <x-maz-sidebar-item alias="for.approval" name="For Approval" :link="route('for.approval')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+    @endif
+
+    @if ($committee || $hrmo || $head)
+        <x-maz-sidebar-item alias="reviewing" name="Reviewing Ipcr" :link="route('reviewing')" icon="bi bi-person-lines-fill"></x-maz-sidebar-item>
+    @endif
+    
+    @if ($pmo) 
+        <x-maz-sidebar-item alias="assign.pmt" name="Assigned PMT" :link="route('assign.pmt')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="assign.rc" name="Assigned Committee" :link="route('assign.rc')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="configure" name="Configure" :link="route('configure')" icon="bi bi-nut-fill"></x-maz-sidebar-item>
+    @endif
+
     @if ($head || $pmo || $hrmo)
         <x-maz-sidebar-item alias="trainings" name="Trainings" :link="route('trainings')" icon="bi bi-person-workspace"></x-maz-sidebar-item>
     @endif
+    
+    <x-maz-sidebar-item alias="recommendation.list" name="List of Recommendation" :link="route('recommendation.list')" icon="bi bi-person-video3"></x-maz-sidebar-item>
 
     @if ($head)    
-        <x-maz-sidebar-item alias="subordinates" name="Subordinates" :link="route('subordinates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
         <x-maz-sidebar-item alias="recommended.for.training" name="Recommended for Trainings" :link="route('recommended.for.training')" icon="bi bi-person-rolodex"></x-maz-sidebar-item>
+        <x-maz-sidebar-item alias="subordinates" name="Subordinates" :link="route('subordinates')" icon="bi bi-people-fill"></x-maz-sidebar-item>
     @endif
+
+    <x-maz-sidebar-item alias="archives" name="Archives" :link="route('archives')" icon="bi bi-archive-fill"></x-maz-sidebar-item>
     
     @if ($hrmo)
         <x-maz-sidebar-item alias="register" name="Register User" :link="route('register.user')" icon="bi bi-person-plus-fill"></x-maz-sidebar-item>

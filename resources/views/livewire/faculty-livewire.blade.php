@@ -98,8 +98,8 @@
                                             </button>
                                         @endif
                                     @endforeach
-                                    <button type="button" class="btn btn-outline-warning" title="Add Output/Suboutput/Target" wire:click="add">
-                                        Modify Non-Designated OST
+                                    <button type="button" class="btn btn-outline-success" title="Add Output/Suboutput/Target" wire:click="add">
+                                        Edit Non-Designated OST
                                     </button>
                                 @else
                                     <button type="button" class="btn btn-outline-secondary" title="Add Output/Suboutput/Target" wire:click="add">

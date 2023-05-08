@@ -66,7 +66,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::middleware(['pmo'])->group(function () {
         Route::get('/configure', ConfigureLivewire::class)->name('configure');
         Route::get('/assign-pmt', AssignPmtLivewire::class)->name('assign.pmt');
-        Route::get('/assign-review-committee', AssignCommittee::class)->name('assign.rc');
+        Route::get('/assign-committee', AssignCommittee::class)->name('assign.rc');
     });
 
     Route::group(['prefix' => 'ipcr', 'as' => 'ipcr.'], function() {
