@@ -37,6 +37,8 @@ class ListingOpcrLivewire extends Component
 
     public $sub_percentages;
 
+    public $hasMultipleRating;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -207,7 +209,8 @@ class ListingOpcrLivewire extends Component
                         'output_id' => $subput[1],
                         'required' => $this->required,
                         'duration_id' => $this->duration->id,
-                        'added_by' => auth()->user()->id
+                        'added_by' => auth()->user()->id,
+                        'hasMultipleRating' => $this->hasMultipleRating
                     ]);
                 } elseif ($subput[0] == 'suboutput') {
                     Target::create([
@@ -215,7 +218,8 @@ class ListingOpcrLivewire extends Component
                         'suboutput_id' => $subput[1],
                         'required' => $this->required,
                         'duration_id' => $this->duration->id,
-                        'added_by' => auth()->user()->id
+                        'added_by' => auth()->user()->id,
+                        'hasMultipleRating' => $this->hasMultipleRating
                     ]);
                 }
                 break;
@@ -253,7 +257,8 @@ class ListingOpcrLivewire extends Component
             case 'target':  
                 Target::where('id', $this->target_id)->update([
                     'target' => $this->target,
-                    'required' => $this->required
+                    'required' => $this->required,
+                    'hasMultipleRating' => $this->hasMultipleRating
                 ]);
                 break;
         }

@@ -13,6 +13,7 @@ use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
+use App\Models\PrintInfo;
 use App\Models\Suboutput;
 use App\Models\Percentage;
 use Livewire\WithPagination;
@@ -78,6 +79,8 @@ class OpcrLivewire extends Component
     public $targetAllocated;
 
     public $print;
+
+    public $printInfos = [];
 
     protected $listeners = ['percentage', 'resetIntput'];
 
@@ -164,6 +167,10 @@ class OpcrLivewire extends Component
                 $this->approve_user['name'] = User::where('id', $this->approval->approve_id)->pluck('name')->first();
                 $this->approve_user['message'] = $this->approval->approve_message;
             }
+        }
+
+        foreach(auth()->user()->targets as $target) {
+            $this->targetsSelected[$target->id] = $target->id;
         }
     }
 
@@ -898,7 +905,95 @@ class OpcrLivewire extends Component
 
     public function print() {
         $this->print = 'office';
+        
+        $this->printInfos = PrintInfo::where('user_id', auth()->user()->id)
+                    ->where('duration_id', $this->duration->id)
+                    ->where('type', 'office')
+                    ->first();
+                    
+        if($this->printInfos) {
+            $this->printInfos->toArray();
+        }
     }
+    
+    public function submitPrint() {
+        $printInfo = PrintInfo::where('user_id', auth()->user()->id)
+            ->where('duration_id', $this->duration->id)
+            ->where('type', 'office')
+            ->first();
+
+        if ($printInfo) {
+            PrintInfo::where('id', $printInfo->id)->update([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office']
+            ]);
+        } else {
+            PrintInfo::create([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office'],
+                'type' => 'office',
+                'duration_id' => $this->duration->id,
+                'user_id' => auth()->user()->id
+            ]);
+        }
+
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function add() {
+        $this->add = true;
+    }
+    public function getOpcr() {
+        $this->add = false;
+        $target_ids = [];
+        $suboutput_ids = [];
+        $output_ids = [];
+        $sub_funct_ids = [];
+
+        foreach ($this->targetsSelected as $id) {            
+            if ($target = Target::where('id',$id)->first()) {
+                array_push($target_ids, $id);
+                if ($target->output) {
+                    array_push($output_ids, $target->output_id);
+                    if ($target->output->sub_funct) {
+                        array_push($sub_funct_ids, $target->output->sub_funct_id);
+                    }
+                } else if ($target->suboutput) {
+                    array_push($suboutput_ids, $target->suboutput_id);
+                    if ($target->suboutput->output) {
+                        array_push($output_ids, $target->suboutput->output_id);
+                        if ($target->suboutput->output->sub_funct) {
+                            array_push($sub_funct_ids, $target->suboutput->output->sub_funct_id);
+                        }
+                    }
+                }
+            }
+        }
+        if ($target_ids) {
+            auth()->user()->targets()->sync($target_ids);
+        } else {
+            auth()->user()->targets()->detach();
+        }
+        if ($suboutput_ids) {
+            auth()->user()->suboutputs()->sync($suboutput_ids);
+        } else {
+            auth()->user()->suboutputs()->detach();
+        }
+        if ($output_ids) {
+            auth()->user()->outputs()->sync($output_ids);
+        } else {
+            auth()->user()->outputs()->detach();
+        }
+        if ($sub_funct_ids) {
+            auth()->user()->sub_functs()->sync($sub_funct_ids);
+        } else {
+            auth()->user()->sub_functs()->detach();
+        }
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Added Successfully",
+            'color' => "#435ebe",
+        ]);
+    } 
     
     public function resetInput(){
         $this->percent = [];
@@ -926,6 +1021,8 @@ class OpcrLivewire extends Component
         $this->target_output = '';
         $this->alloted_budget = '';
         $this->responsible = '';
+        
+        $this->printInfos = [];
     }
 
     public function closeModal()

@@ -269,7 +269,7 @@
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                    <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
@@ -398,7 +398,7 @@
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                    <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         <button type="button"
                                                                                             class="btn icon btn-primary"
                                                                                             data-bs-toggle="modal"
@@ -545,7 +545,7 @@
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        <div class="hstack justify-content-center gap-2">
+                                                                        <div class="hstack align-items-center justify-content-center gap-2">
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 data-bs-toggle="modal"
@@ -674,7 +674,7 @@
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        <div class="hstack justify-content-center gap-2">
+                                                                        <div class="hstack align-items-center justify-content-center gap-2">
                                                                             <button type="button"
                                                                                 class="btn icon btn-primary"
                                                                                 data-bs-toggle="modal"

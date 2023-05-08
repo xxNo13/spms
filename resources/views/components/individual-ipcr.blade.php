@@ -116,11 +116,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }}, true)">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }}, true)">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
@@ -131,11 +140,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }}, true)">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }}, true)">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -147,11 +165,20 @@
                             <i class="bi bi-check"></i>
                             Approved
                         </button>
-                        <button type="button" class="btn icon btn-danger"
-                            wire:click="declined({{ $approval->id }}, true)">
-                            <i class="bi bi-x"></i>
-                            Decline
-                        </button>
+                        @if ($approval->name == 'assess')
+                            <button type="button" class="btn icon btn-info"
+                                data-bs-toggle="modal"
+                                data-bs-target="#PrintCommentModal">
+                                <i class="bi bi-x"></i>
+                                Add a Comment
+                            </button>
+                        @else
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="declined({{ $approval->id }}, true)">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
+                        @endif
                     </div>
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
@@ -163,11 +190,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }}, true)">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }}, true)">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -299,8 +335,11 @@
                                                                         @endif
                                                                         
                                                                         @if ($url != 'for-approval' || $approval->name == 'assess')
-                                                                            @foreach ($target->ratings as $rating)
-                                                                                @if ($rating->user_id == $user->id) 
+                                                                            @php
+                                                                                $first = true;
+                                                                            @endphp
+                                                                            @foreach ($target->ratings()->where('user_id', $user->id) as $rating)
+                                                                                @if ($first)
                                                                                     <td>{{ $rating->accomplishment }}
                                                                                     </td>
                                                                                     <td>
@@ -330,7 +369,7 @@
                                                                                     </td>
                                                                                     @if ($url != 'officemates')
                                                                                         <td>
-                                                                                            <div class="hstack justify-content-center gap-2">
+                                                                                            <div class="hstack align-items-center justify-content-center gap-2">
                                                                                                 @if ($url == 'reviewing')
                                                                                                     @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
                                                                                                         <button type="button"
@@ -481,7 +520,193 @@
                                                                                             </div>
                                                                                         </td>
                                                                                     @endif
-                                                                                    @break
+                                                                                    @php
+                                                                                        $first = false;
+                                                                                    @endphp
+                                                                                @else
+                                                                                    <tr>
+                                                                                        <td></td>
+                                                                                        <td>{{ $rating->accomplishment }}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->quality)
+                                                                                            {{ $rating->quality }}
+                                                                                            @else
+                                                                                            NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->efficiency)
+                                                                                                {{ $rating->efficiency }}
+                                                                                            @else
+                                                                                                NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->timeliness)
+                                                                                                {{ $rating->timeliness }}
+                                                                                            @else
+                                                                                                NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td class="text-nowrap">{{ $rating->average }}
+                                                                                        </td>
+                                                                                        <td>{{ $rating->remarks }}
+                                                                                        </td>
+                                                                                        @if ($url != 'officemates')
+                                                                                            <td>
+                                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                                    @if ($url == 'reviewing')
+                                                                                                        @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && $funct->id == 1 && $score_review->designated_id == auth()->user()->id && $sub_funct->id == $non_teaching_sub_funct->id && $score_review->prog_chair_status && !$score_review->designated_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @endif
+                                                                                                    @else
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-primary"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#CommentModal"
+                                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                                            title="Add Comment">
+                                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                                        </button>
+                                                                                                    @endif
+                                                                                                    <div class="dropup-center dropup">
+                                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                            <i class="bi bi-file-earmark-check"></i>
+                                                                                                        </button>
+                                                                                                        <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                                            <li>
+                                                                                                                <div class="row border-bottom">
+                                                                                                                    <div class="col-3 border-end">
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                                <small><strong>Old Score</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>Q</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>E</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>T</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>A</strong></small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 border-end">
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                                <small><strong>New Score</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>Q</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>E</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>T</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>A</strong></small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                        <small><strong>Updated By</strong></small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap">
+                                                                                                                        <small><strong>Updated At</strong></small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </li>
+                                                                                                                @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                                    <li>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-3 border-end">
+                                                                                                                                <div class="row">
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_qua }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_eff }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_time }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_ave }}</small>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 border-end">
+                                                                                                                                <div class="row">
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_qua }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_eff }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_time }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_ave }}</small>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                                <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </li>
+                                                                                                                @endforeach
+                                                                                                        </ul>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        @endif
+                                                                                    </tr>
                                                                                 @endif
                                                                             @endforeach
                                                                         @else
@@ -573,8 +798,11 @@
                                                                         @endif
                                                                         
                                                                         @if ($url != 'for-approval' || $approval->name == 'assess')
-                                                                            @foreach ($target->ratings as $rating)
-                                                                                @if ($rating->user_id == $user->id) 
+                                                                            @php
+                                                                                $first = true;
+                                                                            @endphp
+                                                                            @foreach ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                                                @if ($first)
                                                                                     <td>{{ $rating->accomplishment }}
                                                                                     </td>
                                                                                     <td>
@@ -604,7 +832,7 @@
                                                                                     </td>
                                                                                     @if ($url != 'officemates')
                                                                                         <td>
-                                                                                            <div class="hstack justify-content-center gap-2">
+                                                                                            <div class="hstack align-items-center justify-content-center gap-2">
                                                                                                 @if ($url == 'reviewing')
                                                                                                     @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
                                                                                                         <button type="button"
@@ -755,7 +983,193 @@
                                                                                             </div>
                                                                                         </td>
                                                                                     @endif
-                                                                                    @break
+                                                                                    @php
+                                                                                        $first = false;
+                                                                                    @endphp
+                                                                                @else
+                                                                                    <tr>
+                                                                                        <td></td>
+                                                                                        <td>{{ $rating->accomplishment }}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->quality)
+                                                                                            {{ $rating->quality }}
+                                                                                            @else
+                                                                                            NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->efficiency)
+                                                                                                {{ $rating->efficiency }}
+                                                                                            @else
+                                                                                                NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if ($rating->timeliness)
+                                                                                                {{ $rating->timeliness }}
+                                                                                            @else
+                                                                                                NR
+                                                                                            @endif
+                                                                                        </td>
+                                                                                        <td class="text-nowrap">{{ $rating->average }}
+                                                                                        </td>
+                                                                                        <td>{{ $rating->remarks }}
+                                                                                        </td>
+                                                                                        @if ($url != 'officemates')
+                                                                                            <td>
+                                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                                    @if ($url == 'reviewing')
+                                                                                                        @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && $sub_funct->id == $teaching_sub_funct->id && !$score_review->prog_chair_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && $funct->id == 1 && $score_review->designated_id == auth()->user()->id && $sub_funct->id == $non_teaching_sub_funct->id && $score_review->prog_chair_status && !$score_review->designated_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
+                                                                                                            <button type="button"
+                                                                                                                class="btn icon btn-success"
+                                                                                                                data-bs-toggle="modal"
+                                                                                                                data-bs-target="#EditRatingModal"
+                                                                                                                wire:click="editRating({{ $rating->id }})"
+                                                                                                                title="Edit Rating">
+                                                                                                                <i class="bi bi-pencil-square"></i>
+                                                                                                            </button>
+                                                                                                        @endif
+                                                                                                    @else
+                                                                                                        <button type="button"
+                                                                                                            class="btn icon btn-primary"
+                                                                                                            data-bs-toggle="modal"
+                                                                                                            data-bs-target="#CommentModal"
+                                                                                                            wire:click="comment({{ $target->id }})"
+                                                                                                            title="Add Comment">
+                                                                                                            <i class="bi bi-chat-dots"></i>
+                                                                                                        </button>
+                                                                                                    @endif
+                                                                                                    <div class="dropup-center dropup">
+                                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                            <i class="bi bi-file-earmark-check"></i>
+                                                                                                        </button>
+                                                                                                        <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                                            <li>
+                                                                                                                <div class="row border-bottom">
+                                                                                                                    <div class="col-3 border-end">
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                                <small><strong>Old Score</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>Q</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>E</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>T</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>A</strong></small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 border-end">
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-12 text-center text-nowrap">
+                                                                                                                                <small><strong>New Score</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>Q</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>E</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>T</strong></small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small><strong>A</strong></small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                        <small><strong>Updated By</strong></small>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-3 text-center text-nowrap">
+                                                                                                                        <small><strong>Updated At</strong></small>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </li>
+                                                                                                                @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                                    <li>
+                                                                                                                        <div class="row">
+                                                                                                                            <div class="col-3 border-end">
+                                                                                                                                <div class="row">
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_qua }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_eff }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_time }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                                        <small>{{ $score_log->old_ave }}</small>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 border-end">
+                                                                                                                                <div class="row">
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_qua }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_eff }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_time }}</small>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                                        <small>{{ $score_log->new_ave }}</small>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                                <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                                            </div>
+                                                                                                                            <div class="col-3 text-center text-nowrap">
+                                                                                                                                <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </li>
+                                                                                                                @endforeach
+                                                                                                        </ul>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        @endif
+                                                                                    </tr>
                                                                                 @endif
                                                                             @endforeach
                                                                         @else
@@ -868,8 +1282,11 @@
                                                             @endif
                 
                                                             @if ($url != 'for-approval' || $approval->name == 'assess')
-                                                                @foreach ($target->ratings as $rating)
-                                                                    @if ($rating->user_id == $user->id) 
+                                                                @php
+                                                                    $first = true;
+                                                                @endphp
+                                                                @foreach ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                                    @if ($first)
                                                                         <td>{{ $rating->accomplishment }}
                                                                         </td>
                                                                         <td>
@@ -899,7 +1316,7 @@
                                                                         </td>
                                                                         @if ($url != 'officemates')
                                                                             <td>
-                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ($url == 'reviewing')
                                                                                         @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
                                                                                             <button type="button"
@@ -1041,7 +1458,184 @@
                                                                                 </div>
                                                                             </td>
                                                                         @endif
-                                                                        @break
+                                                                        @php
+                                                                            $first = false;
+                                                                        @endphp
+                                                                    @else
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td>{{ $rating->accomplishment }}
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->quality)
+                                                                                {{ $rating->quality }}
+                                                                                @else
+                                                                                NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->efficiency)
+                                                                                    {{ $rating->efficiency }}
+                                                                                @else
+                                                                                    NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->timeliness)
+                                                                                    {{ $rating->timeliness }}
+                                                                                @else
+                                                                                    NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td class="text-nowrap">{{ $rating->average }}
+                                                                            </td>
+                                                                            <td>{{ $rating->remarks }}
+                                                                            </td>
+                                                                            @if ($url != 'officemates')
+                                                                                <td>
+                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                        @if ($url == 'reviewing')
+                                                                                            @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                        @else
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-primary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#CommentModal"
+                                                                                                wire:click="comment({{ $target->id }})"
+                                                                                                title="Add Comment">
+                                                                                                <i class="bi bi-chat-dots"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                        <div class="dropup-center dropup">
+                                                                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                <i class="bi bi-file-earmark-check"></i>
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                                <li>
+                                                                                                    <div class="row border-bottom">
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-12 text-center text-nowrap">
+                                                                                                                    <small><strong>Old Score</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>Q</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>E</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>T</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>A</strong></small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-12 text-center text-nowrap">
+                                                                                                                    <small><strong>New Score</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>Q</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>E</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>T</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>A</strong></small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap border-end">
+                                                                                                            <small><strong>Updated By</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Updated At</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                                    @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                        <li>
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 border-end">
+                                                                                                                    <div class="row">
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_qua }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_eff }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_time }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_ave }}</small>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 border-end">
+                                                                                                                    <div class="row">
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_qua }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_eff }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_time }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_ave }}</small>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                    <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </li>
+                                                                                                    @endforeach
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            @endif
+                                                                        </tr>
                                                                     @endif
                                                                 @endforeach
                                                             @else
@@ -1129,8 +1723,11 @@
                                                             @endif
                 
                                                             @if ($url != 'for-approval' || $approval->name == 'assess')
-                                                                @foreach ($target->ratings as $rating)
-                                                                    @if ($rating->user_id == $user->id) 
+                                                                @php
+                                                                    $first = true;
+                                                                @endphp
+                                                                @foreach ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                                    @if ($first)
                                                                         <td>{{ $rating->accomplishment }}
                                                                         </td>
                                                                         <td>
@@ -1160,7 +1757,7 @@
                                                                         </td>
                                                                         @if ($url != 'officemates')
                                                                             <td>
-                                                                                <div class="hstack justify-content-center gap-2">
+                                                                                <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ($url == 'reviewing')
                                                                                         @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
                                                                                             <button type="button"
@@ -1302,7 +1899,184 @@
                                                                                 </div>
                                                                             </td>
                                                                         @endif
-                                                                        @break
+                                                                        @php
+                                                                            $first = false;
+                                                                        @endphp
+                                                                    @else
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td>{{ $rating->accomplishment }}
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->quality)
+                                                                                {{ $rating->quality }}
+                                                                                @else
+                                                                                NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->efficiency)
+                                                                                    {{ $rating->efficiency }}
+                                                                                @else
+                                                                                    NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($rating->timeliness)
+                                                                                    {{ $rating->timeliness }}
+                                                                                @else
+                                                                                    NR
+                                                                                @endif
+                                                                            </td>
+                                                                            <td class="text-nowrap">{{ $rating->average }}
+                                                                            </td>
+                                                                            <td>{{ $rating->remarks }}
+                                                                            </td>
+                                                                            @if ($url != 'officemates')
+                                                                                <td>
+                                                                                    <div class="hstack justify-content-center gap-2">
+                                                                                        @if ($url == 'reviewing')
+                                                                                            @if (!$committee_status && $funct->id == 1 && $score_review->prog_chair_id == auth()->user()->id && !$score_review->prog_chair_status && $score_review->type == 'staff')
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @elseif (!$committee_status && $funct->id == 3 && $hr && $number == 2 && (($score_review->designated_id && $score_review->designated_status) || (!$score_review->designated_id && $score_review->prog_chair_status)) && !$score_review->hr_status)
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @elseif (!$committee_status && ($funct->id == 2 || ($funct->id == 3 && $number != 2)) && ($score_review->designated_id != auth()->user()->id && $score_review->prog_chair_id != auth()->user()->id && !$hr))
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-success"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#EditRatingModal"
+                                                                                                    wire:click="editRating({{ $rating->id }})"
+                                                                                                    title="Edit Rating">
+                                                                                                    <i class="bi bi-pencil-square"></i>
+                                                                                                </button>
+                                                                                            @endif
+                                                                                        @else
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-primary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#CommentModal"
+                                                                                                wire:click="comment({{ $target->id }})"
+                                                                                                title="Add Comment">
+                                                                                                <i class="bi bi-chat-dots"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                        <div class="dropup-center dropup">
+                                                                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                <i class="bi bi-file-earmark-check"></i>
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu p-2 border-1" style="width: 600px">
+                                                                                                <li>
+                                                                                                    <div class="row border-bottom">
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-12 text-center text-nowrap">
+                                                                                                                    <small><strong>Old Score</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>Q</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>E</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>T</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>A</strong></small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 border-end">
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-12 text-center text-nowrap">
+                                                                                                                    <small><strong>New Score</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>Q</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>E</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>T</strong></small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small><strong>A</strong></small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap border-end">
+                                                                                                            <small><strong>Updated By</strong></small>
+                                                                                                        </div>
+                                                                                                        <div class="col-3 text-center text-nowrap">
+                                                                                                            <small><strong>Updated At</strong></small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                                    @foreach ($rating->score_logs()->where('user_id', auth()->user()->id)->get() as $score_log)
+                                                                                                        <li>
+                                                                                                            <div class="row">
+                                                                                                                <div class="col-3 border-end">
+                                                                                                                    <div class="row">
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_qua }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_eff }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_time }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-danger' }}">
+                                                                                                                            <small>{{ $score_log->old_ave }}</small>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 border-end">
+                                                                                                                    <div class="row">
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_qua == $score_log->new_qua) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_qua }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_eff == $score_log->new_eff) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_eff }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_time == $score_log->new_time) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_time }}</small>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-3 text-center text-nowrap {{ ($score_log->old_ave == $score_log->new_ave) ? '' : 'text-success' }}">
+                                                                                                                            <small>{{ $score_log->new_ave }}</small>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap border-end">
+                                                                                                                    <small>{{ $score_log->updatedBy->name }}</small>
+                                                                                                                </div>
+                                                                                                                <div class="col-3 text-center text-nowrap">
+                                                                                                                    <small>{{ $score_log->updated_at->diffForHumans() }}</small>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </li>
+                                                                                                    @endforeach
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                            @endif
+                                                                        </tr>
                                                                     @endif
                                                                 @endforeach
                                                             @else
@@ -1334,5 +2108,8 @@
             @endforeach
         @endforeach
     </section>
-    <x-modals :selectedTargetId="$selectedTargetId" :targetOutput="$targetOutput" :selectedTarget="$selectedTarget" />
+
+    @if ($url != 'officemates')
+        <x-modals :selectedTargetId="$selectedTargetId" :targetOutput="$targetOutput" :selectedTarget="$selectedTarget" />
+    @endif
 </div>

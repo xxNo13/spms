@@ -275,13 +275,18 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'listingFaculty')
-                                        <div class="form-group hstack gap-2">
+                                    <div class="form-group hstack gap-2">
+                                        @if (isset($userType) && $userType == 'listingFaculty')
+                                                <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
+                                                    name="required" wire:model.defer="required">
+                                                <label>Required to all Faculty</label>
+                                        @endif
+                                        @if (!isset($type) || (isset($type) && $type != 'office'))
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
-                                                name="required" wire:model.defer="required">
-                                            <label>Required to all Faculty</label>
-                                        </div>
-                                    @endif
+                                                name="hasMultipleRating" wire:model.defer="hasMultipleRating">
+                                            <label>Has Multple Rating</label>
+                                        @endif
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -348,13 +353,18 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @if (isset($userType) && $userType == 'listingFaculty')
-                                        <div class="form-group hstack gap-2">
+                                    <div class="form-group hstack gap-2">
+                                        @if (isset($userType) && $userType == 'listingFaculty')
+                                                <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
+                                                    name="required" wire:model.defer="required">
+                                                <label>Required to all Faculty</label>
+                                        @endif
+                                        @if (!isset($type) || (isset($type) && $type != 'office'))
                                             <input type="checkbox" class="form-check-glow form-check-input form-check-primary"
-                                                name="required" wire:model.defer="required">
-                                            <label>Required to all Faculty</label>
-                                        </div>
-                                    @endif
+                                                name="hasMultipleRating" wire:model.defer="hasMultipleRating">
+                                            <label>Has Multple Rating</label>
+                                        @endif
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -3146,11 +3156,11 @@
                         <div class="modal-body">
                             <label>Title/Position: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Title/Position" class="form-control" name="title">
+                                <input type="text" wire:model.defer="printInfos.position" placeholder="Title/Position" class="form-control" name="title">
                             </div>
                             <label>Office: </label>
                             <div class="form-group">
-                                <input type="text" placeholder="Office" class="form-control" name="office">
+                                <input type="text" wire:model.defer="printInfos.office" placeholder="Office" class="form-control" name="office">
                             </div>
                             @if (isset($durationId))
                                 <input type="hidden" name="duration_id" value="{{ $durationId }}">
@@ -3161,12 +3171,42 @@
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Close</span>
                             </button>
-                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                            <button type="submit" wire:loading.attr="disabled" wire:click="submitPrint" class="btn btn-primary ml-1">
                                 <i class="bx bx-check d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Save</span>
                             </button>
                         </div>
                     </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Print Comment Modal --}}
+    <div wire:ignore.self  class="modal fade text-left" id="PrintCommentModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel33" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel33">Comment</h4>
+                    <button type="button" class="btn btn-light rounded-circle" data-bs-dismiss="modal"><i class="bi bi-fullscreen-exit"></i></button>
+                </div>
+                <form wire:submit.prevent="declined">
+                    @csrf
+                    <div class="modal-body">
+                        <label>Comment: </label>
+                        <div class="form-group">
+                            <textarea placeholder="Comment" class="form-control"
+                                wire:model.defer="printComment" style="height: 100px;">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -107,10 +107,12 @@
                                                                     wire:click="approved({{ $approval->id }}, 'Reviewed')">
                                                                     <i class="bi bi-check"></i>
                                                                 </button>
-                                                                <button type="button" class="btn icon btn-danger"
-                                                                    wire:click="declined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                    <i class="bi bi-x"></i>
-                                                                </button>
+                                                                @if ($approval->name != 'assess')
+                                                                    <button type="button" class="btn icon btn-danger"
+                                                                        wire:click="declined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                        <i class="bi bi-x"></i>
+                                                                    </button>
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </div>
@@ -201,10 +203,12 @@
                                                                     wire:click="approved({{ $approval->id }}, 'Approved')">
                                                                     <i class="bi bi-check"></i>
                                                                 </button>
-                                                                <button type="button" class="btn icon btn-danger"
-                                                                    wire:click="declined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
-                                                                    <i class="bi bi-x"></i>
-                                                                </button>
+                                                                @if ($approval->name != 'assess')
+                                                                    <button type="button" class="btn icon btn-danger"
+                                                                        wire:click="declined({{ $approval->id }})"  data-bs-toggle="modal" data-bs-target="#DeclineModal">
+                                                                        <i class="bi bi-x"></i>
+                                                                    </button>
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </div>

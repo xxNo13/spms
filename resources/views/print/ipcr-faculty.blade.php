@@ -95,6 +95,16 @@
             padding-top: 0;
             padding-bottom: 0; 
         }
+        table.main-table  tr.page-break {
+            page-break-after: avoid !important;
+            break-after: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
+        table.main-table  tr  td, table.main-table tr th {
+            page-break-inside: avoid !important;
+            break-inside: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
     </style>
 </head>
 
@@ -242,7 +252,7 @@
         @endphp
         @foreach ($functs as $funct)
             <tbody>
-                <tr>
+                <tr class="page-break">
                     <th rowspan="2" colspan="2">
                         {{ $funct->funct }}
                         @switch(strtolower($funct->funct))
@@ -305,9 +315,17 @@
                                     </td>
                                     <td colspan="8"></td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
-                                    {{ $suboutput->suboutput }}
+                                <tr class="page-break">
+                                    @php
+                                        $totalRating = 0;
+                                    @endphp
+                                    @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                        @php
+                                            $totalRating += count($target->ratings()->where('user_id', $user->id)->get());
+                                        @endphp
+                                    @endforeach
+                                    <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
+                                        {{ $suboutput->suboutput }}
                                     </td>
 
                                     @php
@@ -315,9 +333,12 @@
                                     @endphp
                                     @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
-                                            <td>{{ $target->target }}</td>
-                                            @forelse ($target->ratings as $rating)
-                                                @if ($rating->user_id == $user->id)
+                                            <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                            @php
+                                                $firstRating = true;
+                                            @endphp
+                                            @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                @if ($firstRating)
                                                     <td colspan="2">{{ $rating->accomplishment }}</td>
                                                     <td>
                                                         @if ($rating->quality)
@@ -365,31 +386,11 @@
                                                             @endphp
                                                             @break
                                                     @endswitch
-                                                    @break;
-                                                @elseif ($loop->last)
-                                                    <td colspan="2"></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                @endif
-                                            @empty
-                                                <td colspan="2"></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            @endforelse
-                                            @php
-                                                $first = false;
-                                            @endphp
-                                        @else
-                                            <tr>
-                                                <td>{{ $target->target }}</td>
-                                                @forelse ($target->ratings as $rating)
-                                                    @if ($rating->user_id == $user->id)
+                                                    @php
+                                                        $firstRating = false;
+                                                    @endphp
+                                                @else
+                                                    <tr>
                                                         <td colspan="2">{{ $rating->accomplishment }}</td>
                                                         <td>
                                                             @if ($rating->quality)
@@ -437,14 +438,127 @@
                                                                 @endphp
                                                                 @break
                                                         @endswitch
-                                                        @break;
-                                                    @elseif ($loop->last)
-                                                        <td colspan="2"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                    </tr>
+                                                @endif
+                                            @empty
+                                                <td colspan="2"></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
+                                            @php
+                                                $first = false;
+                                            @endphp
+                                        @else
+                                            <tr class="page-break">
+                                                <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                                @php
+                                                    $firstRating = true;
+                                                @endphp
+                                                @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                    @if ($firstRating)
+                                                        <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                        <td>
+                                                            @if ($rating->quality)
+                                                            {{ $rating->quality }}
+                                                            @else
+                                                            NR
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($rating->efficiency)
+                                                                {{ $rating->efficiency }}
+                                                            @else
+                                                                NR
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($rating->timeliness)
+                                                                {{ $rating->timeliness }}
+                                                            @else
+                                                                NR
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-nowrap">{{ $rating->average }}</td>
+                                                        <td>{{ $rating->remarks }}</td>
+                                                        @switch($funct->funct)
+                                                            @case('Core Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberCF++;
+                                                                @endphp
+                                                                @break
+                                                            @case('Strategic Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberSTF++;
+                                                                @endphp
+                                                                @break
+                                                            @case('Support Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberSF++;
+                                                                @endphp
+                                                                @break
+                                                        @endswitch
+                                                        @php
+                                                            $firstRating = false;
+                                                        @endphp
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                            <td>
+                                                                @if ($rating->quality)
+                                                                {{ $rating->quality }}
+                                                                @else
+                                                                NR
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($rating->efficiency)
+                                                                    {{ $rating->efficiency }}
+                                                                @else
+                                                                    NR
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($rating->timeliness)
+                                                                    {{ $rating->timeliness }}
+                                                                @else
+                                                                    NR
+                                                                @endif
+                                                            </td>
+                                                            <td class="text-nowrap">{{ $rating->average }}</td>
+                                                            <td>{{ $rating->remarks }}</td>
+                                                            @switch($funct->funct)
+                                                                @case('Core Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberCF++;
+                                                                    @endphp
+                                                                    @break
+                                                                @case('Strategic Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberSTF++;
+                                                                    @endphp
+                                                                    @break
+                                                                @case('Support Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberSF++;
+                                                                    @endphp
+                                                                    @break
+                                                            @endswitch
+                                                        </tr>
                                                     @endif
                                                 @empty
                                                     <td colspan="2"></td>
@@ -459,11 +573,19 @@
                                     @endforeach
                                 </tr>
                             @empty
-                                <tr>
-                                    <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
+                                <tr class="page-break">
+                                    @php
+                                        $totalRating = 0;
+                                    @endphp
+                                    @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                        @php
+                                            $totalRating += count($target->ratings()->where('user_id', $user->id)->get());
+                                        @endphp
+                                    @endforeach
+                                    <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
                                         {{ $output->code }} {{ ++$number }}
                                     </td>
-                                    <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
+                                    <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
                                         {{ $output->output }}
                                     </td>
     
@@ -472,9 +594,12 @@
                                     @endphp
                                     @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                         @if ($first)
-                                            <td>{{ $target->target }}</td>
-                                            @forelse ($target->ratings as $rating)
-                                                @if ($rating->user_id == $user->id)
+                                            <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                            @php
+                                                $firstRating = true;
+                                            @endphp
+                                            @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                @if ($firstRating)
                                                     <td colspan="2">{{ $rating->accomplishment }}</td>
                                                     <td>
                                                         @if ($rating->quality)
@@ -522,31 +647,11 @@
                                                             @endphp
                                                             @break
                                                     @endswitch
-                                                    @break;
-                                                @elseif ($loop->last)
-                                                    <td colspan="2"></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                @endif
-                                            @empty
-                                                <td colspan="2"></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            @endforelse
-                                            @php
-                                                $first = false;
-                                            @endphp
-                                        @else
-                                            <tr>
-                                                <td>{{ $target->target }}</td>
-                                                @forelse ($target->ratings as $rating)
-                                                    @if ($rating->user_id == $user->id)
+                                                    @php
+                                                        $firstRating = false;
+                                                    @endphp
+                                                @else
+                                                    <tr>
                                                         <td colspan="2">{{ $rating->accomplishment }}</td>
                                                         <td>
                                                             @if ($rating->quality)
@@ -594,14 +699,127 @@
                                                                 @endphp
                                                                 @break
                                                         @endswitch
-                                                        @break;
-                                                    @elseif ($loop->last)
-                                                        <td colspan="2"></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                    </tr>
+                                                @endif
+                                            @empty
+                                                <td colspan="2"></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforelse
+                                            @php
+                                                $first = false;
+                                            @endphp
+                                        @else
+                                            <tr class="page-break">
+                                                <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                                @php
+                                                    $firstRating = true;
+                                                @endphp
+                                                @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                                    @if ($firstRating)
+                                                        <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                        <td>
+                                                            @if ($rating->quality)
+                                                            {{ $rating->quality }}
+                                                            @else
+                                                            NR
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($rating->efficiency)
+                                                                {{ $rating->efficiency }}
+                                                            @else
+                                                                NR
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($rating->timeliness)
+                                                                {{ $rating->timeliness }}
+                                                            @else
+                                                                NR
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-nowrap">{{ $rating->average }}</td>
+                                                        <td>{{ $rating->remarks }}</td>
+                                                        @switch($funct->funct)
+                                                            @case('Core Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberCF++;
+                                                                @endphp
+                                                                @break
+                                                            @case('Strategic Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberSTF++;
+                                                                @endphp
+                                                                @break
+                                                            @case('Support Function')
+                                                                @php
+                                                                    $total += $rating->average;
+                                                                    $numberSubF++;
+                                                                    $numberSF++;
+                                                                @endphp
+                                                                @break
+                                                        @endswitch
+                                                        @php
+                                                            $firstRating = false;
+                                                        @endphp
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                            <td>
+                                                                @if ($rating->quality)
+                                                                {{ $rating->quality }}
+                                                                @else
+                                                                NR
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($rating->efficiency)
+                                                                    {{ $rating->efficiency }}
+                                                                @else
+                                                                    NR
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($rating->timeliness)
+                                                                    {{ $rating->timeliness }}
+                                                                @else
+                                                                    NR
+                                                                @endif
+                                                            </td>
+                                                            <td class="text-nowrap">{{ $rating->average }}</td>
+                                                            <td>{{ $rating->remarks }}</td>
+                                                            @switch($funct->funct)
+                                                                @case('Core Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberCF++;
+                                                                    @endphp
+                                                                    @break
+                                                                @case('Strategic Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberSTF++;
+                                                                    @endphp
+                                                                    @break
+                                                                @case('Support Function')
+                                                                    @php
+                                                                        $total += $rating->average;
+                                                                        $numberSubF++;
+                                                                        $numberSF++;
+                                                                    @endphp
+                                                                    @break
+                                                            @endswitch
+                                                        </tr>
                                                     @endif
                                                 @empty
                                                     <td colspan="2"></td>
@@ -777,8 +995,16 @@
                             </td>
                             <td colspan="8"></td>
                         </tr>
-                        <tr>
-                            <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
+                        <tr class="page-break">
+                            @php
+                                $totalRating = 0;
+                            @endphp
+                            @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
+                                @php
+                                    $totalRating += count($target->ratings()->where('user_id', $user->id)->get());
+                                @endphp
+                            @endforeach
+                            <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
                                 {{ $suboutput->suboutput }}
                             </td>
 
@@ -787,9 +1013,12 @@
                             @endphp
                             @foreach ($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
-                                    <td>{{ $target->target }}</td>
-                                    @forelse ($target->ratings as $rating)
-                                        @if ($rating->user_id == $user->id)
+                                    <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                    @php
+                                        $firstRating = true;
+                                    @endphp
+                                    @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                        @if ($firstRating)
                                             <td colspan="2">{{ $rating->accomplishment }}</td>
                                             <td>
                                                 @if ($rating->quality)
@@ -837,31 +1066,8 @@
                                                     @endphp
                                                     @break
                                             @endswitch
-                                            @break;
-                                        @elseif ($loop->last)
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        @endif
-                                    @empty
-                                        <td colspan="2"></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    @endforelse
-                                    @php
-                                        $first = false;
-                                    @endphp
-                                @else
-                                    <tr>
-                                        <td>{{ $target->target }}</td>
-                                        @forelse ($target->ratings as $rating)
-                                            @if ($rating->user_id == $user->id)
+                                        @else
+                                            <tr>
                                                 <td colspan="2">{{ $rating->accomplishment }}</td>
                                                 <td>
                                                     @if ($rating->quality)
@@ -909,14 +1115,124 @@
                                                         @endphp
                                                         @break
                                                 @endswitch
-                                                @break;
-                                            @elseif ($loop->last)
-                                                <td colspan="2"></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        <td colspan="2"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
+                                    @php
+                                        $first = false;
+                                    @endphp
+                                @else
+                                    <tr class="page-break">
+                                        <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                        @php
+                                            $firstRating = true;
+                                        @endphp
+                                        @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                            @if ($firstRating)
+                                                <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                <td>
+                                                    @if ($rating->quality)
+                                                    {{ $rating->quality }}
+                                                    @else
+                                                    NR
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($rating->efficiency)
+                                                        {{ $rating->efficiency }}
+                                                    @else
+                                                        NR
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($rating->timeliness)
+                                                        {{ $rating->timeliness }}
+                                                    @else
+                                                        NR
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">{{ $rating->average }}</td>
+                                                <td>{{ $rating->remarks }}</td>
+                                                @switch($funct->funct)
+                                                    @case('Core Function')
+                                                        @php
+                                                            $totalCF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberCF++;
+                                                        @endphp
+                                                        @break
+                                                    @case('Strategic Function')
+                                                        @php
+                                                            $totalSTF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberSTF++;
+                                                        @endphp
+                                                        @break
+                                                    @case('Support Function')
+                                                        @php
+                                                            $totalSF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberSF++;
+                                                        @endphp
+                                                        @break
+                                                @endswitch
+                                            @else
+                                                <tr>
+                                                    <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                    <td>
+                                                        @if ($rating->quality)
+                                                        {{ $rating->quality }}
+                                                        @else
+                                                        NR
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rating->efficiency)
+                                                            {{ $rating->efficiency }}
+                                                        @else
+                                                            NR
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rating->timeliness)
+                                                            {{ $rating->timeliness }}
+                                                        @else
+                                                            NR
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-nowrap">{{ $rating->average }}</td>
+                                                    <td>{{ $rating->remarks }}</td>
+                                                    @switch($funct->funct)
+                                                        @case('Core Function')
+                                                            @php
+                                                                $totalCF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberCF++;
+                                                            @endphp
+                                                            @break
+                                                        @case('Strategic Function')
+                                                            @php
+                                                                $totalSTF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberSTF++;
+                                                            @endphp
+                                                            @break
+                                                        @case('Support Function')
+                                                            @php
+                                                                $totalSF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberSF++;
+                                                            @endphp
+                                                            @break
+                                                    @endswitch
+                                                </tr>
                                             @endif
                                         @empty
                                             <td colspan="2"></td>
@@ -931,11 +1247,19 @@
                             @endforeach
                         </tr>
                     @empty
-                        <tr>
-                            <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
+                        <tr class="page-break">
+                            @php
+                                $totalRating = 0;
+                            @endphp
+                            @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
+                                @php
+                                    $totalRating += count($target->ratings()->where('user_id', $user->id)->get());
+                                @endphp
+                            @endforeach
+                            <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
                                 {{ $output->code }} {{ ++$number }}
                             </td>
-                            <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
+                            <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) + ($totalRating - 1) }}">
                                 {{ $output->output }}
                             </td>
 
@@ -944,9 +1268,12 @@
                             @endphp
                             @foreach ($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get() as $target)
                                 @if ($first)
-                                    <td>{{ $target->target }}</td>
-                                    @forelse ($target->ratings as $rating)
-                                        @if ($rating->user_id == $user->id)
+                                    <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                    @php
+                                        $firstRating = true;
+                                    @endphp
+                                    @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                        @if ($firstRating)
                                             <td colspan="2">{{ $rating->accomplishment }}</td>
                                             <td>
                                                 @if ($rating->quality)
@@ -994,31 +1321,8 @@
                                                     @endphp
                                                     @break
                                             @endswitch
-                                            @break;
-                                        @elseif ($loop->last)
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        @endif
-                                    @empty
-                                        <td colspan="2"></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    @endforelse
-                                    @php
-                                        $first = false;
-                                    @endphp
-                                @else
-                                    <tr>
-                                        <td>{{ $target->target }}</td>
-                                        @forelse ($target->ratings as $rating)
-                                            @if ($rating->user_id == $user->id)
+                                        @else
+                                            <tr>
                                                 <td colspan="2">{{ $rating->accomplishment }}</td>
                                                 <td>
                                                     @if ($rating->quality)
@@ -1066,14 +1370,124 @@
                                                         @endphp
                                                         @break
                                                 @endswitch
-                                                @break;
-                                            @elseif ($loop->last)
-                                                <td colspan="2"></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                            </tr>
+                                        @endif
+                                    @empty
+                                        <td colspan="2"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
+                                    @php
+                                        $first = false;
+                                    @endphp
+                                @else
+                                    <tr class="page-break">
+                                        <td rowspan="{{ count($target->ratings()->where('user_id', $user->id)->get()) }}">{{ $target->target }}</td>
+                                        @php
+                                            $firstRating = true;
+                                        @endphp
+                                        @forelse ($target->ratings()->where('user_id', $user->id)->get() as $rating)
+                                            @if ($firstRating)
+                                                <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                <td>
+                                                    @if ($rating->quality)
+                                                    {{ $rating->quality }}
+                                                    @else
+                                                    NR
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($rating->efficiency)
+                                                        {{ $rating->efficiency }}
+                                                    @else
+                                                        NR
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($rating->timeliness)
+                                                        {{ $rating->timeliness }}
+                                                    @else
+                                                        NR
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">{{ $rating->average }}</td>
+                                                <td>{{ $rating->remarks }}</td>
+                                                @switch($funct->funct)
+                                                    @case('Core Function')
+                                                        @php
+                                                            $totalCF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberCF++;
+                                                        @endphp
+                                                        @break
+                                                    @case('Strategic Function')
+                                                        @php
+                                                            $totalSTF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberSTF++;
+                                                        @endphp
+                                                        @break
+                                                    @case('Support Function')
+                                                        @php
+                                                            $totalSF += $rating->average;
+                                                            $numberSubF++;
+                                                            $numberSF++;
+                                                        @endphp
+                                                        @break
+                                                @endswitch
+                                            @else
+                                                <tr>
+                                                    <td colspan="2">{{ $rating->accomplishment }}</td>
+                                                    <td>
+                                                        @if ($rating->quality)
+                                                        {{ $rating->quality }}
+                                                        @else
+                                                        NR
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rating->efficiency)
+                                                            {{ $rating->efficiency }}
+                                                        @else
+                                                            NR
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rating->timeliness)
+                                                            {{ $rating->timeliness }}
+                                                        @else
+                                                            NR
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-nowrap">{{ $rating->average }}</td>
+                                                    <td>{{ $rating->remarks }}</td>
+                                                    @switch($funct->funct)
+                                                        @case('Core Function')
+                                                            @php
+                                                                $totalCF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberCF++;
+                                                            @endphp
+                                                            @break
+                                                        @case('Strategic Function')
+                                                            @php
+                                                                $totalSTF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberSTF++;
+                                                            @endphp
+                                                            @break
+                                                        @case('Support Function')
+                                                            @php
+                                                                $totalSF += $rating->average;
+                                                                $numberSubF++;
+                                                                $numberSF++;
+                                                            @endphp
+                                                            @break
+                                                    @endswitch
+                                                </tr>
                                             @endif
                                         @empty
                                             <td colspan="2"></td>
@@ -1266,8 +1680,9 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="10" class="text-start" style="height: 100px; vertical-align: top;">
-                    Comment and recommendation for Development Purposes
+                <td colspan="10" class="text-start" style="min-height: 100px; vertical-align: top;">
+                    Comment and recommendation for Development Purposes <br>
+                    <?php echo nl2br($printInfo->comment) ?>
                 </td>
             </tr>
             <tr>
@@ -1303,6 +1718,21 @@
             </tr>
         </tfoot>
     </table>
-</body>
+    <script src="{{ asset('/js/jquery.js') }}"></script>
 
+    <script>
+        $('table.main-table tbody tr').each(function () {
+            if ($(this).offset().top >= 100) {
+                var boundary = $(this);
+                $("<tbody>").insertAfter(boundary.parent()).append(boundary.nextAll().addBack());
+                    
+                var boundaryP = $(this).parent();
+                $("<table class='main-table bordered'>").insertAfter(boundaryP.parent()).append(boundaryP.nextAll().addBack());
+                $(this).css({
+                    'page-break-before': 'always'
+                });
+            }
+        });
+    </script>
+</body>
 </html>

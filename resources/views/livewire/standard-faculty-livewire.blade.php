@@ -182,26 +182,28 @@
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-success"
-                                                                                            wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#EditStandardModal"
-                                                                                            title="Edit Standard">
-                                                                                            <i
-                                                                                                class="bi bi-pencil-square"></i>
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-danger"
-                                                                                            wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#DeleteModal"
-                                                                                            title="Delete Standard">
-                                                                                            <i
-                                                                                                class="bi bi-trash"></i>
-                                                                                        </button>
-                                                                                    @endif
+                                                                                    <div class="hstack align-items-center justify-content-center gap-2">
+                                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditStandardModal"
+                                                                                                title="Edit Standard">
+                                                                                                <i
+                                                                                                    class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-danger"
+                                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#DeleteModal"
+                                                                                                title="Delete Standard">
+                                                                                                <i
+                                                                                                    class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -331,6 +333,7 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <td colspan="6">Rating</td>
+                                                                        <td rowspan="2">Action</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2">Q</td>
@@ -352,26 +355,28 @@
                                                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                                 </td>
                                                                                 <td rowspan="5">
-                                                                                    @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-success"
-                                                                                            wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#EditStandardModal"
-                                                                                            title="Edit Standard">
-                                                                                            <i
-                                                                                                class="bi bi-pencil-square"></i>
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            class="btn icon btn-danger"
-                                                                                            wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#DeleteModal"
-                                                                                            title="Delete Standard">
-                                                                                            <i
-                                                                                                class="bi bi-trash"></i>
-                                                                                        </button>
-                                                                                    @endif
+                                                                                    <div class="hstack align-items-center justify-content-center gap-2">
+                                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-success"
+                                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#EditStandardModal"
+                                                                                                title="Edit Standard">
+                                                                                                <i
+                                                                                                    class="bi bi-pencil-square"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-danger"
+                                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#DeleteModal"
+                                                                                                title="Delete Standard">
+                                                                                                <i
+                                                                                                    class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
@@ -516,6 +521,7 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
+                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">Q</td>
@@ -537,26 +543,28 @@
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-success"
-                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#EditStandardModal"
-                                                                                title="Edit Standard">
-                                                                                <i
-                                                                                    class="bi bi-pencil-square"></i>
-                                                                            </button>
-                                                                            <button type="button"
-                                                                                class="btn icon btn-danger"
-                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#DeleteModal"
-                                                                                title="Delete Standard">
-                                                                                <i
-                                                                                    class="bi bi-trash"></i>
-                                                                            </button>
-                                                                        @endif
+                                                                        <div class="hstack align-items-center justify-content-center gap-2">
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-success"
+                                                                                    wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#EditStandardModal"
+                                                                                    title="Edit Standard">
+                                                                                    <i
+                                                                                        class="bi bi-pencil-square"></i>
+                                                                                </button>
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-danger"
+                                                                                    wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#DeleteModal"
+                                                                                    title="Delete Standard">
+                                                                                    <i
+                                                                                        class="bi bi-trash"></i>
+                                                                                </button>
+                                                                            @endif
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -686,6 +694,7 @@
                                                     <thead>
                                                         <tr>
                                                             <td colspan="6">Rating</td>
+                                                            <td rowspan="2">Action</td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2">Q</td>
@@ -707,26 +716,28 @@
                                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}
                                                                     </td>
                                                                     <td rowspan="5">
-                                                                        @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
-                                                                            <button type="button"
-                                                                                class="btn icon btn-success"
-                                                                                wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#EditStandardModal"
-                                                                                title="Edit Standard">
-                                                                                <i
-                                                                                    class="bi bi-pencil-square"></i>
-                                                                            </button>
-                                                                            <button type="button"
-                                                                                class="btn icon btn-danger"
-                                                                                wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#DeleteModal"
-                                                                                title="Delete Standard">
-                                                                                <i
-                                                                                    class="bi bi-trash"></i>
-                                                                            </button>
-                                                                        @endif
+                                                                        <div class="hstack align-items-center justify-content-center gap-2">
+                                                                            @if (($duration && $duration->end_date >= date('Y-m-d')) && $target->added_by == null  && (!$approval || (isset($approval->approve_status) && $approval->approve_status != 1)))
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-success"
+                                                                                    wire:click="clicked('{{ 'edit' }}', {{ $standard->id }})"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#EditStandardModal"
+                                                                                    title="Edit Standard">
+                                                                                    <i
+                                                                                        class="bi bi-pencil-square"></i>
+                                                                                </button>
+                                                                                <button type="button"
+                                                                                    class="btn icon btn-danger"
+                                                                                    wire:click="clicked('{{ 'delete' }}', {{ $standard->id }})"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#DeleteModal"
+                                                                                    title="Delete Standard">
+                                                                                    <i
+                                                                                        class="bi bi-trash"></i>
+                                                                                </button>
+                                                                            @endif
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>

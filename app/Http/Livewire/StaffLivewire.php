@@ -13,6 +13,7 @@ use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
 use App\Models\Committee;
+use App\Models\PrintInfo;
 use App\Models\Suboutput;
 use App\Models\IpcrReview;
 use App\Models\Percentage;
@@ -68,6 +69,10 @@ class StaffLivewire extends Component
     public $hasRating = false;
 
     public $print;
+
+    public $hasMultipleRating;
+
+    public $printInfos = [];
 
     protected $listeners = ['percentage', 'resetIntput'];
 
@@ -655,13 +660,15 @@ class StaffLivewire extends Component
                     auth()->user()->targets()->attach(Target::create([
                         'target' => $this->target,
                         'output_id' => $subput[1],
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'hasMultipleRating' => $this->hasMultipleRating,
                     ]));
                 } elseif ($subput[0] == 'suboutput') {
                     auth()->user()->targets()->attach(Target::create([
                         'target' => $this->target,
                         'suboutput_id' => $subput[1],
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'hasMultipleRating' => $this->hasMultipleRating,
                     ]));
                 }
                 break;
@@ -701,7 +708,8 @@ class StaffLivewire extends Component
                 break;
             case 'target':  
                 Target::where('id', $this->target_id)->update([
-                    'target' => $this->target
+                    'target' => $this->target,
+                    'hasMultipleRating' => $this->hasMultipleRating,
                 ]);
                 break;
             case 'target_output':
@@ -894,6 +902,38 @@ class StaffLivewire extends Component
 
     public function print() {
         $this->print = 'staff';
+        
+        $this->printInfos = PrintInfo::where('user_id', auth()->user()->id)
+                        ->where('duration_id', $this->duration->id)
+                        ->where('type', 'staff')
+                        ->first();
+        if($this->printInfos) {
+            $this->printInfos->toArray();
+        }
+    }
+
+    public function submitPrint() {
+        $printInfo = PrintInfo::where('user_id', auth()->user()->id)
+            ->where('duration_id', $this->duration->id)
+            ->where('type', 'staff')
+            ->first();
+
+        if ($printInfo) {
+            PrintInfo::where('id', $printInfo->id)->update([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office']
+            ]);
+        } else {
+            PrintInfo::create([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office'],
+                'type' => 'staff',
+                'duration_id' => $this->duration->id,
+                'user_id' => auth()->user()->id
+            ]);
+        }
+
+        $this->dispatchBrowserEvent('close-modal');
     }
     
     public function resetInput(){
@@ -916,6 +956,8 @@ class StaffLivewire extends Component
         $this->quality = '';
         $this->timeliness = '';
         $this->accomplishment = '';
+
+        $this->printInfos = [];
     }
 
     public function closeModal()

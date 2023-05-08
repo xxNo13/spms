@@ -95,6 +95,16 @@
             padding-top: 0;
             padding-bottom: 0; 
         }
+        table.main-table  tr.page-break {
+            page-break-after: avoid !important;
+            break-after: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
+        table.main-table  tr  td, table.main-table tr th {
+            page-break-inside: avoid !important;
+            break-inside: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
     </style>
 </head>
 
@@ -186,7 +196,7 @@
                                 </td>
                                 <td colspan="7"></td>
                             </tr>
-                            <tr>
+                            <tr class="page-break">
                                 <td colspan="2" rowspan="{{ count($suboutput->targets) * 5 }}">
                                 {{ $suboutput->suboutput }}
                                 </td>
@@ -324,7 +334,7 @@
                                             $first = false;
                                         @endphp
                                     @else
-                                        <tr>
+                                        <tr class="page-break">
                                             @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id)
                                                     <td rowspan="5">{{ $target->target }}</td>
@@ -454,7 +464,7 @@
                                 @endforeach
                             </tr>
                         @empty
-                            <tr>
+                            <tr class="page-break">
                                 <td rowspan="{{ count($output->targets)*5 }}">
                                     {{ $output->code }} {{ ++$number }}
                                 </td>
@@ -595,7 +605,7 @@
                                             $first = false;
                                         @endphp
                                     @else
-                                        <tr>
+                                        <tr class="page-break">
                                             @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id)
                                                     <td rowspan="5">{{ $target->target }}</td>
@@ -738,7 +748,7 @@
                             </td>
                             <td colspan="7"></td>
                         </tr>
-                        <tr>
+                        <tr class="page-break">
                             <td colspan="2" rowspan="{{ count($suboutput->targets) * 5 }}">
                             {{ $suboutput->suboutput }}
                             </td>
@@ -876,7 +886,7 @@
                                         $first = false;
                                     @endphp
                                 @else
-                                    <tr>
+                                    <tr class="page-break">
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>
@@ -1006,7 +1016,7 @@
                             @endforeach
                         </tr>
                     @empty
-                        <tr>
+                        <tr class="page-break">
                             <td rowspan="{{ count($output->targets)*5 }}">
                                 {{ $output->code }} {{ ++$number }}
                             </td>
@@ -1147,7 +1157,7 @@
                                         $first = false;
                                     @endphp
                                 @else
-                                    <tr>
+                                    <tr class="page-break">
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id)
                                                 <td rowspan="5">{{ $target->target }}</td>

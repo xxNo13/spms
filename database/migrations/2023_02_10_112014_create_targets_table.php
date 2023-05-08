@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('suboutput_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('duration_id')->constrained()->onDelete('cascade');
             $table->integer('added_by')->nullable();
+            $table->boolean('hasMultipleRating')->default(false);
             $table->timestamps();
         });
         

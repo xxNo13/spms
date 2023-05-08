@@ -11,6 +11,7 @@ use App\Models\Target;
 use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
+use App\Models\PrintInfo;
 use App\Models\Percentage;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,8 @@ class ForApprovalLivewire extends Component
     public $targetOutput;
 
     public $selectedTargetId;
+
+    public $printComment;
 
     protected  $queryString = ['search'];
 
@@ -213,6 +216,28 @@ class ForApprovalLivewire extends Component
     public function approved($id, $type, $bool = false){
         $approval = Approval::find($id);
 
+        
+        $printInfo = PrintInfo::where('user_id', $approval->user_id)
+                            ->where('duration_id', $approval->duration_id)
+                            ->where('type', $approval->user_type)
+                            ->first();
+
+        if ($printInfo) {
+            if ($printInfo->comment) {
+                $this->printComment = $printInfo->comment . "\n" . $this->printComment;
+            }
+            PrintInfo::where('id', $printInfo->id)->update([
+                'comment' => $this->printComment,
+            ]);
+        } else {
+            PrintInfo::create([
+                'comment' => $this->printComment,
+                'type' => $approval->user_type,
+                'duration_id' => $approval->duration_id,
+                'user_id' => $approval->user_id
+            ]);
+        }
+
         if ($approval->approve_id == Auth::user()->id && $type == 'Approved'){
 
             foreach ($this->comment as $id => $value) {
@@ -265,9 +290,7 @@ class ForApprovalLivewire extends Component
         $this->mount();
         $this->dispatchBrowserEvent('close-modal'); 
 
-        if ($bool) {
-            return redirect(request()->header('Referer'));
-        }
+        return redirect(request()->header('Referer'));
     }
 
     public function comment($target_id) {

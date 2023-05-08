@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Funct;
 use App\Models\Office;
 use App\Models\Duration;
+use App\Models\PrintInfo;
 use App\Models\Percentage;
 use Illuminate\Http\Request;
 use App\Models\SubPercentage;
@@ -88,6 +89,11 @@ class PdfController extends Controller
             }
         }
 
+        $printInfo = PrintInfo::where('user_id', $user->id)
+                            ->where('duration_id', $duration->id)
+                            ->where('type', 'faculty')
+                            ->first();
+
         $data = [
             'functs' => Funct::all(),
             'approval' => $approval,
@@ -103,6 +109,7 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
+            'printInfo' => $printInfo
         ];
 
         $pdf = PDF::loadView('print.ipcr-faculty', $data)->setPaper('a4','landscape');
@@ -244,6 +251,11 @@ class PdfController extends Controller
             }
         }
 
+        $printInfo = PrintInfo::where('user_id', $user->id)
+                            ->where('duration_id', $duration->id)
+                            ->where('type', 'staff')
+                            ->first();
+
         $data = [
             'functs' => Funct::all(),
             'approval' => $approval,
@@ -259,6 +271,7 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
+            'printInfo' => $printInfo
         ];
 
         $pdf = PDF::loadView('print.ipcr-staff', $data)->setPaper('a4','landscape');
@@ -393,6 +406,11 @@ class PdfController extends Controller
             }
         }
 
+        $printInfo = PrintInfo::where('user_id', $user->id)
+                            ->where('duration_id', $duration->id)
+                            ->where('type', 'office')
+                            ->first();
+
         $data = [
             'functs' => Funct::all(),
             'approval' => $approval,
@@ -408,6 +426,7 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
+            'printInfo' => $printInfo
         ];
 
         $pdf = PDF::loadView('print.opcr', $data)->setPaper('a4','landscape');

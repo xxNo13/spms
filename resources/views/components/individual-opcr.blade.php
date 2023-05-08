@@ -113,11 +113,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }})">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else 
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }})">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @elseif ($approval->reviewers()->where('user_id', auth()->user()->id)->first()->pivot->review_status != 1)
@@ -128,11 +137,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }})">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else 
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }})">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -144,11 +162,20 @@
                             <i class="bi bi-check"></i>
                             Approved
                         </button>
-                        <button type="button" class="btn icon btn-danger"
-                            wire:click="declined({{ $approval->id }})">
-                            <i class="bi bi-x"></i>
-                            Decline
-                        </button>
+                        @if ($approval->name == 'assess')
+                            <button type="button" class="btn icon btn-info"
+                                data-bs-toggle="modal"
+                                data-bs-target="#PrintCommentModal">
+                                <i class="bi bi-x"></i>
+                                Add a Comment
+                            </button>
+                        @else 
+                            <button type="button" class="btn icon btn-danger"
+                                wire:click="declined({{ $approval->id }})">
+                                <i class="bi bi-x"></i>
+                                Decline
+                            </button>
+                        @endif
                     </div>
                 </div>
             @elseif ($approval->approve_id == auth()->user()->id && $approval->approve_status != 1)
@@ -160,11 +187,20 @@
                                 <i class="bi bi-check"></i>
                                 Approved
                             </button>
-                            <button type="button" class="btn icon btn-danger"
-                                wire:click="declined({{ $approval->id }}">
-                                <i class="bi bi-x"></i>
-                                Decline
-                            </button>
+                            @if ($approval->name == 'assess')
+                                <button type="button" class="btn icon btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PrintCommentModal">
+                                    <i class="bi bi-x"></i>
+                                    Add a Comment
+                                </button>
+                            @else 
+                                <button type="button" class="btn icon btn-danger"
+                                    wire:click="declined({{ $approval->id }}">
+                                    <i class="bi bi-x"></i>
+                                    Decline
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -323,7 +359,7 @@
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
                                                                                     <td>
-                                                                                        <div class="hstack gap-2">
+                                                                                        <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ($approval->approve_id != auth()->user()->id)
                                                                                                 <button type="button"
                                                                                                     class="btn icon btn-success"
@@ -573,7 +609,7 @@
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
                                                                                     <td>
-                                                                                        <div class="hstack gap-2">
+                                                                                        <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ($approval->approve_id != auth()->user()->id)
                                                                                                 <button type="button"
                                                                                                     class="btn icon btn-success"
@@ -846,7 +882,7 @@
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
                                                                         <td>
-                                                                            <div class="hstack gap-2">
+                                                                            <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ($approval->approve_id != auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"
@@ -1094,7 +1130,7 @@
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
                                                                         <td>
-                                                                            <div class="hstack gap-2">
+                                                                            <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ($approval->approve_id != auth()->user()->id)
                                                                                     <button type="button"
                                                                                         class="btn icon btn-success"

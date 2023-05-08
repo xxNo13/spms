@@ -12,12 +12,13 @@ use Livewire\Component;
 use App\Models\Approval;
 use App\Models\Duration;
 use App\Models\SubFunct;
+use App\Models\Committee;
+use App\Models\PrintInfo;
 use App\Models\Suboutput;
 use App\Models\Percentage;
 use App\Models\ScoreReview;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
-use App\Models\Committee;
 use App\Notifications\ApprovalNotification;
 
 class FacultyLivewire extends Component
@@ -69,6 +70,10 @@ class FacultyLivewire extends Component
 
     public $print;
 
+    public $hasMultipleRating;
+
+    public $printInfos = [];
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -85,6 +90,9 @@ class FacultyLivewire extends Component
         'target' => ['required_if:selected,target'],
 
         'deloading' => ['nullable', 'required_if:selected,deloading', 'numeric', 'max:18'],
+    
+        'printInfos.position' => ['nullable'],
+        'printInfos.office' => ['nullable'],
     ];
 
     protected $messages = [
@@ -807,14 +815,16 @@ class FacultyLivewire extends Component
                     $target = Target::create([
                         'target' => $this->target,
                         'output_id' => $subput[1],
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'hasMultipleRating' => $this->hasMultipleRating,
                     ]);
                     auth()->user()->targets()->attach($target->id);
                 } elseif ($subput[0] == 'suboutput') {
                     $target = Target::create([
                         'target' => $this->target,
                         'suboutput_id' => $subput[1],
-                        'duration_id' => $this->duration->id
+                        'duration_id' => $this->duration->id,
+                        'hasMultipleRating' => $this->hasMultipleRating,
                     ]);
                     auth()->user()->targets()->attach($target->id);
                 }
@@ -857,7 +867,8 @@ class FacultyLivewire extends Component
             case 'target':  
                 Target::where('id', $this->target_id)->update([
                     'target' => $this->target,
-                    'required' => $this->required
+                    'required' => $this->required,
+                    'hasMultipleRating' => $this->hasMultipleRating,
                 ]);
                 break;
             case 'target_output':
@@ -1061,6 +1072,38 @@ class FacultyLivewire extends Component
 
     public function print() {
         $this->print = 'faculty';
+
+        $this->printInfos = PrintInfo::where('user_id', auth()->user()->id)
+                                ->where('duration_id', $this->duration->id)
+                                ->where('type', 'faculty')
+                                ->first();
+        if($this->printInfos) {
+            $this->printInfos->toArray();
+        }
+    }
+
+    public function submitPrint() {
+        $printInfo = PrintInfo::where('user_id', auth()->user()->id)
+                            ->where('duration_id', $this->duration->id)
+                            ->where('type', 'faculty')
+                            ->first();
+
+        if ($printInfo) {
+            PrintInfo::where('id', $printInfo->id)->update([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office']
+            ]);
+        } else {
+            PrintInfo::create([
+                'position' => $this->printInfos['position'],
+                'office' => $this->printInfos['office'],
+                'type' => 'faculty',
+                'duration_id' => $this->duration->id,
+                'user_id' => auth()->user()->id
+            ]);
+        }
+
+        $this->dispatchBrowserEvent('close-modal');
     }
     
     public function resetInput(){
@@ -1084,6 +1127,8 @@ class FacultyLivewire extends Component
         $this->timeliness = '';
         $this->accomplishment = '';
         $this->deloading = '';
+
+        $this->printInfos = [];
     }
 
     public function closeModal()

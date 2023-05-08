@@ -55,6 +55,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public function printInfos() {
+        return $this->hasMany(PrintInfo::class);
+    }
+
     public function score_logs() {
         return $this->hasMany(ScoreLog::class, 'user_id');
     }

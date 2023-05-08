@@ -41,19 +41,23 @@
                                     <tr>
                                         <td>OPCR for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'opcr', 'office')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'opcr', 'office')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>OPCR Standard for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'opcr', 'office', 'standard')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'opcr', 'office', 'standard')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endif
@@ -61,19 +65,23 @@
                                     <tr>
                                         <td>Faculty IPCR for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'ipcr', 'faculty')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'ipcr', 'faculty')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Faculty IPCR Standard for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'ipcr', 'faculty', 'standard')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'ipcr', 'faculty', 'standard')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endif
@@ -81,19 +89,23 @@
                                     <tr>
                                         <td>Staff IPCR for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'ipcr', 'staff')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'ipcr', 'staff')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Staff IPCR Standard for {{ $duration->duration_name }}</td>
                                         <td>
-                                            <button type="button" class="btn icon btn-secondary"
-                                                wire:click="viewed({{$duration->id}}, 'ipcr', 'staff', 'standard')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <div class="hstack align-items-center justify-content-center gap-2">
+                                                <button type="button" class="btn icon btn-secondary"
+                                                    wire:click="viewed({{$duration->id}}, 'ipcr', 'staff', 'standard')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endif

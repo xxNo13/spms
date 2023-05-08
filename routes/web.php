@@ -96,8 +96,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
         
         Route::middleware(['pmoorhrmo'])->group(function () {
-            // Route::get('/listing', ListingOpcrLivewire::class)->name('listing');
-            // Route::get('/listing/standard', ListingStandardOpcrLivewire::class)->name('listing.standard');
+            Route::get('/listing', ListingOpcrLivewire::class)->name('listing');
+            Route::get('/listing/standard', ListingStandardOpcrLivewire::class)->name('listing.standard');
         });
 
     });

@@ -100,6 +100,16 @@
             padding-top: 0;
             padding-bottom: 0; 
         }
+        table.main-table  tr.page-break {
+            page-break-after: avoid !important;
+            break-after: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
+        table.main-table  tr  td, table.main-table tr th {
+            page-break-inside: avoid !important;
+            break-inside: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
     </style>
 </head>
 
@@ -247,7 +257,7 @@
         @endphp
         @foreach ($functs as $funct)
             <tbody>
-                <tr>
+                <tr class="page-break">
                     <th rowspan="2" colspan="2">
                         {{ $funct->funct }}
                         @switch(strtolower($funct->funct))
@@ -312,7 +322,7 @@
                                     </td>
                                     <td colspan="10"></td>
                                 </tr>
-                                <tr>
+                                <tr class="page-break">
                                     <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
                                     {{ $suboutput->suboutput }}
                                     </td>
@@ -470,7 +480,7 @@
                                     @endforeach
                                 </tr>
                             @empty
-                                <tr>
+                                <tr class="page-break">
                                     <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
                                         {{ $output->code }} {{ ++$number }}
                                     </td>
@@ -801,7 +811,7 @@
                             </td>
                             <td colspan="10"></td>
                         </tr>
-                        <tr>
+                        <tr class="page-break">
                             <td colspan="2" rowspan="{{ count($user->targets()->where('suboutput_id', $suboutput->id)->where('duration_id', $duration->id)->get()) }}">
                                 {{ $suboutput->suboutput }}
                             </td>
@@ -959,7 +969,7 @@
                             @endforeach
                         </tr>
                     @empty
-                        <tr>
+                        <tr class="page-break">
                             <td rowspan="{{ count($user->targets()->where('output_id', $output->id)->where('duration_id', $duration->id)->get()) }}">
                                 {{ $output->code }} {{ ++$number }}
                             </td>
@@ -1298,8 +1308,9 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="12" class="text-start" style="height: 100px; vertical-align: top;">
+                <td colspan="12" class="text-start" style="min-height: 100px; vertical-align: top;">
                     Comment and recommendation for Development Purposes
+                    <?php echo nl2br($printInfo->comment) ?>
                 </td>
             </tr>
             <tr>

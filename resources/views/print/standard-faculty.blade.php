@@ -95,6 +95,16 @@
             padding-top: 0;
             padding-bottom: 0; 
         }
+        table.main-table  tr.page-break {
+            page-break-after: avoid !important;
+            break-after: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
+        table.main-table  tr  td, table.main-table tr th {
+            page-break-inside: avoid !important;
+            break-inside: avoid-page !important;
+            margin: 4px 0 4px 0
+        }
     </style>
 </head>
 
@@ -187,7 +197,7 @@
                                 </td>
                                 <td colspan="7"></td>
                             </tr>
-                            <tr style="page-break-inside: avoid;" >
+                            <tr class="page-break">
                                 <td colspan="2" rowspan="{{ count($suboutput->targets) * 5}}">
                                 {{ $suboutput->suboutput }}
                                 </td>
@@ -206,7 +216,7 @@
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -214,7 +224,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -222,7 +232,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -247,7 +257,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -255,7 +265,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -263,7 +273,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -288,7 +298,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -296,7 +306,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -304,7 +314,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -325,7 +335,7 @@
                                             $first = false;
                                         @endphp
                                     @else
-                                        <tr style="page-break-inside: avoid;" >
+                                        <tr class="page-break">
                                             @forelse ($target->standards as $standard)
                                                 @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                     <td rowspan="5">{{ $target->target }}</td>
@@ -335,7 +345,7 @@
                                                     <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                     <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                         <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -343,7 +353,7 @@
                                                         <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                         <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                         <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -351,7 +361,7 @@
                                                         <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                         <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                         <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                         <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -376,7 +386,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -384,7 +394,7 @@
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -392,7 +402,7 @@
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr class="page-break">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -417,7 +427,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -425,7 +435,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -433,7 +443,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -455,7 +465,7 @@
                                 @endforeach
                             </tr>
                         @empty
-                            <tr style="page-break-inside: avoid;" >
+                            <tr class="page-break">
                                 <td rowspan="{{ count($output->targets)*5 }}">
                                     {{ $output->code }} {{ ++$number }}
                                 </td>
@@ -472,7 +482,7 @@
                                             <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -480,7 +490,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -488,7 +498,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -513,7 +523,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -521,7 +531,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -529,7 +539,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -554,7 +564,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -562,7 +572,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -570,7 +580,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -603,7 +613,7 @@
                             </td>
                             <td colspan="7"></td>
                         </tr>
-                        <tr style="page-break-inside: avoid;" >
+                        <tr class="page-break">
                             <td colspan="2" rowspan="{{ count($suboutput->targets) * 5 }}">
                             {{ $suboutput->suboutput }}
                             </td>
@@ -622,7 +632,7 @@
                                             <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -630,7 +640,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -638,7 +648,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -663,7 +673,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -671,7 +681,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -679,7 +689,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -704,7 +714,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -712,7 +722,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -720,7 +730,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -741,7 +751,7 @@
                                         $first = false;
                                     @endphp
                                 @else
-                                    <tr style="page-break-inside: avoid;" >
+                                    <tr class="page-break">
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
@@ -751,7 +761,7 @@
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -759,7 +769,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -767,7 +777,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -792,7 +802,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -800,7 +810,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -808,7 +818,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -833,7 +843,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -841,7 +851,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -849,7 +859,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -871,7 +881,7 @@
                             @endforeach
                         </tr>
                     @empty
-                        <tr style="page-break-inside: avoid;" >
+                        <tr class="page-break">
                             <td rowspan="{{ count($output->targets)*5 }}">
                                 {{ $output->code }} {{ ++$number }}
                             </td>
@@ -893,7 +903,7 @@
                                             <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                             <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                             <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -901,7 +911,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                 <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -909,7 +919,7 @@
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                 <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                 <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                 <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -934,7 +944,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -942,7 +952,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -950,7 +960,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -975,7 +985,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -983,7 +993,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -991,7 +1001,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="page-break">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -1012,7 +1022,7 @@
                                         $first = false;
                                     @endphp
                                 @else
-                                    <tr style="page-break-inside: avoid;" >
+                                    <tr class="page-break">
                                         @forelse ($target->standards as $standard)
                                             @if ($standard->user_id == $user->id || $standard->user_id == null)
                                                 <td rowspan="5">{{ $target->target }}</td>
@@ -1022,7 +1032,7 @@
                                                 <td>{{ $standard->eff_5 ? $standard->eff_5 : 'NR' }}</td>
                                                 <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '5' : '' }}</td>
                                                 <td>{{ $standard->time_5 ? $standard->time_5 : 'NR' }}</td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->qua_4 ? $standard->qua_4 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '4' : '' }}</td>
@@ -1030,7 +1040,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '4' : '' }}</td>
                                                     <td>{{ $standard->time_4 ? $standard->time_4 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->qua_3 ? $standard->qua_3 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '3' : '' }}</td>
@@ -1038,7 +1048,7 @@
                                                     <td>{{ ($standard->time_5 || $standard->time_4 || $standard->time_3 || $standard->time_2 || $standard->time_1) ? '3' : '' }}</td>
                                                     <td>{{ $standard->time_3 ? $standard->time_3 : 'NR' }}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td>{{ ($standard->qua_5 || $standard->qua_4 || $standard->qua_3 || $standard->qua_2 || $standard->qua_1) ? '2' : '' }}</td>
                                                     <td>{{ $standard->qua_2 ? $standard->qua_2 : 'NR' }}</td>
                                                     <td>{{ ($standard->eff_5 || $standard->eff_4 || $standard->eff_3 || $standard->eff_2 || $standard->eff_1) ? '2' : '' }}</td>
@@ -1063,7 +1073,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -1071,7 +1081,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -1079,7 +1089,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="page-break">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -1104,7 +1114,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -1112,7 +1122,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -1120,7 +1130,7 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="page-break">
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
