@@ -242,7 +242,7 @@
                                                                             </td>
                                                                         @else
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                                <td class="text-center">
+                                                                                <td class="text-center ">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                             data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -287,7 +287,7 @@
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -305,6 +305,14 @@
                                                                                                 title="Delete Rating"
                                                                                                 wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                 <i class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-secondary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#AddFilesModal"
+                                                                                                title="Add Documents"
+                                                                                                wire:click="file({{ $rating->id }})">
+                                                                                                <i class="bi bi-paperclip"></i>
                                                                                             </button>
                                                                                         @endif
                                                                                         <div class="dropup-center dropup">
@@ -441,7 +449,7 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td class="">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                                 <button type="button"
@@ -459,6 +467,14 @@
                                                                                                     title="Delete Rating"
                                                                                                     wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                     <i class="bi bi-trash"></i>
+                                                                                                </button>
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-secondary"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#AddFilesModal"
+                                                                                                    title="Add Documents"
+                                                                                                    wire:click="file({{ $rating->id }})">
+                                                                                                    <i class="bi bi-paperclip"></i>
                                                                                                 </button>
                                                                                             @endif
                                                                                             <div class="dropup-center dropup">
@@ -567,7 +583,7 @@
                                                                             @if ($loop->last && $target->hasMultipleRating)
                                                                                 <tr>
                                                                                     <td colspan="7"></td>
-                                                                                    <td>
+                                                                                    <td class="">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                                 <button type="button"
@@ -585,7 +601,7 @@
                                                                             @endif
                                                                         @empty
                                                                             <td colspan="6"></td>
-                                                                            <td>
+                                                                            <td class="">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
@@ -683,7 +699,7 @@
                                                                             </td>
                                                                         @else
                                                                             @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                                <td class="text-center">
+                                                                                <td class="text-center ">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                             data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -728,7 +744,7 @@
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -746,6 +762,14 @@
                                                                                                 title="Delete Rating"
                                                                                                 wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                 <i class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-secondary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#AddFilesModal"
+                                                                                                title="Add Documents"
+                                                                                                wire:click="file({{ $rating->id }})">
+                                                                                                <i class="bi bi-paperclip"></i>
                                                                                             </button>
                                                                                         @endif
                                                                                         <div class="dropup-center dropup">
@@ -882,7 +906,7 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td class="">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                                 <button type="button"
@@ -900,6 +924,14 @@
                                                                                                     title="Delete Rating"
                                                                                                     wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                     <i class="bi bi-trash"></i>
+                                                                                                </button>
+                                                                                                <button type="button"
+                                                                                                    class="btn icon btn-secondary"
+                                                                                                    data-bs-toggle="modal"
+                                                                                                    data-bs-target="#AddFilesModal"
+                                                                                                    title="Add Documents"
+                                                                                                    wire:click="file({{ $rating->id }})">
+                                                                                                    <i class="bi bi-paperclip"></i>
                                                                                                 </button>
                                                                                             @endif
                                                                                             <div class="dropup-center dropup">
@@ -1008,7 +1040,7 @@
                                                                             @if ($loop->last && $target->hasMultipleRating)
                                                                                 <tr>
                                                                                     <td colspan="7"></td>
-                                                                                    <td>
+                                                                                    <td class="">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                                 <button type="button"
@@ -1026,7 +1058,7 @@
                                                                             @endif
                                                                         @empty
                                                                             <td colspan="6"></td>
-                                                                            <td>
+                                                                            <td class="">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
@@ -1161,7 +1193,7 @@
                                                                         </td>
                                                                     @else
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                            <td class="text-center">
+                                                                            <td class="text-center ">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                         data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -1206,7 +1238,7 @@
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
-                                                                            <td>
+                                                                            <td class="">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
@@ -1224,6 +1256,14 @@
                                                                                             title="Delete Rating"
                                                                                             wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                             <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-secondary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#AddFilesModal"
+                                                                                            title="Add Documents"
+                                                                                            wire:click="file({{ $rating->id }})">
+                                                                                            <i class="bi bi-paperclip"></i>
                                                                                         </button>
                                                                                     @endif
                                                                                     <div class="dropup-center dropup">
@@ -1360,7 +1400,7 @@
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -1378,6 +1418,14 @@
                                                                                                 title="Delete Rating"
                                                                                                 wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                 <i class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-secondary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#AddFilesModal"
+                                                                                                title="Add Documents"
+                                                                                                wire:click="file({{ $rating->id }})">
+                                                                                                <i class="bi bi-paperclip"></i>
                                                                                             </button>
                                                                                         @endif
                                                                                         <div class="dropup-center dropup">
@@ -1486,7 +1534,7 @@
                                                                         @if ($loop->last && $target->hasMultipleRating)
                                                                             <tr>
                                                                                 <td colspan="7"></td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -1504,7 +1552,7 @@
                                                                         @endif
                                                                     @empty
                                                                         <td colspan="6"></td>
-                                                                        <td>
+                                                                        <td class="">
                                                                             <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"
@@ -1602,7 +1650,7 @@
                                                                         </td>
                                                                     @else
                                                                         @if (($duration && $duration->end_date >= date('Y-m-d')) && ((!$approval || (isset($approval->approve_status) && $approval->approve_status != 1))))
-                                                                            <td class="text-center">
+                                                                            <td class="text-center ">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     <button type="button" class="ms-md-auto btn icon btn-primary" data-bs-toggle="modal"
                                                                                         data-bs-target="#AddTargetOutputModal" wire:click="selectIpcr('target_output', {{$target->id}}, 'edit')" title="Add Target Output">
@@ -1647,7 +1695,7 @@
                                                                             </td>
                                                                             <td>{{ $rating->remarks }}
                                                                             </td>
-                                                                            <td>
+                                                                            <td class="">
                                                                                 <div class="hstack align-items-center justify-content-center gap-2">
                                                                                     @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                         <button type="button"
@@ -1665,6 +1713,14 @@
                                                                                             title="Delete Rating"
                                                                                             wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                             <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                        <button type="button"
+                                                                                            class="btn icon btn-secondary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#AddFilesModal"
+                                                                                            title="Add Documents"
+                                                                                            wire:click="file({{ $rating->id }})">
+                                                                                            <i class="bi bi-paperclip"></i>
                                                                                         </button>
                                                                                     @endif
                                                                                     <div class="dropup-center dropup">
@@ -1801,7 +1857,7 @@
                                                                                 </td>
                                                                                 <td>{{ $rating->remarks }}
                                                                                 </td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -1819,6 +1875,14 @@
                                                                                                 title="Delete Rating"
                                                                                                 wire:click="rating({{ 0 }}, {{ $rating->id }})">
                                                                                                 <i class="bi bi-trash"></i>
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                class="btn icon btn-secondary"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#AddFilesModal"
+                                                                                                title="Add Documents"
+                                                                                                wire:click="file({{ $rating->id }})">
+                                                                                                <i class="bi bi-paperclip"></i>
                                                                                             </button>
                                                                                         @endif
                                                                                         <div class="dropup-center dropup">
@@ -1927,7 +1991,7 @@
                                                                         @if ($loop->last && $target->hasMultipleRating)
                                                                             <tr>
                                                                                 <td colspan="7"></td>
-                                                                                <td>
+                                                                                <td class="">
                                                                                     <div class="hstack align-items-center justify-content-center gap-2">
                                                                                         @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                             <button type="button"
@@ -1945,7 +2009,7 @@
                                                                         @endif
                                                                     @empty
                                                                         <td colspan="6"></td>
-                                                                        <td>
+                                                                        <td class="">
                                                                             <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ((!auth()->user()->score_review) && ($duration && $duration->end_date >= date('Y-m-d')) && (($approval && (isset($approval->approve_status) && $approval->approve_status == 1))) && ((!$assess || (isset($assess->approve_status) && $assess->approve_status != 1))))
                                                                                     <button type="button"

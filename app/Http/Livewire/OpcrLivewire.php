@@ -16,6 +16,7 @@ use App\Models\SubFunct;
 use App\Models\PrintInfo;
 use App\Models\Suboutput;
 use App\Models\Percentage;
+use App\Models\TargetFile;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
 use App\Notifications\ApprovalNotification;
@@ -82,6 +83,10 @@ class OpcrLivewire extends Component
 
     public $printInfos = [];
 
+    public $targetFiles;
+    public $files = [];
+    public $itteration = 1;
+    
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -102,6 +107,8 @@ class OpcrLivewire extends Component
         'target_output' => ['nullable', 'required_if:selected,target_output', 'numeric'],
         'alloted_budget' => ['nullable', 'required_if:selected,target_output', 'numeric'],
         'responsible' => ['nullable', 'required_if:selected,target_output'],
+
+        'files' => ['nullable', 'required_if:selected,file'],
     ];
 
     protected $messages = [
@@ -125,6 +132,8 @@ class OpcrLivewire extends Component
         'alloted_budget.required_if' => 'Alloted Budget cannot be null',
         'alloted_budget.numeric' => 'Alloted Budget should be a number.',
         'responsible.required_if' => 'Responsible Person/Office cannot be null',
+
+        'files.required_if' => 'File upload cannot be null.'
     ];
     
     public function updated($property)
@@ -994,6 +1003,47 @@ class OpcrLivewire extends Component
             'color' => "#435ebe",
         ]);
     } 
+
+    public function file($id) {
+
+        $this->selected = 'file';
+        $this->rating_id = $id;
+        $this->targetFiles = TargetFile::where('rating_id', $id)->get();
+    }
+
+    public function uploadFiles() {
+        $this->validate();
+
+        foreach ($this->files as $file) {
+            $url = $file->store('document');
+
+            TargetFile::create([
+                'rating_id' => $this->rating_id,
+                'file_new_name' => $url,
+                'file_default_name' => $file->getClientOriginalName()
+            ]);
+        }
+        
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Added Successfully",
+            'color' => "#28ab55",
+        ]);
+
+        $this->resetInput();
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function deleteFile($id) {
+        $targetFile = TargetFile::find($id);
+        TargetFile::where('id', $id)->delete();
+
+        $this->targetFiles = TargetFile::where('rating_id', $targetFile->rating_id)->get();
+
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Deleted Successfully",
+            'color' => "#f3616d",
+        ]);
+    }
     
     public function resetInput(){
         $this->percent = [];
@@ -1023,6 +1073,9 @@ class OpcrLivewire extends Component
         $this->responsible = '';
         
         $this->printInfos = [];
+
+        $this->files = null;
+        $this->itteration++;
     }
 
     public function closeModal()

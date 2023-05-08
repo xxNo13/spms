@@ -52,9 +52,9 @@ body.theme-dark .bg-light {
 .max-w-33 .select2-container {
     width: 90.5% !important;
 }
-.table-responsive .table tbody tr td {
+/* .table-responsive .table tbody tr td {
     max-width: 0;
-}
+} */
 
 .file-accordion.accordion-button {
     width: fit-content !important;

@@ -16,14 +16,17 @@ use App\Models\Committee;
 use App\Models\PrintInfo;
 use App\Models\Suboutput;
 use App\Models\Percentage;
+use App\Models\TargetFile;
 use App\Models\ScoreReview;
 use Livewire\WithPagination;
 use App\Models\SubPercentage;
+use Livewire\WithFileUploads;
 use App\Notifications\ApprovalNotification;
 
 class FacultyLivewire extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $funct_id;
     public $sub_funct;
@@ -74,6 +77,10 @@ class FacultyLivewire extends Component
 
     public $printInfos = [];
 
+    public $targetFiles;
+    public $files = [];
+    public $itteration = 1;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -93,6 +100,8 @@ class FacultyLivewire extends Component
     
         'printInfos.position' => ['nullable'],
         'printInfos.office' => ['nullable'],
+
+        'files' => ['nullable', 'required_if:selected,file'],
     ];
 
     protected $messages = [
@@ -113,6 +122,8 @@ class FacultyLivewire extends Component
         'deloading.required_if' => 'Number of Deloading cannot be null.',
         'deloading.numeric' => 'Number of Deloading should be a number.',
         'deloading.max' => 'Number of Deloading should not be greater than 18.',
+
+        'files.required_if' => 'File upload cannot be null.'
     ];
     
     public function updated($property)
@@ -1105,6 +1116,47 @@ class FacultyLivewire extends Component
 
         $this->dispatchBrowserEvent('close-modal');
     }
+
+    public function file($id) {
+
+        $this->selected = 'file';
+        $this->rating_id = $id;
+        $this->targetFiles = TargetFile::where('rating_id', $id)->get();
+    }
+
+    public function uploadFiles() {
+        $this->validate();
+
+        foreach ($this->files as $file) {
+            $url = $file->store('document');
+
+            TargetFile::create([
+                'rating_id' => $this->rating_id,
+                'file_new_name' => $url,
+                'file_default_name' => $file->getClientOriginalName()
+            ]);
+        }
+        
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Added Successfully",
+            'color' => "#28ab55",
+        ]);
+
+        $this->resetInput();
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function deleteFile($id) {
+        $targetFile = TargetFile::find($id);
+        TargetFile::where('id', $id)->delete();
+
+        $this->targetFiles = TargetFile::where('rating_id', $targetFile->rating_id)->get();
+
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Deleted Successfully",
+            'color' => "#f3616d",
+        ]);
+    }
     
     public function resetInput(){
         $this->percent = [];
@@ -1129,6 +1181,9 @@ class FacultyLivewire extends Component
         $this->deloading = '';
 
         $this->printInfos = [];
+
+        $this->files = null;
+        $this->itteration++;
     }
 
     public function closeModal()

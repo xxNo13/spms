@@ -75,7 +75,8 @@
 
         $('#PrintModal').modal('hide');
         $('#AddCommitteeModal').modal('hide');        
-        $('#EditCommitteeModal').modal('hide');
+        $('#EditCommitteeModal').modal('hide');       
+        $('#AddFilesModal').modal('hide');
     });
 
     $('a.dropdown-notification').on('click', function (event) {

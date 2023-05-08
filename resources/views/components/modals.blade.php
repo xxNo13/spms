@@ -3210,4 +3210,55 @@
             </div>
         </div>
     </div>
+
+    @if (isset($itteration))
+        {{-- Add Files Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="AddFilesModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Add Documents</h4>
+                    </div>
+                    <form wire:submit.prevent="uploadFiles">
+                        @csrf
+                        <div class="modal-body">
+                            <label>File: </label>
+                            <div class="form-group">
+                                <input  type="file" accept=".pdf,.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" placeholder="Training Name" class="form-control"
+                                wire:model.defer="files" id="files.{{ $itteration }}" multiple>
+                                @error('files')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <hr>
+                            <div class="vstack gap-2">
+                                @if (isset($targetFiles))
+                                    @foreach ($targetFiles as $file)
+                                        <div class="hstack gap-3">
+                                            <a href="#" wire:click.prevent="deleteFile({{ $file->id }})"><i class="bi bi-x"></i></a>
+                                            <div class="btn icon icon-left btn-secondary">
+                                                <i class="bi bi-file-earmark-text"></i>
+                                                {{ $file->file_default_name }}
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

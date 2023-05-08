@@ -40,7 +40,7 @@ class TtmaLivewire extends Component
         'output' => ['nullable', 'required_if:selected,assign'],
         'deadline' => ['nullable', 'required_if:selected,assign'],
         
-        'message' => ['nullable', 'required_without_all:file'],
+        'message' => ['nullable', 'required_without_all:file,subject'],
     ];
 
     protected $messages = [

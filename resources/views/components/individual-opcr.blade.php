@@ -358,7 +358,7 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td class="px-3" style="width: fit-content;">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ($approval->approve_id != auth()->user()->id)
                                                                                                 <button type="button"
@@ -378,6 +378,20 @@
                                                                                                     title="Add Comment">
                                                                                                     <i class="bi bi-chat-dots"></i>
                                                                                                 </button>
+                                                                                            @endif
+                                                                                            @if (count($rating->files) > 0)
+                                                                                                <div class="dropup-center dropup">
+                                                                                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                        <i class="bi bi-paperclip"></i>
+                                                                                                    </button>
+                                                                                                    <ul class="dropdown-menu p-2 border-1">
+                                                                                                        @foreach ($rating->files as $file)
+                                                                                                            <li>
+                                                                                                                <a href="uploads/{{ $file->file_new_name }}" class="text-decoration-none" target="_blank"><i class="bi bi-file-earmark-text"></i>{{ $file->file_default_name }}</a>
+                                                                                                            </li>
+                                                                                                        @endforeach
+                                                                                                    </ul>
+                                                                                                </div>
                                                                                             @endif
                                                                                             <div class="dropup-center dropup">
                                                                                                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -608,7 +622,7 @@
                                                                                     </td>
                                                                                     <td>{{ $rating->remarks }}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td class="px-3" style="width: fit-content;">
                                                                                         <div class="hstack align-items-center justify-content-center gap-2">
                                                                                             @if ($approval->approve_id != auth()->user()->id)
                                                                                                 <button type="button"
@@ -628,6 +642,20 @@
                                                                                                     title="Add Comment">
                                                                                                     <i class="bi bi-chat-dots"></i>
                                                                                                 </button>
+                                                                                            @endif
+                                                                                            @if (count($rating->files) > 0)
+                                                                                                <div class="dropup-center dropup">
+                                                                                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                        <i class="bi bi-paperclip"></i>
+                                                                                                    </button>
+                                                                                                    <ul class="dropdown-menu p-2 border-1">
+                                                                                                        @foreach ($rating->files as $file)
+                                                                                                            <li>
+                                                                                                                <a href="uploads/{{ $file->file_new_name }}" class="text-decoration-none" target="_blank"><i class="bi bi-file-earmark-text"></i>{{ $file->file_default_name }}</a>
+                                                                                                            </li>
+                                                                                                        @endforeach
+                                                                                                    </ul>
+                                                                                                </div>
                                                                                             @endif
                                                                                             <div class="dropup-center dropup">
                                                                                                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -881,7 +909,7 @@
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="px-3" style="width: fit-content;">
                                                                             <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ($approval->approve_id != auth()->user()->id)
                                                                                     <button type="button"
@@ -901,6 +929,20 @@
                                                                                         title="Add Comment">
                                                                                         <i class="bi bi-chat-dots"></i>
                                                                                     </button>
+                                                                                @endif
+                                                                                @if (count($rating->files) > 0)
+                                                                                    <div class="dropup-center dropup">
+                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                            <i class="bi bi-paperclip"></i>
+                                                                                        </button>
+                                                                                        <ul class="dropdown-menu p-2 border-1">
+                                                                                            @foreach ($rating->files as $file)
+                                                                                                <li>
+                                                                                                    <a href="uploads/{{ $file->file_new_name }}" class="text-decoration-none" target="_blank"><i class="bi bi-file-earmark-text"></i>{{ $file->file_default_name }}</a>
+                                                                                                </li>
+                                                                                            @endforeach
+                                                                                        </ul>
+                                                                                    </div>
                                                                                 @endif
                                                                                 <div class="dropup-center dropup">
                                                                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1129,7 +1171,7 @@
                                                                         </td>
                                                                         <td>{{ $rating->remarks }}
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="px-3" style="width: fit-content;">
                                                                             <div class="hstack align-items-center justify-content-center gap-2">
                                                                                 @if ($approval->approve_id != auth()->user()->id)
                                                                                     <button type="button"
@@ -1149,6 +1191,20 @@
                                                                                         title="Add Comment">
                                                                                         <i class="bi bi-chat-dots"></i>
                                                                                     </button>
+                                                                                @endif
+                                                                                @if (count($rating->files) > 0)
+                                                                                    <div class="dropup-center dropup">
+                                                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                            <i class="bi bi-paperclip"></i>
+                                                                                        </button>
+                                                                                        <ul class="dropdown-menu p-2 border-1">
+                                                                                            @foreach ($rating->files as $file)
+                                                                                                <li>
+                                                                                                    <a href="uploads/{{ $file->file_new_name }}" class="text-decoration-none" target="_blank"><i class="bi bi-file-earmark-text"></i>{{ $file->file_default_name }}</a>
+                                                                                                </li>
+                                                                                            @endforeach
+                                                                                        </ul>
+                                                                                    </div>
                                                                                 @endif
                                                                                 <div class="dropup-center dropup">
                                                                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

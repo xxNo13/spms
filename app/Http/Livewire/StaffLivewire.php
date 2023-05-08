@@ -74,6 +74,10 @@ class StaffLivewire extends Component
 
     public $printInfos = [];
 
+    public $targetFiles;
+    public $files = [];
+    public $itteration = 1;
+
     protected $listeners = ['percentage', 'resetIntput'];
 
     protected $rules = [
@@ -91,6 +95,8 @@ class StaffLivewire extends Component
 
         'output_finished' => ['nullable', 'required_if:selected,rating', 'numeric'],
         'accomplishment' => ['required_if:selected,rating'],
+
+        'files' => ['nullable', 'required_if:selected,file'],
     ];
 
     protected $messages = [
@@ -110,6 +116,8 @@ class StaffLivewire extends Component
         'output_finished.required_if' => 'Output Finished cannot be null.',
         'output_finished.numeric' => 'Output Finished should be a number.',
         'accomplishment.required_if' => 'Actual Accomplishment cannot be null.',
+
+        'files.required_if' => 'File upload cannot be null.'
     ];
     
     public function updated($property)
@@ -935,6 +943,47 @@ class StaffLivewire extends Component
 
         $this->dispatchBrowserEvent('close-modal');
     }
+
+    public function file($id) {
+
+        $this->selected = 'file';
+        $this->rating_id = $id;
+        $this->targetFiles = TargetFile::where('rating_id', $id)->get();
+    }
+
+    public function uploadFiles() {
+        $this->validate();
+
+        foreach ($this->files as $file) {
+            $url = $file->store('document');
+
+            TargetFile::create([
+                'rating_id' => $this->rating_id,
+                'file_new_name' => $url,
+                'file_default_name' => $file->getClientOriginalName()
+            ]);
+        }
+        
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Added Successfully",
+            'color' => "#28ab55",
+        ]);
+
+        $this->resetInput();
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function deleteFile($id) {
+        $targetFile = TargetFile::find($id);
+        TargetFile::where('id', $id)->delete();
+
+        $this->targetFiles = TargetFile::where('rating_id', $targetFile->rating_id)->get();
+
+        $this->dispatchBrowserEvent('toastify', [
+            'message' => "Deleted Successfully",
+            'color' => "#f3616d",
+        ]);
+    }
     
     public function resetInput(){
         $this->percent = [];
@@ -958,6 +1007,9 @@ class StaffLivewire extends Component
         $this->accomplishment = '';
 
         $this->printInfos = [];
+
+        $this->files = null;
+        $this->itteration++;
     }
 
     public function closeModal()
