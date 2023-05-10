@@ -9,7 +9,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page"><a
                                 href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Standard - Faculty</li>
+                        <li class="breadcrumb-item active" aria-current="page">Standard - OPCR</li>
                     </ol>
                 </nav>
             </div>

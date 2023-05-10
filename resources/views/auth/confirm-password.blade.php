@@ -15,7 +15,10 @@
 
             <div>
                 <x-jet-label for="password" value="{{ __('Password') }}" />
-                <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" autofocus />
+                <div class="position-relative">
+                    <x-jet-input id="password" class="password-padding block mt-1 w-full" type="password" name="password" required autocomplete="current-password" autofocus />
+                    <i class="bi bi-eye-slash password-show-hide" id="toggleshow"></i>
+                </div>
             </div>
 
             <div class="flex justify-end mt-4">

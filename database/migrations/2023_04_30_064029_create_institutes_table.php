@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('institutes', function (Blueprint $table) {
             $table->id();
             $table->string('institute_name');
-            $table->string('institute_abbr');
             $table->unsignedInteger('office_id');
+            $table->foreign('office_id')->references('id')->on('offices')->onDelete('cascade');
             $table->timestamps();
         });
 

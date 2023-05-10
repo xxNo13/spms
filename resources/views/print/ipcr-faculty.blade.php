@@ -83,17 +83,11 @@
             text-align: center;
         }
 
-        .iso-table {
+        .iso-form {
             width: 150px;
-            border-collapse: collapse;
             position: absolute;
             top: -15px;
             right: 0;
-        }
-
-        .iso-table th{
-            padding-top: 0;
-            padding-bottom: 0; 
         }
         table.main-table  tr.page-break {
             page-break-after: avoid !important;
@@ -110,34 +104,11 @@
 
 <body>
     <div id="header">
-        <img src="{{ public_path('images/logo/header.jpg') }}">
-        <table class="iso-table">
-            <tbody>
-                <tr>
-                    <th class="text-start">Form No.</th>
-                    <th>FM-DNSC-SPE-01</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Issue Status</th>
-                    <th>03</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Revision No.</th>
-                    <th>04</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Effective Date</th>
-                    <th>27-Jan-2022</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Approved by</th>
-                    <th>President</th>
-                </tr>
-            </tbody>
-        </table>
+        <img src="uploads/{{ $printImage->header_link }}">
+        <img src="uploads/{{ $printImage->form_link }}" class="iso-form">
     </div>
     <div id="footer">
-        <img src="{{ public_path('images/logo/footer.jpg') }}">
+        <img src="uploads/{{ $printImage->footer_link }}">
     </div>
     <div>
         <p style="font-size: 10px;" class="text-center">
@@ -151,7 +122,7 @@
         <div style="text-align: center;">
             <p>______________________</p>
             <p>(Employee's Signature)</p>
-            <p>Date: <u>{{ date('m-d-Y') }}</u></p>
+            <p>Date: <u>{{ isset($assess) ? date('m-d-Y', strtotime($assess->created_at)) : '' }}</u></p>
         </div>
     </div>
     <table class="top-table">
@@ -187,7 +158,11 @@
                     </div>
                 </td>
                 <td rowspan="5" class="bordered">
-                    {{-- {{ date('M d, Y', strtotime($approval->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
+                    @if ($approval)
+                        @foreach ($approval->reviewers as $reviewer)
+                            {{ date('M d, Y', strtotime($reviewer->pivot->review_date)) }}
+                        @endforeach
+                    @endif
                 </td>
                 <td colspan="2" rowspan="5" class="bordered">
                     @if (isset($approval_approver->name))
@@ -204,7 +179,7 @@
                     @endif 
                 </td>
                 <td rowspan="5" class="bordered">
-                    {{-- {{ date('M d, Y', strtotime($approval->approve_date)) }} --}}
+                    {{ isset($approval) ? date('M d, Y', strtotime($approval->approve_date)) : '' }}
                 </td>
                 <td class="bold">Q</td>
                 <td class="border-right">Quality</td>
@@ -1682,7 +1657,9 @@
             <tr>
                 <td colspan="10" class="text-start" style="min-height: 100px; vertical-align: top;">
                     Comment and recommendation for Development Purposes <br>
+                    @if ($printInfo->comment)
                     <?php echo nl2br($printInfo->comment) ?>
+                    @endif
                 </td>
             </tr>
             <tr>
@@ -1694,7 +1671,7 @@
                     <p><u>{{ $user->name }}</u></p>
                 </td>
                 <td >Date: 
-                    {{-- {{ date('M d, Y') }} --}}
+                    {{ isset($assess) ? date('M d, Y', strtotime($assess->created_at)) : '' }}
                 </td>
                 <td style="width: 200px;">
                     <p style="white-space: break-word;">I certify that I discussed my assessment of the performance with the employee.</p>
@@ -1706,14 +1683,18 @@
                     </div>
                 </td>
                 <td style="width: 150px;">Date: 
-                    {{-- {{ date('M d, Y', strtotime($assess->reviewers()->orderBy('updated_at', 'DESC')->first()->pivot->review_date)) }} --}}
+                    @if ($assess)
+                        @foreach ($assess->reviewers as $reviewer)
+                            {{ date('M d, Y', strtotime($reviewer->pivot->review_date)) }}
+                        @endforeach
+                    @endif
                 </td>
                 <td colspan="3">
                     <p class="text-start">Final rating by:</p>
                     <p><u>{{ isset($assess_approver->name) ? $assess_approver->name : '' }}</u></p>
                 </td>
                 <td colspan="2">Date: 
-                    {{-- {{ date('M d, Y', strtotime($assess->approve_date)) }} --}}
+                    {{ isset($assess) ? date('M d, Y', strtotime($assess->approve_date)) : '' }}
                 </td>
             </tr>
         </tfoot>

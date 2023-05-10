@@ -69,12 +69,14 @@
                     <x-slot name="content">
                         {{ __('Please enter your password to confirm you would like to logout of your other browser sessions across all of your devices.') }}
 
-                        <div class="mt-4" x-data="{}" x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)">
-                            <input type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                        <div class="mt-4 position-relative" x-data="{}" x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)">
+                            <input id="password_browser" type="password" class="password-padding form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
                                         placeholder="{{ __('Password') }}"
                                         x-ref="password"
                                         wire:model.defer="password"
                                         wire:keydown.enter="logoutOtherBrowserSessions" />
+                            
+                            <i class="bi bi-eye-slash password-show-hide" id="toggleshowBrowser"></i>
 
                             <x-maz-input-error for="password" class="mt-2" />
                         </div>

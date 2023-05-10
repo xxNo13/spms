@@ -101,13 +101,11 @@ class OfficeSeeder extends Seeder
 
         Institute::factory()->create([
             'institute_name' => 'Information Technology',
-            'institute_abbr' => 'BSIT',
             'office_id'      => 13,
         ]);
 
         Institute::factory()->create([
             'institute_name' => 'Information System',
-            'institute_abbr' => 'BSIS',
             'office_id'      => 13,
         ]);
         

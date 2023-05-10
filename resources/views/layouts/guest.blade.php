@@ -40,5 +40,19 @@
                 </div>
             </div>
         </div>
+        <script src="{{ asset('/js/jquery.js') }}"></script>
+        <script>
+                $('#toggleshow').click(function () {
+                    if ($(this).hasClass('bi-eye-slash')) {
+                        $(this).removeClass('bi-eye-slash');
+                        $(this).addClass('bi-eye');
+                        $('.password-padding').attr('type', 'text');
+                    } else {
+                        $(this).removeClass('bi-eye');
+                        $(this).addClass('bi-eye-slash');
+                        $('.password-padding').attr('type', 'password');
+                    }
+                });
+        </script>
     </body>
 </html>

@@ -11,7 +11,6 @@ class Institute extends Model
 
     protected $fillable = [
         'institute_name',
-        'institute_abbr',
         'office_id'
     ];
 

@@ -2268,6 +2268,130 @@
                 </div>
             </div>
         </div>
+
+        {{-- Add Institute Modal --}}
+        <div wire:ignore data-bs-backdrop="static"  class="modal fade text-left" id="AddInstituteModal" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Add Institute</h4>
+                    </div>
+                    <form wire:submit.prevent="save">
+                        @csrf
+                        <div class="modal-body">
+                            <label>Institute Name: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Institute Name" class="form-control" wire:model.defer="institute_name">
+                                @error('institute_name')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office which it belongs: </label>
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="office_id" id="office_id" class="form-select"  wire:loading="disabled" wire:model="office_id" >
+                                    <option></option>
+                                    @foreach ($offices as $office) 
+                                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @if (isset($offices))
+                            @push ('script')
+                                <script>
+                                    $('#office_id').on('change', function () {
+                                        var data = $('#office_id').select2("val");
+                                        @this.set('office_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#office_id").select2({
+                                                placeholder: "Select an Office which it belongs.",
+                                                dropdownParent: $("#AddInstituteModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                        @endif
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- Edit Institute Modal --}}
+        <div wire:ignore data-bs-backdrop="static"  class="modal fade text-left" id="EditInstituteModal" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Edit Institute</h4>
+                    </div>
+                    <form wire:submit.prevent="save">
+                        @csrf
+                        <div class="modal-body">
+                            <label>Institute Name: </label>
+                            <div class="form-group">
+                                <input type="text" placeholder="Institute Name" class="form-control" wire:model.defer="institute_name">
+                                @error('institute_name')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <label>Office which it belongs: </label>
+                            <div class="form-group" wire:ignore>
+                                <select style="width: 100%;" name="edit_office_id" id="edit_office_id" class="form-select" wire:loading="disabled" wire:model="office_id" >
+                                    <option></option>
+                                    @foreach ($offices as $office) 
+                                        <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @if (isset($offices))
+                            @push ('script')
+                                <script>
+                                    $('#edit_office_id').on('change', function () {
+                                        var data = $('#edit_office_id').select2("val");
+                                        @this.set('office_id', data);
+                                    });
+
+                                    document.addEventListener("livewire:load", function (event) {
+                                        Livewire.hook('message.processed', function (message, component){
+                                            $("#edit_office_id").select2({
+                                                placeholder: "Select an Office which it belongs.",
+                                                dropdownParent: $("#EditInstituteModal")
+                                            });
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                        @endif
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Update</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     @endif
 
     {{-- Add Account Type Modal --}}
@@ -3260,5 +3384,75 @@
                 </div>
             </div>
         </div>
+
+        {{-- Add Files Modal --}}
+        <div wire:ignore.self data-bs-backdrop="static"  class="modal fade text-left" id="EditPrintImageModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel33">Edit Print Images</h4>
+                    </div>
+                    <form wire:submit.prevent="save">
+                        @csrf
+                        <div class="modal-body">
+                            <label>Header: </label>
+                            <div class="form-group">
+                                <input  type="file" accept=".jpg,.png,.jpeg" placeholder="Header" class="form-control"
+                                wire:model.defer="header" id="header.{{ $itteration }}">
+                                @error('header')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @if (isset($printImage->header_link))
+                                <div class="text-center">
+                                    <img src="uploads/{{ $printImage->header_link }}" style="max-height: 50px" alt="">
+                                </div>
+                            @endif
+                            <hr>
+                            <label>Footer: </label>
+                            <div class="form-group">
+                                <input  type="file" accept=".jpg,.png,.jpeg" placeholder="Header" class="form-control"
+                                wire:model.defer="footer" id="footer.{{ $itteration }}">
+                                @error('footer')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @if (isset($printImage->footer_link))
+                                <div class="text-center">
+                                    <img src="uploads/{{ $printImage->footer_link }}" style="max-height: 50px" alt="">
+                                </div>
+                            @endif
+                            <hr>
+                            <label>Form: </label>
+                            <div class="form-group">
+                                <input  type="file" accept=".jpg,.png,.jpeg" placeholder="Header" class="form-control"
+                                wire:model.defer="form" id="form.{{ $itteration }}">
+                                @error('form')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @if (isset($printImage->form_link))
+                                <div class="text-center">
+                                    <img src="uploads/{{ $printImage->form_link }}" style="max-height: 50px" alt="">
+                                </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" wire:click="closeModal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Close</span>
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-success ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Update</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     @endif
+
+
 </div>

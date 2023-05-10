@@ -134,7 +134,7 @@ class ListingOpcrLivewire extends Component
         }
     }
 
-    public function saveIpcr() {
+    public function saveOpcr() {
         $this->validate();
 
         switch (str_replace(url('/'), '', url()->previous())) {
@@ -234,7 +234,7 @@ class ListingOpcrLivewire extends Component
         $this->dispatchBrowserEvent('close-modal');
     }
 
-    public function updateIpcr() {
+    public function updateOpcr() {
 
         $this->validate();
 

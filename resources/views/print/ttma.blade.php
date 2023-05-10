@@ -87,10 +87,10 @@
 
 <body>
     <div id="header">
-        <img src="{{ public_path('images/logo/header.jpg') }}">
+        <img src="uploads/{{ $printImage->header_link }}">
     </div>
     <div id="footer">
-        <img src="{{ public_path('images/logo/footer.jpg') }}">
+        <img src="uploads/{{ $printImage->footer_link }}">
     </div>
     
     <h1 class="text-center" style="font-size: 12px;">{{ date('Y') }} Tracking Tool for Monitoring Assignments</h1>

@@ -27,11 +27,12 @@
                 </div>
             </div>
             <div class="form-group position-relative has-icon-left mb-4">
-                <input type="password" class="form-control form-control-lg" name="password" placeholder="Password"
+                <input type="password" class="password-padding form-control form-control-lg" name="password" placeholder="Password"
                     placeholder="Password">
                 <div class="form-control-icon">
                     <i class="bi bi-shield-lock"></i>
                 </div>
+                <i class="bi bi-eye-slash password-show-hide" id="toggleshow"></i>
             </div>
             <div class="form-check form-check-lg d-flex align-items-end">
                 <input class="form-check-input me-2" type="checkbox" name="remember" id="flexCheckDefault">

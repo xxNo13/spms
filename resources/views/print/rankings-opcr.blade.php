@@ -87,10 +87,10 @@
 
 <body>
     <div id="header">
-        <img src="{{ public_path('images/logo/header.jpg') }}">
+        <img src="uploads/{{ $printImage->header_link }}">
     </div>
     <div id="footer">
-        <img src="{{ public_path('images/logo/footer.jpg') }}">
+        <img src="uploads/{{ $printImage->footer_link }}">
     </div>
 
     <table class="main-table bordered">

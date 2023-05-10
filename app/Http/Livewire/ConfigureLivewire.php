@@ -3,16 +3,20 @@
 namespace App\Http\Livewire;
 
 use App\Models\Office;
-use App\Models\ScoreEquivalent;
 use Livewire\Component;
 use App\Models\Duration;
+use App\Models\Institute;
+use App\Models\PrintImage;
 use App\Models\AccountType;
 use Livewire\WithPagination;
 use App\Models\StandardValue;
+use Livewire\WithFileUploads;
+use App\Models\ScoreEquivalent;
 
 class ConfigureLivewire extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $searchoffice = '';
     public $sortOffice = 'id';
@@ -46,6 +50,19 @@ class ConfigureLivewire extends Component
     public $quality;
     public $timeliness;
 
+    public $searchinstitute = '';
+    public $sortInstitute = 'id';
+    public $ascInstitute = 'asc';
+    public $pageInstitute = 10;
+    public $institute_name;
+    public $institute_id;
+
+    public $printImage_id;
+    public $header;
+    public $footer;
+    public $form;
+    public $itteration = 1;
+
     protected $rules = [
         'office_name' => ['required_if:type,office'],
         'office_abbr' => ['required_if:type,office'],
@@ -63,6 +80,12 @@ class ConfigureLivewire extends Component
         'efficiency' => ['required_if:type,standardValue'],
         'quality' => ['required_if:type,standardValue'],
         'timeliness' => ['required_if:type,standardValue'],
+
+        'institute_name' => ['required_if:type,institute'],
+        
+        'header' => ['nullable'],
+        'footer' => ['nullable'],
+        'form' => ['nullable'],
     ];
 
     protected $messages = [
@@ -123,6 +146,8 @@ class ConfigureLivewire extends Component
         'efficiency.required_if' => 'Efficiency cannot be null.',
         'quality.required_if' => 'Quality cannot be null.',
         'timeliness.required_if' => 'Timeliness cannot be null.',
+
+        'institute_name.required_if' => 'Institute Name cannot be null.',
     ];
 
     public function updated($property)
@@ -147,6 +172,15 @@ class ConfigureLivewire extends Component
             $account_types->where('account_type', 'like', "%{$this->searchacctype}%");
         }
 
+        $institutes = Institute::query();
+        if ($this->searchinstitute) {
+            $search = $this->searchinstitute;
+            $institutes->whereHas('office', function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+                    return $query->where('office_name', 'like', "%{$search}%");
+                })
+                ->orwhere('institute_name', 'like', "%{$search}%");
+        }
+
         return view('livewire.configure-livewire',[
             'offices' => $offices->orderBy($this->sortOffice, $this->ascOffice)->paginate($this->pageOffice),
             'account_types' => $account_types->orderBy($this->sortAccType, $this->ascAccType)->paginate($this->pageAccType),
@@ -154,6 +188,8 @@ class ConfigureLivewire extends Component
             'scoreEq' => ScoreEquivalent::first(),
             'standardValue' => StandardValue::first(),
             'allOffices' => Office::all(),
+            'printImage' => PrintImage::first(),
+            'institutes' => $institutes->orderBy($this->sortInstitute, $this->ascInstitute)->paginate($this->pageInstitute),
         ]);
     }
 
@@ -229,6 +265,56 @@ class ConfigureLivewire extends Component
                 'message' => "Updated Successfully",
                 'color' => "#28ab55",
             ]);
+        } elseif ($this->category == 'edit' && $this->type == 'institute') {
+            Institute::where('id', $this->institute_id)->update([
+                'institute_name' => $this->institute_name,
+                'office_id' => $this->office_id
+            ]);
+
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
+        } elseif ($this->type == 'institute') {
+            Institute::create([
+                'institute_name' => $this->institute_name, 
+                'office_id' => $this->office_id
+            ]);
+
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Added Successfully",
+                'color' => "#435ebe",
+            ]);
+        } elseif ($this->category == 'edit' && $this->type == 'printImage') {
+
+            if ($this->header) {
+                $header = $this->header->store('images');
+
+                PrintImage::where('id', $this->printImage_id)->update([
+                    'header_link' => $header,
+                ]);
+            }
+
+            if ($this->footer) {
+                $footer = $this->footer->store('images');
+    
+                PrintImage::where('id', $this->printImage_id)->update([
+                    'footer_link' => $footer,
+                ]);
+            }
+
+            if ($this->form) {
+                $form = $this->form->store('images');
+
+                PrintImage::where('id', $this->printImage_id)->update([
+                    'form_link' => $form,
+                ]);
+            }
+
+            $this->dispatchBrowserEvent('toastify', [
+                'message' => "Updated Successfully",
+                'color' => "#28ab55",
+            ]);
         }
 
         $this->resetInput();
@@ -285,6 +371,21 @@ class ConfigureLivewire extends Component
             $this->unsat_to = $data->unsat_to;
             $this->poor_from = $data->poor_from;
             $this->poor_to = $data->poor_to;
+        } elseif ($type == 'institute') {
+            $this->institute_id = $id;
+            if ($category == 'edit') {
+                $this->category = $category;
+
+                $data = Institute::find($this->institute_id);
+
+                $this->institute_name = $data->institute_name;
+                $this->office_id = $data->office_id;
+            }
+        } elseif ($type == 'printImage') {
+            $this->printImage_id = $id;
+            if ($category == 'edit') {
+                $this->category = $category;
+            }
         }
     }
 
@@ -293,6 +394,8 @@ class ConfigureLivewire extends Component
             Office::where('id', $this->office_id)->delete();
         } elseif ($this->type == 'account_type') {
             AccountType::where('id', $this->account_type_id)->delete();
+        } elseif ($this->type == 'institute') {
+            Institute::where('id', $this->institute_id)->delete();
         }
 
         $this->dispatchBrowserEvent('toastify', [
@@ -328,6 +431,15 @@ class ConfigureLivewire extends Component
         $this->unsat_to = '';
         $this->poor_from = '';
         $this->poor_to = '';
+
+        $this->institute_name = '';
+        $this->institute_id = '';
+
+        $this->printImage_id = '';
+        $this->header = '';
+        $this->footer = '';
+        $this->form = '';
+        $this->itteration++;
     }
 
     public function closeModal(){

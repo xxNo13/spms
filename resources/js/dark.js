@@ -18,16 +18,22 @@ export function setTheme(theme, dontPersist = false) {
   document.body.className = document.body.className.replace(THEME_REGEX, "");
   console.log("change theme to ", theme);
   document.body.classList.add(theme);
-  toggler.checked = theme == "theme-dark";
+  if (toggler) {
+    toggler.checked = theme == "theme-dark";
+  }
 
   if (!dontPersist) {
     localStorage.setItem(THEME_KEY, theme);
   }
 }
 
-toggler.addEventListener("input", (e) => {
-  setTheme(e.target.checked ? "theme-dark" : "theme-light");
-});
+if (toggler) {
+  toggler.addEventListener("input", (e) => {
+    setTheme(e.target.checked ? "theme-dark" : "theme-light");
+  });
+} else {
+  setTheme("theme-light");
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Dark Loaded");

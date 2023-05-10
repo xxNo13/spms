@@ -38,7 +38,9 @@
                 <a href="#scoreEqs" class="btn btn-outline-primary">Score Equivalent</a>
                 <a href="#standardValue" class="btn btn-outline-primary">Standard Values</a>
                 <a href="#offices" class="btn btn-outline-primary">Offices</a>
+                <a href="#institutes" class="btn btn-outline-primary">Institutes</a>
                 <a href="#account_types" class="btn btn-outline-primary">Account Types</a>
+                <a href="#printImages" class="btn btn-outline-primary">Print Images</a>
             </div>
         </div>
     </div>
@@ -233,8 +235,8 @@
                                     <label for="sortOffice">Sort By:</label>
                                     <select class="form-control" wire:model="sortOffice" id="sortOffice">
                                         <option value="id">ID</option>
-                                        <option value="office">Office Name</option>
-                                        <option value="abr">Office Abbreviation</option>
+                                        <option value="office_name">Office Name</option>
+                                        <option value="office_abbr">Office Abbreviation</option>
                                         <option value="parent_id">Head Office</option>
                                     </select>
                                 </div>
@@ -310,8 +312,111 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer" id="account_types">
+            <div class="card-footer" id="institutes">
                 {{ $offices->links('components.pagination') }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="accordion accordion-flush card-header" id="instituteAccordion">
+                <div class="accordion-item">
+                    <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
+                        <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#institute"
+                            wire:ignore.self aria-expanded="false" aria-controls="institute" role="button">
+                            <h4>Institutes</h4>
+                        </div>
+                    </div>
+                    <div id="institute" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne"
+                        wire:ignore.self data-bs-parent="#instituteAccordion">
+                        <div class="acordion-header mt-2 row">
+                            <div class="hstack justify-content-center justify-content-md-start col-12 col-md-6 gap-5 order-md-1 order-last">
+                                <div class="my-auto form-group position-relative">
+                                    <label for="ascInstitute">Order By:</label>
+                                    <select class="form-control" wire:model="ascInstitute" id="ascInstitute">
+                                        <option value="asc">ASC</option>
+                                        <option value="desc">DESC</option>
+                                    </select>
+                                </div>
+                                <div class="my-auto form-group position-relative">
+                                    <label for="sortInstitute">Sort By:</label>
+                                    <select class="form-control" wire:model="sortInstitute" id="sortInstitute">
+                                        <option value="id">ID</option>
+                                        <option value="institute_name">Institute Name</option>
+                                        <option value="office_id">Office Name</option>
+                                    </select>
+                                </div>
+                                <div class="my-auto form-group position-relative">
+                                    <label for="pageInstitute">Per Page:</label>
+                                    <select class="form-control" wire:model="pageInstitute" id="pageInstitute">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <div class="hstack justify-content-center gap-2 mt-2 col-12 col-md-6 order-md-1 order-last">
+                                <div class="ms-md-auto my-auto form-group position-relative has-icon-right">
+                                    <input type="text" class="form-control" placeholder="Search.." wire:model="searchinstitute">
+                                    <div class="form-control-icon">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn icon btn-primary" data-bs-toggle="modal"
+                                    wire:click="select('{{ 'institute' }}')" data-bs-target="#AddInstituteModal"
+                                    title="Add Institute">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                <table class="table table-lg text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>INSTITUTE NAME</th>
+                                            <th>OFFICE NAME</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($institutes as $institute)
+                                            <tr>
+                                                <td>{{ $institute->id }}</td>
+                                                <td>{{ $institute->institute_name }}</td>
+                                                <td>{{ $institute->office->office_name }}</td>
+                                                <td>
+                                                    <div class="hstack gap-2 justify-content-center">
+                                                        <button type="button" class="btn icon btn-success"
+                                                            wire:click="select('{{ 'institute' }}', {{ $institute->id }}, '{{ 'edit' }}')"
+                                                            data-bs-toggle="modal" data-bs-target="#EditInstituteModal">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </button>
+                                                        <button type="button" class="btn icon btn-danger"
+                                                            wire:click="select('{{ 'institute' }}', {{ $institute->id }})"
+                                                            data-bs-toggle="modal" data-bs-target="#DeleteModal">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4">No record available!</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" id="account_types">
+                {{ $institutes->links('components.pagination') }}
             </div>
         </div>
 
@@ -410,14 +515,67 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" id="printImages">
                 {{ $account_types->links('components.pagination') }}
             </div>
         </div>
     </section>
 
+    <div class="card" >
+        <div class="accordion accordion-flush card-header" id="printImageAccordion">
+            <div class="accordion-item">
+                <div class="accordion-header hstack gap-2" id="flush-headingOne" wire:ignore.self>
+                    <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#printImage"
+                        wire:ignore.self aria-expanded="false" aria-controls="printImage" role="button">
+                        <h4>Print Images</h4>
+                    </div>
+                </div>
+                <div id="printImage" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne"
+                    wire:ignore.self data-bs-parent="#printImageAccordion">
+                    <div class="acordion-header mt-2 row">    
+                        <div class="hstack justify-content-center gap-2 mt-2 col-12">
+                            <button type="button" class="ms-auto btn icon btn-success"
+                                wire:click="select('{{ 'printImage' }}', {{ $printImage->id }}, '{{ 'edit' }}')"
+                                data-bs-toggle="modal" data-bs-target="#EditPrintImageModal">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table table-lg text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Image</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Header</td>
+                                        <td><img src="uploads/{{ $printImage->header_link }}" style="max-height: 50px" alt=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Footer</td>
+                                        <td><img src="uploads/{{ $printImage->footer_link }}" style="max-height: 50px" alt=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Form</td>
+                                        <td><img src="uploads/{{ $printImage->form_link }}" style="max-height: 50px" alt=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
     @php
         $parentId = $parent_id;
     @endphp
-    <x-modals :offices="$allOffices" :parentId="$parentId" />
+    <x-modals :itteration="$itteration" :printImage="$printImage" :offices="$allOffices" :parentId="$parentId" />
 </div>

@@ -18,7 +18,6 @@ class InstituteFactory extends Factory
     {
         return [
             'institute_name' => $this->faker->text(10),
-            'institute_abbr' => $this->faker->text(5),
         ];
     }
 }

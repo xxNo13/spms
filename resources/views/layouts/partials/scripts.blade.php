@@ -19,7 +19,7 @@
 @stack('assignment')
 @stack('rating')
 <script>
-    
+
     function scrollToTop() {
         window.scrollTo({
             top: 0,
@@ -77,6 +77,10 @@
         $('#AddCommitteeModal').modal('hide');        
         $('#EditCommitteeModal').modal('hide');       
         $('#AddFilesModal').modal('hide');
+
+        $('#AddInstituteModal').modal('hide');        
+        $('#EditInstituteModal').modal('hide');  
+        $('#EditPrintImageModal').modal('hide'); 
     });
 
     $('a.dropdown-notification').on('click', function (event) {
@@ -93,6 +97,74 @@
         ) {
             $('a.dropdown-notification').removeClass('show');
             $('ul.notification-dropdown').removeClass('show');
+        }
+    });
+
+    
+    $('#toggleshow').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('.password-padding').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('.password-padding').attr('type', 'password');
+        }
+    });
+    $('#toggleshow1').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('#current_password').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('#current_password').attr('type', 'password');
+        }
+    });
+    $('#toggleshow2').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('#password').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('#password').attr('type', 'password');
+        }
+    });
+    $('#toggleshow3').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('#password_confirmation').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('#password_confirmation').attr('type', 'password');
+        }
+    });
+    $('#toggleshowBrowser').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('#password_browser').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('#password_browser').attr('type', 'password');
+        }
+    });
+    $('#toggleshowDelete').click(function () {
+        if ($(this).hasClass('bi-eye-slash')) {
+            $(this).removeClass('bi-eye-slash');
+            $(this).addClass('bi-eye');
+            $('#password_delete').attr('type', 'text');
+        } else {
+            $(this).removeClass('bi-eye');
+            $(this).addClass('bi-eye-slash');
+            $('#password_delete').attr('type', 'password');
         }
     });
 </script>

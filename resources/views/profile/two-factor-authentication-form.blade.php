@@ -79,9 +79,23 @@
 @push('script')
     <script>
         $(document).ready(function () {
-            $('input.border-gray-300.rounded-md.shadow-sm.mt-1.block').removeClass().addClass('form-control');
+            $('input.border-gray-300.rounded-md.shadow-sm.mt-1.block').removeClass().addClass('form-control').addClass('password-padding').attr('id', 'password_twofactor').wrap("<div class='position-relative' id='parent_twofactor'></div>");
+            $('#parent_twofactor').append("<i class='bi bi-eye-slash password-show-hide' id='toggleshowTwoFactor'></i>");
             $('button.inline-flex.items-center.px-4.py-2.bg-white.border.border-gray-300.rounded-md.font-semibold.text-xs.text-gray-700.uppercase.tracking-widest.shadow-sm.transition').removeClass().addClass('btn btn-outline-secondary');
             $('button.inline-flex.items-center.px-4.py-2.bg-gray-800.border.border-transparent.rounded-md.font-semibold.text-xs.text-white.uppercase.tracking-widest.transition.ml-3').removeClass().addClass('btn btn-primary');
-        })
+        
+        
+            $('#toggleshowTwoFactor').click(function () {
+                if ($(this).hasClass('bi-eye-slash')) {
+                    $(this).removeClass('bi-eye-slash');
+                    $(this).addClass('bi-eye');
+                    $('#password_twofactor').attr('type', 'text');
+                } else {
+                    $(this).removeClass('bi-eye');
+                    $(this).addClass('bi-eye-slash');
+                    $('#password_twofactor').attr('type', 'password');
+                }
+            });
+        });
     </script>
 @endpush

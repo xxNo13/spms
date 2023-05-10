@@ -278,8 +278,11 @@
     @php
         $currentPage = $functs->currentPage();
         $userType = 'listing';
+        $type = 'office';
+        $targetAllocated = -1;
+        $targetID = 1;
     @endphp
     @if ($duration)
-        <x-modals :filter="$filter" :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />
+        <x-modals :targetID="$targetID" :targetAllocated="$targetAllocated" :type="$type" :filter="$filter" :selected="$selected" :userType="$userType" :currentPage="$currentPage" :duration="$duration" :outputs="$outputs" :subFuncts="$subFuncts" />
     @endif
 </div>

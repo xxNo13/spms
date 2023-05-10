@@ -71,6 +71,18 @@ body.theme-dark .bg-light {
     box-shadow: none !important;
 }
 
+.password-show-hide {
+    position: absolute;
+    top: 43%;
+    transform: translateY(-57%);
+    right: 15px;
+    cursor: pointer;
+}
+
+.password-padding {
+    padding-right: 46px !important;
+}
+
 @media (max-width: 991px) {
     .center-form {
         width: 100%;

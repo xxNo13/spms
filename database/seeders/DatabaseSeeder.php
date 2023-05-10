@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Funct;
 use App\Models\Office;
 use App\Models\SubFunct;
+use App\Models\PrintImage;
 use App\Models\AccountType;
 use App\Models\StandardValue;
 use App\Models\ScoreEquivalent;
@@ -87,6 +88,12 @@ after deadline'
 
         Pmt::factory()->create([
             'position' => 'Representative of Staff'
+        ]);
+
+        PrintImage::factory()->create([
+            'header_link' => 'images/header.jpg',
+            'footer_link' => 'images/footer.jpg',
+            'form_link' => 'images/form.png',
         ]);
 
         $this->call([

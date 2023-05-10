@@ -83,17 +83,11 @@
             text-align: center;
         }
 
-        .iso-table {
+        .iso-form {
             width: 150px;
-            border-collapse: collapse;
             position: absolute;
             top: -15px;
             right: 0;
-        }
-
-        .iso-table th{
-            padding-top: 0;
-            padding-bottom: 0; 
         }
         table.main-table  tr.page-break {
             page-break-after: avoid !important;
@@ -110,34 +104,11 @@
 
 <body>
     <div id="header">
-        <img src="{{ public_path('images/logo/header.jpg') }}">
-        <table class="iso-table">
-            <tbody>
-                <tr>
-                    <th class="text-start">Form No.</th>
-                    <th>FM-DNSC-SPE-01</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Issue Status</th>
-                    <th>03</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Revision No.</th>
-                    <th>04</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Effective Date</th>
-                    <th>27-Jan-2022</th>
-                </tr>
-                <tr>
-                    <th class="text-start">Approved by</th>
-                    <th>President</th>
-                </tr>
-            </tbody>
-        </table>
+        <img src="uploads/{{ $printImage->header_link }}">
+        <img src="uploads/{{ $printImage->form_link }}" class="iso-form">
     </div>
     <div id="footer">
-        <img src="{{ public_path('images/logo/footer.jpg') }}">
+        <img src="uploads/{{ $printImage->footer_link }}">
     </div>
     
     <h1 class="text-center" style="font-size: 12px;">{{ date('Y', strtotime($duration->start_date)) }} PERFORMANCE STANDARD ( SEMESTRAL )</h1>

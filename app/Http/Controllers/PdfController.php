@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pmt;
 use App\Models\Ttma;
 use App\Models\User;
 use App\Models\Funct;
@@ -9,6 +10,7 @@ use App\Models\Office;
 use App\Models\Duration;
 use App\Models\PrintInfo;
 use App\Models\Percentage;
+use App\Models\PrintImage;
 use Illuminate\Http\Request;
 use App\Models\SubPercentage;
 use App\Models\ScoreEquivalent;
@@ -94,6 +96,9 @@ class PdfController extends Controller
                             ->where('type', 'faculty')
                             ->first();
 
+
+        $printImage = PrintImage::first();
+
         $data = [
             'functs' => Funct::all(),
             'approval' => $approval,
@@ -109,7 +114,8 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
-            'printInfo' => $printInfo
+            'printInfo' => $printInfo,
+            'printImage' => $printImage,
         ];
 
         $pdf = PDF::loadView('print.ipcr-faculty', $data)->setPaper('a4','landscape');
@@ -166,6 +172,8 @@ class PdfController extends Controller
 
         $user = User::find($id);
 
+        $printImage = PrintImage::first();
+
         $data = [
             'functs' => Funct::all(),
             'duration' => $duration,
@@ -173,6 +181,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
+            'printImage' => $printImage
         ];
 
         $pdf = PDF::loadView('print.standard-faculty', $data)->setPaper('a4','landscape');
@@ -256,6 +265,8 @@ class PdfController extends Controller
                             ->where('type', 'staff')
                             ->first();
 
+        $printImage = PrintImage::first();
+
         $data = [
             'functs' => Funct::all(),
             'approval' => $approval,
@@ -271,7 +282,8 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
-            'printInfo' => $printInfo
+            'printInfo' => $printInfo,
+            'printImage' => $printImage
         ];
 
         $pdf = PDF::loadView('print.ipcr-staff', $data)->setPaper('a4','landscape');
@@ -329,6 +341,7 @@ class PdfController extends Controller
         }
 
 
+        $printImage = PrintImage::first();
         $data = [
             'functs' => Funct::all(),
             'duration' => $duration,
@@ -336,6 +349,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
+            'printImage' => $printImage
         ];
 
         $pdf = PDF::loadView('print.standard-staff', $data)->setPaper('a4','landscape');
@@ -388,8 +402,9 @@ class PdfController extends Controller
             $approval = $user->approvals()->orderBy('id', 'DESC')->where('name', 'approval')->where('type', 'opcr')->where('duration_id', $duration->id)->where('user_type', 'office')->first();
             
             $approval_approver = '';
+            $pmtHead = Pmt::where('isHead', 1)->pluck('id')->first();
             if ($approval) {
-                foreach ($approval->reviewers as $reviewer) {
+                foreach ($approval->reviewers()->where('id', $pmtHead)->get() as $reviewer) {
                     array_push($approval_reviewer, $reviewer);
                 }
                 $approval_approver = User::find($approval->approve_id);
@@ -399,7 +414,7 @@ class PdfController extends Controller
             
             $assess_approver = '';
             if ($assess) {
-                foreach ($assess->reviewers as $reviewer) {
+                foreach ($assess->reviewers()->where('id', $pmtHead)->get() as $reviewer) {
                     array_push($assess_reviewer, $reviewer);
                 }
                 $assess_approver = User::find($assess->approve_id);
@@ -410,6 +425,8 @@ class PdfController extends Controller
                             ->where('duration_id', $duration->id)
                             ->where('type', 'office')
                             ->first();
+
+        $printImage = PrintImage::first();
 
         $data = [
             'functs' => Funct::all(),
@@ -426,7 +443,9 @@ class PdfController extends Controller
             'user' => $user,
             'title' => $request->title,
             'office' => $request->office,
-            'printInfo' => $printInfo
+            'printInfo' => $printInfo,
+            'pmtHead' => $pmtHead,
+            'printImage' => $printImage
         ];
 
         $pdf = PDF::loadView('print.opcr', $data)->setPaper('a4','landscape');
@@ -475,6 +494,7 @@ class PdfController extends Controller
             }
         }
 
+        $printImage = PrintImage::first();
 
         $data = [
             'functs' => Funct::all(),
@@ -483,6 +503,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'user_id' => $user->id,
             'user' => $user,
+            'printImage' => $printImage
         ];
 
         $pdf = PDF::loadView('print.standard-opcr', $data)->setPaper('a4','landscape');
@@ -507,8 +528,10 @@ class PdfController extends Controller
         $duration = Duration::orderBy('id', 'DESC')->where('type', 'office')->where('start_date', '<=', date('Y-m-d'))->first();
         $ttmas = Ttma::where('duration_id', $duration->id)->where('head_id', auth()->user()->id)->get();
 
+        $printImage = PrintImage::first();
         $data = [
             'ttmas' => $ttmas,
+            'printImage' => $printImage
         ];
 
         
@@ -549,6 +572,7 @@ class PdfController extends Controller
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $printImage = PrintImage::first();
         $data = [
             'functs' => $functs,    
             'durationS' => $durationS,
@@ -557,6 +581,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users,
             'offices' => Office::where('id', $office_id)->get(),
+            'printImage' => $printImage
         ];
 
         
@@ -579,6 +604,7 @@ class PdfController extends Controller
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $printImage = PrintImage::first();
         $data = [
             'functs' => $functs,    
             'durationF' => $durationF,
@@ -586,6 +612,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users,
             'offices' => Office::where('office_name', 'like', '%dean%')->get(),
+            'printImage' => $printImage
         ];
 
         
@@ -621,6 +648,7 @@ class PdfController extends Controller
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $printImage = PrintImage::first();
         $data = [
             'functs' => $functs,    
             'durationS' => $durationS,
@@ -628,6 +656,7 @@ class PdfController extends Controller
             'scoreEquivalent' => $scoreEquivalent,
             'users' => $users,
             'offices' => Office::wherenot('office_name', 'like', '%dean%')->wherenot('id', 1)->get(),
+            'printImage' => $printImage
         ];
 
         
@@ -663,13 +692,15 @@ class PdfController extends Controller
         $functs = Funct::all();
         $scoreEquivalent = ScoreEquivalent::first();
 
+        $printImage = PrintImage::first();
         $data = [
             'functs' => $functs,    
             'duration' => $duration,
             'percentage' => $percentage,
             'sub_percentages' => $sub_percentages,
             'scoreEquivalent' => $scoreEquivalent,
-            'users' => $users
+            'users' => $users,
+            'printImage' => $printImage
         ];
 
         
